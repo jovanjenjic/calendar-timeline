@@ -1,17 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Provider } from 'react-redux';
-import { store } from './redux/store';
+import CalendarView from './components/Calendar/CalendarView';
+import dataViewConfig from '@base/dataView';
+import GoUrbanStyleguide from './components/style-guide/GoUrbanStyleguide';
 
-const Router = React.lazy(() => import('./pages/router'));
+const Playground = () => {
+  const [currentDate, setCurrentDate] = React.useState('2023-06-03');
+
+  const dataView = dataViewConfig(currentDate, setCurrentDate);
+  return (
+    <div style={{ padding: '16px' }}>
+      <GoUrbanStyleguide />
+      <CalendarView {...dataView} />
+    </div>
+  );
+};
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
-root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <Router />
-    </Provider>
-  </React.StrictMode>,
-);
+root.render(<Playground />);

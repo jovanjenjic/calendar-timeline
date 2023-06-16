@@ -1,0 +1,192 @@
+.button {
+  $button: &;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--spacing) / 2) calc(var(--spacing) * 2);
+
+  &__icon {
+    height: 19px;
+    width: 19px;
+    max-height: 19px;
+    max-width: 19px;
+    transition: all 0.2s ease;
+
+    &-left {
+      margin-right: var(--spacing);
+    }
+
+    &-right {
+      margin-left: calc(var(--spacing) * 1.2);
+    }
+  }
+
+  &--loading {
+    cursor: progress;
+    padding-left: calc(var(--spacing) * 3);
+    padding-right: calc(var(--spacing) * 3);
+
+    svg {
+      height: 23px;
+      width: 23px;
+      max-height: 23px;
+      max-width: 23px;
+
+      circle {
+        stroke: white;
+
+        &:first-child {
+          opacity: 0.3;
+        }
+      }
+    }
+  }
+
+  &:hover:not(#{$button}--loading):not(#{$button}--disabled) {
+    background-color: var(--gs-800);
+  }
+
+  &--primary {
+    background-color: var(--gs-900);
+    color: white;
+
+    & * {
+      color: white;
+    }
+
+    &:active:not(#{$button}--disabled):not(#{$button}--loading) {
+      background-color: var(--gs-500) !important;
+    }
+  }
+
+  &--secondary {
+    background-color: white;
+    border: 1px solid var(--gs-200);
+    color: var(--gs-900);
+
+    & * {
+      color: var(--gs-900);
+    }
+
+    &:hover:not(#{$button}--loading):not(#{$button}--disabled) {
+      border-color: var(--gs-900);
+      background-color: white;
+    }
+
+    &:active:not(#{$button}--disabled):not(#{$button}--loading) {
+      border-color: var(--gs-600);
+      color: var(--gs-600);
+    }
+
+    &#{$button}--loading {
+      svg {
+        circle {
+          stroke: var(--gs-700);
+        }
+      }
+    }
+  }
+
+  &--link {
+    background-color: transparent;
+    color: var(--gs-900);
+
+    & * {
+      color: var(--gs-900);
+    }
+
+    &:hover:not(#{$button}--loading):not(#{$button}--disabled) {
+      background-color: transparent;
+      color: var(--gs-500);
+    }
+
+    &:active:not(#{$button}--disabled):not(#{$button}--loading) {
+      color: var(--gs-300);
+    }
+
+    &#{$button}--loading {
+      svg {
+        circle {
+          stroke: var(--gs-700);
+        }
+      }
+    }
+  }
+
+  &--danger {
+    background-color: var(--r-400);
+    color: var(--white);
+
+    & * {
+      color: white;
+    }
+
+    &:hover:not(#{$button}--loading):not(#{$button}--disabled) {
+      background-color: var(--r-300);
+      color: white;
+    }
+  }
+
+  &--large {
+    min-height: 56px;
+    font: var(--font-p-1);
+  }
+
+  &--medium {
+    min-height: 40px;
+    font: var(--font-p-2);
+  }
+
+  &--small {
+    min-height: 32px;
+    font: var(--font-p-3);
+    font-weight: 500;
+
+    &#{$button}--loading {
+      svg {
+        height: 20px;
+        width: 20px;
+        max-height: 20px;
+        max-width: 20px;
+      }
+    }
+
+    #{$button}__icon {
+      height: 14px;
+      width: 14px;
+      max-height: 14px;
+      max-width: 14px;
+    }
+  }
+
+  &--full {
+    width: 100%;
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+    background-color: var(--gs-100);
+    color: var(--gs-300);
+    border: unset;
+
+    &#{$button}--secondary {
+      background-color: white;
+      border: 1px solid var(--gs-300);
+      color: var(--gs-300);
+    }
+
+    &#{$button}--link {
+      background-color: transparent;
+    }
+  }
+
+  &--no-padding {
+    padding: 0;
+    height: unset;
+    min-height: unset;
+  }
+
+  &--icon-only #{$button}__icon {
+    margin: 0 !important;
+  }
+}

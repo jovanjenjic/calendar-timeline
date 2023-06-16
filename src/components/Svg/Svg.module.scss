@@ -1,0 +1,6 @@
+.svg {
+  &--has-icon-color * {
+    fill: inherit;
+    stroke: inherit;
+  }
+}

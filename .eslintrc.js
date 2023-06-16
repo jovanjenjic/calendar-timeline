@@ -9,5 +9,6 @@ module.exports = {
   ],
   rules: {
     'prettier/prettier': 'error',
+    'no-explicit-any': 'off'
   },
 };
