@@ -31,32 +31,9 @@ const DataViewsCalendarHeader: React.FC<CalendarHeaderProps> = ({
 
   return (
     <div className={calendarStyles['data-views__header-calendar']}>
-      <Button
-        attributes={{
-          className: calendarStyles['data-views__header-calendar__button'],
-          'data-cy': 'NavigationLeftArrow',
-        }}
-        variation="secondary"
-        size="small"
-        label=""
-        iconName="simpleArrowLeft"
-        iconColoringMode="stroke"
-        iconSize={{ width: 9 }}
-        onClick={() => changeMonth('sub')}
-      />
-      <Button
-        attributes={{
-          className: calendarStyles['data-views__header-calendar__button'],
-          'data-cy': 'NavigationRightArrow',
-        }}
-        variation="secondary"
-        size="small"
-        label=""
-        iconName="simpleArrowRight"
-        iconColoringMode="stroke"
-        iconSize={{ width: 9 }}
-        onClick={() => changeMonth('add')}
-      />
+      <Button arrowSide="left" onClick={() => changeMonth('sub')} />
+      <Button arrowSide="right" onClick={() => changeMonth('add')} />
+
       <div
         className={calendarStyles['data-views__header-calendar__month-text']}
       >
@@ -65,13 +42,7 @@ const DataViewsCalendarHeader: React.FC<CalendarHeaderProps> = ({
         </span>
       </div>
       <Button
-        attributes={{
-          className: calendarStyles['data-views__header-calendar__button'],
-          'data-cy': 'NavigationTodayButton',
-        }}
-        variation="secondary"
-        size="small"
-        label="Today"
+        label="Now"
         onClick={() => setCurrentDate(formatFullDate(new Date()))}
       />
     </div>
