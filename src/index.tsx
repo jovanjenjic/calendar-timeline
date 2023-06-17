@@ -9,7 +9,7 @@ const Playground = () => {
 
   const dataView = dataViewConfig(currentDate, setCurrentDate);
   return (
-    <div style={{ padding: '16px' }}>
+    <div style={{ padding: '80px' }}>
       <GoUrbanStyleguide />
       <CalendarView {...dataView} />
     </div>

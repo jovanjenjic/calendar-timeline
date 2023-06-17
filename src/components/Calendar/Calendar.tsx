@@ -1,11 +1,4 @@
-import React, {
-  useMemo,
-  FC,
-  useState,
-  useLayoutEffect,
-  useRef,
-  Fragment,
-} from 'react';
+import React, { useMemo, FC, useState, useLayoutEffect, useRef } from 'react';
 import cn from 'classnames';
 import {
   add,
@@ -15,6 +8,8 @@ import {
   isToday,
   startOfMonth,
   startOfWeek,
+  addHours,
+  format,
 } from 'date-fns';
 import { isEmpty, isEqual } from 'lodash';
 import calendarStyles from '@components/Calendar/Calendar.module.scss';
@@ -155,6 +150,20 @@ const Calendar: FC<CalendarProps> = ({
     return newValue;
   }, [colorDots]);
 
+  const HtmlElement =
+    currentView === CurrentView.WEEK_HOURS ? 'div' : React.Fragment;
+
+  const prepareTimeUnits = (key) => {
+    const date = addHours(new Date(), key);
+    let label = '';
+    if (key === -1) {
+      label = format(date, 'z');
+    } else {
+      label = format(date, 'ha');
+    }
+    return label;
+  };
+
   return (
     <>
       {showNavigation && setCurrentDate && (
@@ -187,6 +196,29 @@ const Calendar: FC<CalendarProps> = ({
               />
             ))}
           </div>
+          {currentView === CurrentView.WEEK_HOURS && (
+            <div className={calendarStyles['border-container-horizontal']}>
+              {Array.from(Array(24)).map((_, key) => (
+                <>
+                  <div
+                    className={cn(
+                      calendarStyles['border-container-horizontal__hour'],
+                    )}
+                  >
+                    {prepareTimeUnits(key - 1)}
+                  </div>
+                  <div
+                    data-cy="CellsBorder"
+                    key={key}
+                    className={cn(
+                      calendarStyles['border-container-horizontal'],
+                      calendarStyles['border-container-horizontal__border'],
+                    )}
+                  />
+                </>
+              ))}
+            </div>
+          )}
           {getAllWeeksInMonth.map((week: DateInfo[], index: number) => (
             // One row is one week and there are seven columns for each day of the week. The entire row is one grid container in which elements are implicitly placed
             <div
@@ -196,52 +228,63 @@ const Calendar: FC<CalendarProps> = ({
               data-week-index={index}
               data-cy="WeekRow"
             >
-              {week.map((dateInfo: DateInfo, idx: number) => (
-                <Fragment key={dateInfo.date}>
-                  <div
-                    className={calendarStyles['cells-component-row__header']}
-                  >
-                    <p
-                      data-cy="DayNumber"
-                      data-day-type={
-                        dateInfo.isCurrentDay
-                          ? 'current'
-                          : !dateInfo.isCurrentMonth && 'disabled'
-                      }
-                      className={cn(
-                        calendarStyles['cells-component-row__header__number'],
-                        !dateInfo.isCurrentMonth &&
-                          calendarStyles[
-                            'cells-component-row__header__number--disabled'
-                          ],
-                        dateInfo.isCurrentDay &&
-                          calendarStyles[
-                            'cells-component-row__header__number--current-day'
-                          ],
-                      )}
-                    >
-                      {dateInfo.day}
-                    </p>
-                    {preparedColorDots.dateKeys?.[dateInfo.date] && (
-                      <p
-                        data-cy="ColorDot"
-                        data-date={dateInfo.date}
-                        style={{
-                          backgroundColor:
-                            preparedColorDots.dateKeys[dateInfo.date]?.color,
-                        }}
+              {Array.from(
+                currentView === CurrentView.WEEK_HOURS ? Array(24) : Array(1),
+              ).map((_, hour) =>
+                week.map((dateInfo: DateInfo, idx: number) => (
+                  <HtmlElement key={dateInfo.date}>
+                    {hour === 0 && (
+                      <div
                         className={
-                          calendarStyles[
-                            'cells-component-row__header__color-dot'
-                          ]
+                          calendarStyles['cells-component-row__header']
                         }
-                      />
+                      >
+                        <p
+                          data-cy="DayNumber"
+                          data-day-type={
+                            dateInfo.isCurrentDay
+                              ? 'current'
+                              : !dateInfo.isCurrentMonth && 'disabled'
+                          }
+                          className={cn(
+                            calendarStyles[
+                              'cells-component-row__header__number'
+                            ],
+                            !dateInfo.isCurrentMonth &&
+                              calendarStyles[
+                                'cells-component-row__header__number--disabled'
+                              ],
+                            dateInfo.isCurrentDay &&
+                              calendarStyles[
+                                'cells-component-row__header__number--current-day'
+                              ],
+                          )}
+                        >
+                          {dateInfo.day}
+                        </p>
+                        {preparedColorDots.dateKeys?.[dateInfo.date] && (
+                          <p
+                            data-cy="ColorDot"
+                            data-date={dateInfo.date}
+                            style={{
+                              backgroundColor:
+                                preparedColorDots.dateKeys[dateInfo.date]
+                                  ?.color,
+                            }}
+                            className={
+                              calendarStyles[
+                                'cells-component-row__header__color-dot'
+                              ]
+                            }
+                          />
+                        )}
+                      </div>
                     )}
-                  </div>
-                  {visibleWeeks.includes(index) &&
-                    renderItems({ dateInfo, idx })}
-                </Fragment>
-              ))}
+                    {visibleWeeks.includes(index) &&
+                      renderItems({ dateInfo, hour, idx })}
+                  </HtmlElement>
+                )),
+              )}
             </div>
           ))}
         </div>

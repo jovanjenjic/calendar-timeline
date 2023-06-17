@@ -10,11 +10,13 @@ export interface DateInfo {
 export interface DateInfoFunction {
   dateInfo: DateInfo;
   idx: number;
+  hour: number;
 }
 
 export enum CurrentView {
-  WEEK = 'WEEK',
   MONTH = 'MONTH',
+  WEEK = 'WEEK',
+  WEEK_HOURS = 'WEEK_HOURS',
 }
 
 export interface ColorDot {
@@ -27,6 +29,7 @@ export interface ColorDot {
 export interface CalendarProps {
   renderItems: ({ dateInfo, idx }: DateInfoFunction) => JSX.Element[];
   currentView: CurrentView;
+  onlyOneOnPlace: boolean;
   currentDate: string;
   setCurrentDate: (date: string) => void;
   colorDots?: ColorDot[];
@@ -39,6 +42,7 @@ export interface CalendarViewProps {
   setCurrentDate: (date: string) => void;
   activeTimeDateField: string;
   currentView: CurrentView;
+  onlyOneOnPlace: boolean;
   colorDots: ColorDot[];
 }
 
