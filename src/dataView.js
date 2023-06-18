@@ -130,7 +130,7 @@ const dataViewConfig = (currentDate, setCurrentDate) => ({
     (() => [1, 2].map())();
   },
   currentView: CurrentView.WEEK_HOURS,
-  onlyOneOnPlace: false,
+  onlyOneOnPlace: true,
   availableTimeDate: [
     {
       isIntervalTimeDate: false,

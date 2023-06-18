@@ -88,6 +88,58 @@ const Calendar: FC<CalendarProps> = ({
     return () => observer.disconnect();
   }, [visibleWeeks]);
 
+  const getNextTimeUnit = (currentView, parsedCurrentDate, startDate) => {
+    let nextTimeUnit;
+
+    switch (currentView) {
+      case CurrentView.MONTH:
+        nextTimeUnit = getMonth(add(parsedCurrentDate, { months: 1 }));
+        break;
+      case CurrentView.WEEK:
+        nextTimeUnit = getDate(add(startDate, { weeks: 1 }));
+        break;
+      case CurrentView.WEEK_HOURS:
+        nextTimeUnit = getDate(add(startDate, { weeks: 1 }));
+        break;
+      case CurrentView.DAY:
+        nextTimeUnit = getDate(add(startDate, { days: 1 }));
+        break;
+      default:
+        break;
+    }
+
+    return nextTimeUnit;
+  };
+
+  const whileFunc = (startDate, day, startOfWeekOptions) => {
+    let nextTimeUnit;
+
+    switch (currentView) {
+      case CurrentView.MONTH:
+        nextTimeUnit = getMonth(
+          startOfWeek(add(startDate, { days: day }), startOfWeekOptions),
+        );
+        break;
+      case CurrentView.WEEK:
+        nextTimeUnit = getDate(
+          startOfWeek(add(startDate, { days: day }), startOfWeekOptions),
+        );
+        break;
+      case CurrentView.WEEK_HOURS:
+        nextTimeUnit = getDate(
+          startOfWeek(add(startDate, { days: day }), startOfWeekOptions),
+        );
+        break;
+      case CurrentView.DAY:
+        nextTimeUnit = getDate(add(startDate, { days: day }));
+        break;
+      default:
+        break;
+    }
+
+    return nextTimeUnit;
+  };
+
   /**
    * It will contain all the days of the month structured by weeks.
    * The first array is a array of weeks and each week is a array of days in that week
@@ -100,12 +152,17 @@ const Calendar: FC<CalendarProps> = ({
       ? startOfMonth(parsedCurrentDate)
       : parsedCurrentDate;
     // The first day of the current week or month in the calendar table
-    const startDate = startOfWeek(forParsing, startOfWeekOptions);
+    const startDate =
+      currentView === CurrentView.DAY
+        ? forParsing
+        : startOfWeek(forParsing, startOfWeekOptions);
 
     // If `isMonthView` then it is the next month, else it is the first day in next week
-    const nextTimeUnit: number = isMonthView
-      ? getMonth(add(parsedCurrentDate, { months: 1 }))
-      : getDate(add(startDate, { weeks: 1 }));
+    const nextTimeUnit: number = getNextTimeUnit(
+      currentView,
+      parsedCurrentDate,
+      startDate,
+    );
 
     // All the weeks (together with all the days in week) in one month
     const allDates: DateInfo[][] = [];
@@ -115,15 +172,7 @@ const Calendar: FC<CalendarProps> = ({
     let day = 0;
 
     // It will iterate until it encounters the first day of the next week or month (dependent on `currentView`)
-    while (
-      (isMonthView
-        ? getMonth(
-            startOfWeek(add(startDate, { days: day }), startOfWeekOptions),
-          )
-        : getDate(
-            startOfWeek(add(startDate, { days: day }), startOfWeekOptions),
-          )) !== nextTimeUnit
-    ) {
+    while (whileFunc(startDate, day, startOfWeekOptions) !== nextTimeUnit) {
       const formatted = getDateInfo(
         add(startDate, { days: day }),
         getMonth(parsedCurrentDate),
@@ -131,7 +180,13 @@ const Calendar: FC<CalendarProps> = ({
       weekDates.push(formatted);
 
       // When it comes to the end of the week, it puts the whole week into a month, and restarts the data to move on to the next week
-      if (++day % 7 === 0) {
+      if (currentView !== CurrentView.DAY) {
+        if (++day % 7 === 0) {
+          allDates.push(weekDates);
+          weekDates = [];
+        }
+      } else {
+        ++day;
         allDates.push(weekDates);
         weekDates = [];
       }
@@ -139,6 +194,8 @@ const Calendar: FC<CalendarProps> = ({
 
     return allDates;
   }, [currentDate, currentView, weekStartsOn]);
+
+  console.log('getAllWeeksInMonth', getAllWeeksInMonth);
 
   // Object that will be used to display the color dot for each day, but also for the legend below the calendar
   const preparedColorDots = useMemo(() => {
@@ -151,10 +208,12 @@ const Calendar: FC<CalendarProps> = ({
   }, [colorDots]);
 
   const HtmlElement =
-    currentView === CurrentView.WEEK_HOURS ? 'div' : React.Fragment;
+    currentView === CurrentView.WEEK_HOURS || currentView === CurrentView.DAY
+      ? 'div'
+      : React.Fragment;
 
   const prepareTimeUnits = (key) => {
-    const date = addHours(new Date(), key);
+    const date = addHours(0, key);
     let label = '';
     if (key === -1) {
       label = format(date, 'z');
@@ -175,17 +234,25 @@ const Calendar: FC<CalendarProps> = ({
       )}
       <div className={calendarStyles['calendar-wrapper']}>
         <div className={calendarStyles['days-component']} data-cy="WeekDays">
-          {Array.from(Array(7)).map((_, i) => (
-            <div key={i} className={calendarStyles['days-component__day']}>
-              {formatShortWeekday(
-                add(startOfWeek(new Date(), { weekStartsOn }), { days: i }),
-              )}
+          {currentView !== CurrentView.DAY ? (
+            Array.from(Array(7)).map((_, i) => (
+              <div key={i} className={calendarStyles['days-component__day']}>
+                {formatShortWeekday(
+                  add(startOfWeek(new Date(), { weekStartsOn }), { days: i }),
+                )}
+              </div>
+            ))
+          ) : (
+            <div className={calendarStyles['days-component__day']}>
+              {formatShortWeekday(new Date(currentDate))}
             </div>
-          ))}
+          )}
         </div>
         <div className={calendarStyles['cells-component']}>
           <div className={calendarStyles['border-container']}>
-            {Array.from(Array(7)).map((_, key) => (
+            {Array.from(
+              currentView === CurrentView.DAY ? Array(1) : Array(7),
+            ).map((_, key) => (
               <div
                 data-cy="CellsBorder"
                 key={key}
@@ -196,43 +263,52 @@ const Calendar: FC<CalendarProps> = ({
               />
             ))}
           </div>
-          {currentView === CurrentView.WEEK_HOURS && (
-            <div className={calendarStyles['border-container-horizontal']}>
-              {Array.from(Array(24)).map((_, key) => (
-                <>
-                  <div
-                    className={cn(
-                      calendarStyles['border-container-horizontal__hour'],
-                    )}
-                  >
-                    {prepareTimeUnits(key - 1)}
-                  </div>
-                  <div
-                    data-cy="CellsBorder"
-                    key={key}
-                    className={cn(
-                      calendarStyles['border-container-horizontal'],
-                      calendarStyles['border-container-horizontal__border'],
-                    )}
-                  />
-                </>
-              ))}
-            </div>
-          )}
           {getAllWeeksInMonth.map((week: DateInfo[], index: number) => (
             // One row is one week and there are seven columns for each day of the week. The entire row is one grid container in which elements are implicitly placed
             <div
-              key={`${week[0].date}/${week[1].date}`}
-              className={calendarStyles['cells-component-row']}
+              key={`${week[0].date}/${index}`}
+              className={cn(
+                calendarStyles['cells-component-row'],
+                calendarStyles[
+                  `cells-component-row__${
+                    currentView === CurrentView.MONTH ||
+                    currentView === CurrentView.WEEK
+                      ? 'month-week'
+                      : currentView === CurrentView.DAY
+                      ? 'day'
+                      : 'week-time'
+                  }`
+                ],
+              )}
               ref={(el) => (weekRefs.current[index] = el!)}
               data-week-index={index}
-              data-cy="WeekRow"
             >
               {Array.from(
-                currentView === CurrentView.WEEK_HOURS ? Array(24) : Array(1),
+                currentView === CurrentView.DAY ||
+                  currentView === CurrentView.WEEK_HOURS
+                  ? Array(24)
+                  : Array(1),
               ).map((_, hour) =>
                 week.map((dateInfo: DateInfo, idx: number) => (
-                  <HtmlElement key={dateInfo.date}>
+                  <HtmlElement
+                    className={
+                      calendarStyles['cells-component-row__horizontal-border']
+                    }
+                    key={dateInfo.date}
+                  >
+                    {idx === 0 &&
+                      (currentView === CurrentView.DAY ||
+                        currentView === CurrentView.WEEK_HOURS) && (
+                        <div
+                          className={
+                            calendarStyles[
+                              'cells-component-row__horizontal-border-hour'
+                            ]
+                          }
+                        >
+                          {prepareTimeUnits(hour - 1)}
+                        </div>
+                      )}
                     {hour === 0 && (
                       <div
                         className={

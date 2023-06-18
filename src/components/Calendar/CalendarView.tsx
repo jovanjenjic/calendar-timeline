@@ -25,7 +25,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   // Prepared data so that for each item in the array there is all the data as well as the length of the interval
   const preparedData = React.useMemo(
     () =>
-      currentView === CurrentView.WEEK_HOURS
+      currentView === CurrentView.WEEK_HOURS || currentView === CurrentView.DAY
         ? prepareCalendarDataWeekHours(data, activeTimeDateField)
         : prepareCalendarData(data, activeTimeDateField),
     [data, activeTimeDateField, currentView],
@@ -35,7 +35,10 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   // that data are placed at the appropriate position and length within grid container.
   const renderItems = ({ dateInfo, idx, hour }: DateInfoFunction) => {
     let key = dateInfo.date;
-    if (currentView === CurrentView.WEEK_HOURS) {
+    if (
+      currentView === CurrentView.WEEK_HOURS ||
+      currentView === CurrentView.DAY
+    ) {
       const currentHour = add(new Date(`${dateInfo.date} 00:00:00`), {
         hours: hour,
       });

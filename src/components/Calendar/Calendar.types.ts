@@ -17,6 +17,7 @@ export enum CurrentView {
   MONTH = 'MONTH',
   WEEK = 'WEEK',
   WEEK_HOURS = 'WEEK_HOURS',
+  DAY = 'DAY',
 }
 
 export interface ColorDot {

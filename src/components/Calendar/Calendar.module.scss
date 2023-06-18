@@ -33,6 +33,7 @@
   width: 100%;
   height: 100%;
   display: grid;
+  // Mislim da uopste ne treba
   grid-template-columns: repeat(7, 1fr);
 
   &__border {
@@ -45,39 +46,25 @@
   }
 }
 
-.border-container-horizontal {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: grid;
-
-  &__border {
-    height: 100%;
-    width: 100%;
-    position: relative;
-
-    &:not(:last-of-type) {
-      border-bottom: 1px solid var(--gs-200);
-    }
-  }
-
-  &__hour {
-    height: 0px;
-    position: relative;
-    left: -60px;
-    top: -11px;
-  }
-}
-
 .cells-component-row {
   z-index: 10;
   position: relative;
   width: 100%;
   min-height: 160px;
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(24, 1fr);
   grid-auto-flow: dense;
+
+  &__month-week {
+    grid-template-columns: repeat(7, 1fr);
+  }
+  &__day {
+    grid-template-rows: repeat(24, minmax(40px, auto));
+    grid-template-columns: repeat(1, 1fr);
+  }
+  &__week-time {
+    grid-template-rows: repeat(24, minmax(40px, auto));
+    grid-template-columns: repeat(7, 1fr);
+  }
 
   @include breakpoint('xl') {
     min-height: 220px;
@@ -85,6 +72,23 @@
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--gs-200);
+  }
+
+  &__horizontal-border {
+    height: 100%;
+    width: 100%;
+    position: relative;
+  
+    &:not(:last-of-type) {
+      border-bottom: 1px solid var(--gs-200);
+    }
+  
+    &-hour {
+      height: 0px;
+      position: relative;
+      left: -60px;
+      top: -11px;
+    }
   }
 
   &__header {
