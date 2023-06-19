@@ -8,8 +8,6 @@ import {
   isToday,
   startOfMonth,
   startOfWeek,
-  addHours,
-  format,
 } from 'date-fns';
 import { isEmpty, isEqual } from 'lodash';
 import calendarStyles from '@components/Calendar/Calendar.module.scss';
@@ -24,6 +22,13 @@ import {
   formatShortWeekday,
 } from '@base/utils/index';
 import DataViewsCalendarHeader from './CalendarViewHeader';
+import {
+  addTimeUnit,
+  calculateNumOfColumnsBasedOnView,
+  calculateNumOfRowsBasedOnView,
+  getNextTimeUnit,
+  getTimeUnitString,
+} from './Calendar.helper';
 
 const getDateInfo = (date: Date, currentMonth: number): any => {
   return {
@@ -88,105 +93,47 @@ const Calendar: FC<CalendarProps> = ({
     return () => observer.disconnect();
   }, [visibleWeeks]);
 
-  const getNextTimeUnit = (currentView, parsedCurrentDate, startDate) => {
-    let nextTimeUnit;
-
-    switch (currentView) {
-      case CurrentView.MONTH:
-        nextTimeUnit = getMonth(add(parsedCurrentDate, { months: 1 }));
-        break;
-      case CurrentView.WEEK:
-        nextTimeUnit = getDate(add(startDate, { weeks: 1 }));
-        break;
-      case CurrentView.WEEK_HOURS:
-        nextTimeUnit = getDate(add(startDate, { weeks: 1 }));
-        break;
-      case CurrentView.DAY:
-        nextTimeUnit = getDate(add(startDate, { days: 1 }));
-        break;
-      default:
-        break;
-    }
-
-    return nextTimeUnit;
-  };
-
-  const whileFunc = (startDate, day, startOfWeekOptions) => {
-    let nextTimeUnit;
-
-    switch (currentView) {
-      case CurrentView.MONTH:
-        nextTimeUnit = getMonth(
-          startOfWeek(add(startDate, { days: day }), startOfWeekOptions),
-        );
-        break;
-      case CurrentView.WEEK:
-        nextTimeUnit = getDate(
-          startOfWeek(add(startDate, { days: day }), startOfWeekOptions),
-        );
-        break;
-      case CurrentView.WEEK_HOURS:
-        nextTimeUnit = getDate(
-          startOfWeek(add(startDate, { days: day }), startOfWeekOptions),
-        );
-        break;
-      case CurrentView.DAY:
-        nextTimeUnit = getDate(add(startDate, { days: day }));
-        break;
-      default:
-        break;
-    }
-
-    return nextTimeUnit;
-  };
+  const numOfColumns = React.useMemo(
+    () => calculateNumOfColumnsBasedOnView(currentView),
+    [currentView],
+  );
+  const numOfRows = React.useMemo(
+    () => calculateNumOfRowsBasedOnView(currentView),
+    [currentView],
+  );
 
   /**
    * It will contain all the days of the month structured by weeks.
-   * The first array is a array of weeks and each week is a array of days in that week
+   * The first array is an array of weeks, and each week is an array of days in that week.
    */
   const getAllWeeksInMonth = useMemo(() => {
     const startOfWeekOptions = { weekStartsOn } as const;
-    const isMonthView = currentView === CurrentView.MONTH;
     const parsedCurrentDate = parseFullDate(currentDate);
-    const forParsing = isMonthView
-      ? startOfMonth(parsedCurrentDate)
-      : parsedCurrentDate;
-    // The first day of the current week or month in the calendar table
+    const forParsing =
+      currentView === CurrentView.MONTH
+        ? startOfMonth(parsedCurrentDate)
+        : parsedCurrentDate;
     const startDate =
       currentView === CurrentView.DAY
         ? forParsing
         : startOfWeek(forParsing, startOfWeekOptions);
-
-    // If `isMonthView` then it is the next month, else it is the first day in next week
-    const nextTimeUnit: number = getNextTimeUnit(
+    const nextTimeUnit = getNextTimeUnit(
       currentView,
-      parsedCurrentDate,
-      startDate,
+      currentView === CurrentView.MONTH ? parsedCurrentDate : startDate,
     );
-
-    // All the weeks (together with all the days in week) in one month
     const allDates: DateInfo[][] = [];
-    // All days in one week
     let weekDates: DateInfo[] = [];
-
     let day = 0;
 
-    // It will iterate until it encounters the first day of the next week or month (dependent on `currentView`)
-    while (whileFunc(startDate, day, startOfWeekOptions) !== nextTimeUnit) {
-      const formatted = getDateInfo(
-        add(startDate, { days: day }),
-        getMonth(parsedCurrentDate),
+    while (
+      addTimeUnit(currentView, startDate, day, startOfWeekOptions) !==
+      nextTimeUnit
+    ) {
+      weekDates.push(
+        getDateInfo(add(startDate, { days: day }), getMonth(parsedCurrentDate)),
       );
-      weekDates.push(formatted);
 
-      // When it comes to the end of the week, it puts the whole week into a month, and restarts the data to move on to the next week
-      if (currentView !== CurrentView.DAY) {
-        if (++day % 7 === 0) {
-          allDates.push(weekDates);
-          weekDates = [];
-        }
-      } else {
-        ++day;
+      if (++day % 7 === 0 || currentView === CurrentView.DAY) {
         allDates.push(weekDates);
         weekDates = [];
       }
@@ -194,8 +141,6 @@ const Calendar: FC<CalendarProps> = ({
 
     return allDates;
   }, [currentDate, currentView, weekStartsOn]);
-
-  console.log('getAllWeeksInMonth', getAllWeeksInMonth);
 
   // Object that will be used to display the color dot for each day, but also for the legend below the calendar
   const preparedColorDots = useMemo(() => {
@@ -212,17 +157,6 @@ const Calendar: FC<CalendarProps> = ({
       ? 'div'
       : React.Fragment;
 
-  const prepareTimeUnits = (key) => {
-    const date = addHours(0, key);
-    let label = '';
-    if (key === -1) {
-      label = format(date, 'z');
-    } else {
-      label = format(date, 'ha');
-    }
-    return label;
-  };
-
   return (
     <>
       {showNavigation && setCurrentDate && (
@@ -233,26 +167,22 @@ const Calendar: FC<CalendarProps> = ({
         />
       )}
       <div className={calendarStyles['calendar-wrapper']}>
-        <div className={calendarStyles['days-component']} data-cy="WeekDays">
-          {currentView !== CurrentView.DAY ? (
-            Array.from(Array(7)).map((_, i) => (
-              <div key={i} className={calendarStyles['days-component__day']}>
-                {formatShortWeekday(
-                  add(startOfWeek(new Date(), { weekStartsOn }), { days: i }),
-                )}
-              </div>
-            ))
-          ) : (
-            <div className={calendarStyles['days-component__day']}>
-              {formatShortWeekday(new Date(currentDate))}
+        <div className={calendarStyles['days-component']}>
+          {Array.from(Array(numOfColumns)).map((_, i) => (
+            <div key={i} className={calendarStyles['days-component__day']}>
+              {formatShortWeekday(
+                currentView !== CurrentView.DAY
+                  ? add(startOfWeek(new Date(), { weekStartsOn }), {
+                      days: i,
+                    })
+                  : new Date(currentDate),
+              )}
             </div>
-          )}
+          ))}
         </div>
         <div className={calendarStyles['cells-component']}>
           <div className={calendarStyles['border-container']}>
-            {Array.from(
-              currentView === CurrentView.DAY ? Array(1) : Array(7),
-            ).map((_, key) => (
+            {Array.from(Array(numOfColumns)).map((_, key) => (
               <div
                 data-cy="CellsBorder"
                 key={key}
@@ -271,24 +201,14 @@ const Calendar: FC<CalendarProps> = ({
                 calendarStyles['cells-component-row'],
                 calendarStyles[
                   `cells-component-row__${
-                    currentView === CurrentView.MONTH ||
-                    currentView === CurrentView.WEEK
-                      ? 'month-week'
-                      : currentView === CurrentView.DAY
-                      ? 'day'
-                      : 'week-time'
+                    (currentView === CurrentView.DAY && 'day') ||
+                    (currentView === CurrentView.WEEK_HOURS && 'week-time')
                   }`
                 ],
               )}
               ref={(el) => (weekRefs.current[index] = el!)}
-              data-week-index={index}
             >
-              {Array.from(
-                currentView === CurrentView.DAY ||
-                  currentView === CurrentView.WEEK_HOURS
-                  ? Array(24)
-                  : Array(1),
-              ).map((_, hour) =>
+              {Array.from(Array(numOfRows)).map((_, hour) =>
                 week.map((dateInfo: DateInfo, idx: number) => (
                   <HtmlElement
                     className={
@@ -306,7 +226,7 @@ const Calendar: FC<CalendarProps> = ({
                             ]
                           }
                         >
-                          {prepareTimeUnits(hour - 1)}
+                          {getTimeUnitString(hour - 1)}
                         </div>
                       )}
                     {hour === 0 && (

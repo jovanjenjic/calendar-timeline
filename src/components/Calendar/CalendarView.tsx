@@ -5,6 +5,7 @@ import Calendar from '@base/components/Calendar/Calendar';
 import {
   CalendarViewProps,
   CurrentView,
+  DateInfo,
   DateInfoFunction,
 } from '@base/components/Calendar/Calendar.types';
 import {
@@ -31,38 +32,44 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     [data, activeTimeDateField, currentView],
   );
 
-  // Based on the prepared data, it is iterated through each day of the week and all elements in
-  // that data are placed at the appropriate position and length within grid container.
-  const renderItems = ({ dateInfo, idx, hour }: DateInfoFunction) => {
-    let key = dateInfo.date;
+  // In case it is WEEK_HOURS or DAY view, it is needed to add the hours in order to keep track of the hours as well
+  const getKeyFromDateInfo = (dateInfo: DateInfo, hour: number): string => {
+    let key: string = dateInfo.date;
+
     if (
       currentView === CurrentView.WEEK_HOURS ||
       currentView === CurrentView.DAY
     ) {
-      const currentHour = add(new Date(`${dateInfo.date} 00:00:00`), {
+      const currentHour: Date = add(new Date(`${dateInfo.date} 00:00:00`), {
         hours: hour,
       });
       key = formatFullDateTime(currentHour);
     }
 
-    let arrayData: any = [];
-    const numOfElements = onlyOneOnPlace && preparedData[key]?.length;
-    if (preparedData[key]) {
-      arrayData = onlyOneOnPlace
-        ? [preparedData[key][preparedData[key].length - 1]]
-        : preparedData[key];
-    }
-    return arrayData.map((value, index) => (
+    return key;
+  };
+
+  // Based on the prepared data, it is iterated through each day of the week and all elements in
+  // that data are placed at the appropriate position and length within grid container.
+  const renderItems = ({ dateInfo, idx, hour }: DateInfoFunction) => {
+    const key = getKeyFromDateInfo(dateInfo, hour);
+
+    const arrayData = onlyOneOnPlace
+      ? preparedData[key]?.slice(-1)
+      : preparedData[key] || [];
+    const numOfElements = onlyOneOnPlace && (preparedData[key]?.length || 0);
+
+    return (arrayData || []).map((value, index) => (
       <div
         data-cy="CalendarInfoCard"
         data-card-date={dateInfo.date}
         key={`${index}-${dateInfo.date}`}
         className={calendarStyles['cells-component-row__item']}
         style={{
-          gridColumn: `${idx + 1} / ${idx + value?.length + 1}`,
+          gridColumn: `${idx + 1} / ${idx + (value?.length || 1) + 1}`,
         }}
       >
-        {value.keykey} {value.id} {numOfElements}
+        {value?.keykey} {value?.id} {numOfElements}
       </div>
     ));
   };

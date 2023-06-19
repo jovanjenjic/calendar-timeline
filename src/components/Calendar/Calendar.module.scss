@@ -53,17 +53,14 @@
   min-height: 160px;
   display: grid;
   grid-auto-flow: dense;
+  grid-template-columns: repeat(7, 1fr);
 
-  &__month-week {
-    grid-template-columns: repeat(7, 1fr);
-  }
   &__day {
     grid-template-rows: repeat(24, minmax(40px, auto));
     grid-template-columns: repeat(1, 1fr);
   }
   &__week-time {
     grid-template-rows: repeat(24, minmax(40px, auto));
-    grid-template-columns: repeat(7, 1fr);
   }
 
   @include breakpoint('xl') {

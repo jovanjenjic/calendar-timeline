@@ -129,8 +129,8 @@ const dataViewConfig = (currentDate, setCurrentDate) => ({
   onItemClick: () => {
     (() => [1, 2].map())();
   },
-  currentView: CurrentView.WEEK_HOURS,
-  onlyOneOnPlace: true,
+  currentView: CurrentView.MONTH,
+  onlyOneOnPlace: false,
   availableTimeDate: [
     {
       isIntervalTimeDate: false,
