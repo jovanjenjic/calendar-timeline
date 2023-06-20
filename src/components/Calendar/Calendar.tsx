@@ -16,7 +16,7 @@ import {
   startOfMonth,
   startOfWeek,
 } from 'date-fns';
-import { isEmpty, isEqual } from 'lodash';
+import { isEmpty, isEqual } from 'lodash-es';
 import calendarStyles from '@components/Calendar/Calendar.module.scss';
 import {
   CalendarProps,
