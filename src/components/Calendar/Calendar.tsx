@@ -4,7 +4,7 @@ import React, {
   useState,
   useLayoutEffect,
   useRef,
-  Fragment,
+  ReactElement,
 } from 'react';
 import cn from 'classnames';
 import {
@@ -29,6 +29,11 @@ import {
   formatShortWeekday,
 } from '@base/utils/index';
 import DataViewsCalendarHeader from './CalendarViewHeader';
+import {
+  addTimeUnit,
+  getNextTimeUnit,
+  getTimeUnitString,
+} from './Calendar.helper';
 
 const getDateInfo = (date: Date, currentMonth: number): any => {
   return {
@@ -95,48 +100,36 @@ const Calendar: FC<CalendarProps> = ({
 
   /**
    * It will contain all the days of the month structured by weeks.
-   * The first array is a array of weeks and each week is a array of days in that week
+   * The first array is an array of weeks, and each week is an array of days in that week.
    */
-  const getAllWeeksInMonth = useMemo(() => {
+  const getAllWeeksInMonthBasedOnView = useMemo(() => {
     const startOfWeekOptions = { weekStartsOn } as const;
-    const isMonthView = currentView === CurrentView.MONTH;
     const parsedCurrentDate = parseFullDate(currentDate);
-    const forParsing = isMonthView
-      ? startOfMonth(parsedCurrentDate)
-      : parsedCurrentDate;
-    // The first day of the current week or month in the calendar table
-    const startDate = startOfWeek(forParsing, startOfWeekOptions);
-
-    // If `isMonthView` then it is the next month, else it is the first day in next week
-    const nextTimeUnit: number = isMonthView
-      ? getMonth(add(parsedCurrentDate, { months: 1 }))
-      : getDate(add(startDate, { weeks: 1 }));
-
-    // All the weeks (together with all the days in week) in one month
+    const forParsing =
+      currentView === CurrentView.MONTH
+        ? startOfMonth(parsedCurrentDate)
+        : parsedCurrentDate;
+    const startDate =
+      currentView === CurrentView.DAY
+        ? forParsing
+        : startOfWeek(forParsing, startOfWeekOptions);
+    const nextTimeUnit = getNextTimeUnit(
+      currentView,
+      currentView === CurrentView.MONTH ? parsedCurrentDate : startDate,
+    );
     const allDates: DateInfo[][] = [];
-    // All days in one week
     let weekDates: DateInfo[] = [];
-
     let day = 0;
 
-    // It will iterate until it encounters the first day of the next week or month (dependent on `currentView`)
     while (
-      (isMonthView
-        ? getMonth(
-            startOfWeek(add(startDate, { days: day }), startOfWeekOptions),
-          )
-        : getDate(
-            startOfWeek(add(startDate, { days: day }), startOfWeekOptions),
-          )) !== nextTimeUnit
+      addTimeUnit(currentView, startDate, day, startOfWeekOptions) !==
+      nextTimeUnit
     ) {
-      const formatted = getDateInfo(
-        add(startDate, { days: day }),
-        getMonth(parsedCurrentDate),
+      weekDates.push(
+        getDateInfo(add(startDate, { days: day }), getMonth(parsedCurrentDate)),
       );
-      weekDates.push(formatted);
 
-      // When it comes to the end of the week, it puts the whole week into a month, and restarts the data to move on to the next week
-      if (++day % 7 === 0) {
+      if (++day % 7 === 0 || currentView === CurrentView.DAY) {
         allDates.push(weekDates);
         weekDates = [];
       }
@@ -155,105 +148,188 @@ const Calendar: FC<CalendarProps> = ({
     return newValue;
   }, [colorDots]);
 
+  const renderDays = React.useMemo((): ReactElement => {
+    const renderContent = () => {
+      switch (currentView) {
+        case CurrentView.DAY:
+          return (
+            <div className={calendarStyles['calendar-days-component__day']}>
+              {formatShortWeekday(new Date(currentDate))}
+            </div>
+          );
+        case CurrentView.WEEK_HOURS:
+        case CurrentView.WEEK:
+        case CurrentView.MONTH:
+          return (
+            <>
+              {Array.from(Array(7)).map((_, i) => (
+                <div
+                  key={i}
+                  className={calendarStyles['calendar-days-component__day']}
+                >
+                  {formatShortWeekday(
+                    add(startOfWeek(new Date(), { weekStartsOn }), {
+                      days: i,
+                    }),
+                  )}
+                </div>
+              ))}
+            </>
+          );
+      }
+    };
+    return (
+      <div className={calendarStyles['calendar-days-component']}>
+        {renderContent()}
+      </div>
+    );
+  }, [currentDate, currentView]);
+
+  const renderRowHeader = React.useCallback(
+    (dateInfo): ReactElement => (
+      <div className={calendarStyles['calendar-item-header']}>
+        <p
+          className={cn(
+            calendarStyles['calendar-item-header__number'],
+            !dateInfo.isCurrentMonth &&
+              calendarStyles['calendar-item-header__number--disabled'],
+            dateInfo.isCurrentDay &&
+              calendarStyles['calendar-item-header__number--current-day'],
+          )}
+        >
+          {dateInfo.day}
+        </p>
+        {preparedColorDots.dateKeys?.[dateInfo.date] && (
+          <p
+            data-cy="ColorDot"
+            data-date={dateInfo.date}
+            style={{
+              backgroundColor: preparedColorDots.dateKeys[dateInfo.date]?.color,
+            }}
+            className={calendarStyles['calendar-item-header__color-dot']}
+          />
+        )}
+      </div>
+    ),
+    [],
+  );
+
+  const renderWeekOrHour = (dateInfo, hour, idx, index) => {
+    const isWeekHoursOrDay =
+      currentView === CurrentView.WEEK_HOURS || currentView === CurrentView.DAY;
+
+    const HtmlElement = isWeekHoursOrDay ? 'div' : React.Fragment;
+
+    const renderHourElement = idx === 0 && isWeekHoursOrDay && (
+      <div
+        className={
+          calendarStyles['calendar-week-or-hour-row__horizontal-border-hour']
+        }
+      >
+        {getTimeUnitString(hour - 1)}
+      </div>
+    );
+
+    return (
+      <HtmlElement
+        className={
+          calendarStyles['calendar-week-or-hour-row__horizontal-border']
+        }
+        key={dateInfo.date}
+      >
+        {renderHourElement}
+        {hour === 0 && renderRowHeader(dateInfo)}
+        {visibleWeeks.includes(index) && renderItems({ dateInfo, hour, idx })}
+      </HtmlElement>
+    );
+  };
+
+  const renderWeeksOrDay = (week, index) => {
+    const renderContent = () => {
+      switch (currentView) {
+        case CurrentView.DAY:
+          return Array.from(Array(24)).map((_, hour) =>
+            renderWeekOrHour(week[0], hour, 0, 0),
+          );
+        case CurrentView.WEEK_HOURS:
+          return Array.from(Array(24)).map((_, hour) =>
+            week.map((dateInfo, idx) =>
+              renderWeekOrHour(dateInfo, hour, idx, index),
+            ),
+          );
+        case CurrentView.MONTH:
+        case CurrentView.WEEK:
+          return week.map((dateInfo, idx) =>
+            renderWeekOrHour(dateInfo, 0, idx, index),
+          );
+        default:
+          return null;
+      }
+    };
+
+    return (
+      <div
+        key={`${week[0].date}/${index}`}
+        className={cn(
+          calendarStyles['calendar-week-or-hour-row'],
+          calendarStyles[`calendar-week-or-hour-row__${currentView}`],
+        )}
+        ref={(el) => (weekRefs.current[index] = el!)}
+        data-week-index={index}
+      >
+        {renderContent()}
+      </div>
+    );
+  };
+
   return (
     <>
-      {showNavigation && setCurrentDate && (
+      {showNavigation && !!setCurrentDate && (
         <DataViewsCalendarHeader
           currentDate={currentDate}
           currentView={currentView}
           setCurrentDate={setCurrentDate}
         />
       )}
-      <div className={calendarStyles['calendar-wrapper']}>
-        <div className={calendarStyles['days-component']} data-cy="WeekDays">
-          {Array.from(Array(7)).map((_, i) => (
-            <div key={i} className={calendarStyles['days-component__day']}>
-              {formatShortWeekday(
-                add(startOfWeek(new Date(), { weekStartsOn }), { days: i }),
-              )}
-            </div>
-          ))}
-        </div>
-        <div className={calendarStyles['cells-component']}>
-          <div className={calendarStyles['border-container']}>
-            {Array.from(Array(7)).map((_, key) => (
-              <div
-                data-cy="CellsBorder"
-                key={key}
-                className={cn(
-                  calendarStyles['border-container'],
-                  calendarStyles['border-container__border'],
-                )}
-              />
-            ))}
-          </div>
-          {getAllWeeksInMonth.map((week: DateInfo[], index: number) => (
-            // One row is one week and there are seven columns for each day of the week. The entire row is one grid container in which elements are implicitly placed
-            <div
-              key={`${week[0].date}/${week[1].date}`}
-              className={calendarStyles['cells-component-row']}
-              ref={(el) => (weekRefs.current[index] = el!)}
-              data-week-index={index}
-              data-cy="WeekRow"
-            >
-              {week.map((dateInfo: DateInfo, idx: number) => (
-                <Fragment key={dateInfo.date}>
-                  <div
-                    className={calendarStyles['cells-component-row__header']}
-                  >
-                    <p
-                      data-cy="DayNumber"
-                      data-day-type={
-                        dateInfo.isCurrentDay
-                          ? 'current'
-                          : !dateInfo.isCurrentMonth && 'disabled'
-                      }
-                      className={cn(
-                        calendarStyles['cells-component-row__header__number'],
-                        !dateInfo.isCurrentMonth &&
-                          calendarStyles[
-                            'cells-component-row__header__number--disabled'
-                          ],
-                        dateInfo.isCurrentDay &&
-                          calendarStyles[
-                            'cells-component-row__header__number--current-day'
-                          ],
-                      )}
-                    >
-                      {dateInfo.day}
-                    </p>
-                    {preparedColorDots.dateKeys?.[dateInfo.date] && (
-                      <p
-                        data-cy="ColorDot"
-                        data-date={dateInfo.date}
-                        style={{
-                          backgroundColor:
-                            preparedColorDots.dateKeys[dateInfo.date]?.color,
-                        }}
-                        className={
-                          calendarStyles[
-                            'cells-component-row__header__color-dot'
-                          ]
-                        }
-                      />
-                    )}
-                  </div>
-                  {visibleWeeks.includes(index) &&
-                    renderItems({ dateInfo, idx })}
-                </Fragment>
+      <div className={calendarStyles['calendar']}>
+        {renderDays}
+        <div className={calendarStyles['calendar__inside']}>
+          {currentView !== CurrentView.DAY && (
+            <div className={calendarStyles['vertical-borders-container']}>
+              {Array.from(Array(7)).map((_, key) => (
+                <div
+                  data-cy="CellsBorder"
+                  key={key}
+                  className={cn(
+                    calendarStyles['vertical-borders-container'],
+                    calendarStyles['vertical-borders-container__border'],
+                  )}
+                />
               ))}
             </div>
-          ))}
+          )}
+          {getAllWeeksInMonthBasedOnView.map(renderWeeksOrDay)}
         </div>
         {!isEmpty(preparedColorDots) && (
-          <div className={calendarStyles['color-dots-legend-wrapper']}>
+          <div className={calendarStyles['calendar-color-dots-legend']}>
             {Object.keys(preparedColorDots.colorKeys).map((color) => (
-              <div key={color} className={calendarStyles['color-dots-legend']}>
+              <div
+                key={color}
+                className={calendarStyles['calendar-color-dots-legend__flex']}
+              >
                 <p
                   style={{ background: color }}
-                  className={calendarStyles['color-dots-legend__color-dot']}
+                  className={
+                    calendarStyles[
+                      'calendar-color-dots-legend__flex__color-dot'
+                    ]
+                  }
                 />
-                <p className={calendarStyles['color-dots-legend__text']}>
+                <p
+                  className={
+                    calendarStyles['calendar-color-dots-legend__flex__text']
+                  }
+                >
                   {preparedColorDots?.colorKeys[color]?.text}
                 </p>
               </div>

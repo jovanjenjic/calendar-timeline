@@ -19,9 +19,31 @@ const DataViewsCalendarHeader: React.FC<CalendarHeaderProps> = ({
 }) => {
   const parsedCurrentDate = parseFullDate(currentDate);
 
+  const getNextTimeUnit = () => {
+    let nextTimeUnit;
+
+    switch (currentView) {
+      case CurrentView.MONTH:
+        nextTimeUnit = 'months';
+        break;
+      case CurrentView.WEEK:
+        nextTimeUnit = 'weeks';
+        break;
+      case CurrentView.WEEK_HOURS:
+        nextTimeUnit = 'weeks';
+        break;
+      case CurrentView.DAY:
+        nextTimeUnit = 'days';
+        break;
+      default:
+        break;
+    }
+
+    return nextTimeUnit;
+  };
+
   const changeMonth = (type: 'add' | 'sub'): void => {
-    const duration =
-      currentView === CurrentView.MONTH ? { months: 1 } : { weeks: 1 };
+    const duration = { [getNextTimeUnit()]: 1 };
     const newDate =
       type === 'add'
         ? formatFullDate(add(parsedCurrentDate, duration))
@@ -30,16 +52,12 @@ const DataViewsCalendarHeader: React.FC<CalendarHeaderProps> = ({
   };
 
   return (
-    <div className={calendarStyles['data-views__header-calendar']}>
+    <div className={calendarStyles['calendar__navigation']}>
       <Button arrowSide="left" onClick={() => changeMonth('sub')} />
       <Button arrowSide="right" onClick={() => changeMonth('add')} />
 
-      <div
-        className={calendarStyles['data-views__header-calendar__month-text']}
-      >
-        <span data-cy="NavigationDateText">
-          {formatMonthAndYear(parsedCurrentDate)}
-        </span>
+      <div className={calendarStyles['calendar__navigation__month-text']}>
+        <span>{formatMonthAndYear(parsedCurrentDate)}</span>
       </div>
       <Button
         label="Now"

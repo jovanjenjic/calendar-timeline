@@ -1,11 +1,13 @@
 import { TimeDateFormat } from '@base/components/Calendar/Calendar.constants';
 import {
   differenceInDays,
+  differenceInHours,
   add,
   getDay,
   format,
   parse,
   startOfDay,
+  startOfHour,
 } from 'date-fns';
 
 /**
@@ -17,6 +19,9 @@ import {
  */
 export const formatFullDate = (date: Date): string =>
   format(date, TimeDateFormat.FULL_DATE);
+
+export const formatFullDateTime = (date: Date): string =>
+  format(date, TimeDateFormat.FULL_DATE_TIME);
 
 /**
  * Transforms `date` to a string of this format: "MMMM yyyy",
@@ -46,6 +51,62 @@ export const formatShortWeekday = (date: Date): string =>
  */
 export const parseFullDate = (timeDate: string): Date =>
   parse(timeDate, TimeDateFormat.FULL_DATE, new Date());
+
+/**
+ * Based on the currently selected field in the configuration (eg `startTime` or `startTime-endTime`),
+ * a corresponding array is formed that will be displayed on the calendar
+ * @param calendarData - Array of data for calendar view
+ * @param activeViewConfiguration - Configuration for calendar view
+ * @returns - Prepared array of data for calendar view
+ */
+export const prepareCalendarDataWeekHours = (
+  calendarData: Record<string, any>[],
+  activeTimeDateField: string,
+): Record<string, Record<string, any>[]> => {
+  const result = {};
+  const [startIntervalKey, endIntervalKey = startIntervalKey] = (
+    activeTimeDateField ?? ''
+  ).split('-');
+
+  // A sorted array based on the date and time that was selected within configurations
+  const sortedCalendarValue = calendarData.sort(
+    (a, b) =>
+      new Date(a?.[startIntervalKey]).valueOf() -
+      new Date(b?.[startIntervalKey]).valueOf(),
+  );
+
+  for (const obj of sortedCalendarValue) {
+    const startDate = new Date(obj?.[startIntervalKey]);
+    const roundedStartTime = startOfHour(startDate);
+
+    // Item can have an end interval, if it doesn't then it is the same as the start interval
+    const endDate = new Date(obj?.[endIntervalKey]);
+    const roundedEndTime = startOfHour(endDate);
+
+    2;
+    const numberOfHours = differenceInHours(
+      startOfHour(roundedEndTime),
+      startOfHour(roundedStartTime),
+    );
+
+    // The goal is to go through all the days that exist between the start and end value
+    // of the interval for the current item (most often it is only one)
+    for (let i = 0; i <= numberOfHours; i++) {
+      const nextHour = add(roundedStartTime, { hours: i });
+      const key: string = formatFullDateTime(nextHour);
+
+      const res = {
+        ...obj,
+        length: 1,
+        row: +format(nextHour, 'HH') + 1,
+        keykey: key,
+      };
+      result[key] = [...(result[key] || []), res];
+    }
+  }
+
+  return result;
+};
 
 /**
  * Based on the currently selected field in the configuration (eg `startTime` or `startTime-endTime`),
