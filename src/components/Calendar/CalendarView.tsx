@@ -61,8 +61,6 @@ const CalendarView: React.FC<CalendarViewProps> = ({
 
     return (arrayData || []).map((value, index) => (
       <div
-        data-cy="CalendarInfoCard"
-        data-card-date={dateInfo.date}
         key={`${index}-${dateInfo.date}`}
         className={calendarStyles['cells-component-row__item']}
         style={{

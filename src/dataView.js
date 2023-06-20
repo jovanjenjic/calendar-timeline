@@ -129,7 +129,7 @@ const dataViewConfig = (currentDate, setCurrentDate) => ({
   onItemClick: () => {
     (() => [1, 2].map())();
   },
-  currentView: CurrentView.MONTH,
+  currentView: CurrentView.DAY,
   onlyOneOnPlace: false,
   availableTimeDate: [
     {

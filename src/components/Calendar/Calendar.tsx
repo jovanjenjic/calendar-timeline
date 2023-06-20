@@ -227,9 +227,6 @@ const Calendar: FC<CalendarProps> = ({
       </div>
     );
 
-    const renderVisibleItems =
-      visibleWeeks.includes(index) && renderItems({ dateInfo, hour, idx });
-
     return (
       <HtmlElement
         className={calendarStyles['cells-component-row__horizontal-border']}
@@ -237,7 +234,7 @@ const Calendar: FC<CalendarProps> = ({
       >
         {renderHourElement}
         {hour === 0 && renderRowHeader(dateInfo)}
-        {renderVisibleItems}
+        {visibleWeeks.includes(index) && renderItems({ dateInfo, hour, idx })}
       </HtmlElement>
     );
   };
@@ -247,7 +244,7 @@ const Calendar: FC<CalendarProps> = ({
       switch (currentView) {
         case CurrentView.DAY:
           return Array.from(Array(24)).map((_, hour) =>
-            renderWeekOrHour(week[0], hour, 0, 1),
+            renderWeekOrHour(week[0], hour, 0, 0),
           );
         case CurrentView.WEEK_HOURS:
           return Array.from(Array(24)).map((_, hour) =>
