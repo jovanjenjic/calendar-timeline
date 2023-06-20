@@ -217,22 +217,27 @@ const Calendar: FC<CalendarProps> = ({
 
     const HtmlElement = isWeekHoursOrDay ? 'div' : React.Fragment;
 
+    const renderHourElement = idx === 0 && isWeekHoursOrDay && (
+      <div
+        className={
+          calendarStyles['cells-component-row__horizontal-border-hour']
+        }
+      >
+        {getTimeUnitString(hour - 1)}
+      </div>
+    );
+
+    const renderVisibleItems =
+      visibleWeeks.includes(index) && renderItems({ dateInfo, hour, idx });
+
     return (
       <HtmlElement
         className={calendarStyles['cells-component-row__horizontal-border']}
         key={dateInfo.date}
       >
-        {idx === 0 && isWeekHoursOrDay && (
-          <div
-            className={
-              calendarStyles['cells-component-row__horizontal-border-hour']
-            }
-          >
-            {getTimeUnitString(hour - 1)}
-          </div>
-        )}
+        {renderHourElement}
         {hour === 0 && renderRowHeader(dateInfo)}
-        {visibleWeeks.includes(index) && renderItems({ dateInfo, hour, idx })}
+        {renderVisibleItems}
       </HtmlElement>
     );
   };
