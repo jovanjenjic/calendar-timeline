@@ -62,7 +62,6 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     return (arrayData || []).map((value, index) => (
       <div
         key={`${index}-${dateInfo.date}`}
-        className={calendarStyles['cells-component-row__item']}
         style={{
           gridColumn: `${idx + 1} / ${idx + (value?.length || 1) + 1}`,
         }}
