@@ -153,7 +153,7 @@ const Calendar: FC<CalendarProps> = ({
       switch (currentView) {
         case CurrentView.DAY:
           return (
-            <div className={calendarStyles['days-component__day']}>
+            <div className={calendarStyles['calendar-days-component__day']}>
               {formatShortWeekday(new Date(currentDate))}
             </div>
           );
@@ -163,7 +163,10 @@ const Calendar: FC<CalendarProps> = ({
           return (
             <>
               {Array.from(Array(7)).map((_, i) => (
-                <div key={i} className={calendarStyles['days-component__day']}>
+                <div
+                  key={i}
+                  className={calendarStyles['calendar-days-component__day']}
+                >
                   {formatShortWeekday(
                     add(startOfWeek(new Date(), { weekStartsOn }), {
                       days: i,
@@ -176,22 +179,22 @@ const Calendar: FC<CalendarProps> = ({
       }
     };
     return (
-      <div className={calendarStyles['days-component']}>{renderContent()}</div>
+      <div className={calendarStyles['calendar-days-component']}>
+        {renderContent()}
+      </div>
     );
   }, [currentDate, currentView]);
 
   const renderRowHeader = React.useCallback(
     (dateInfo): ReactElement => (
-      <div className={calendarStyles['cells-component-row__header']}>
+      <div className={calendarStyles['calendar-item-header']}>
         <p
           className={cn(
-            calendarStyles['cells-component-row__header__number'],
+            calendarStyles['calendar-item-header__number'],
             !dateInfo.isCurrentMonth &&
-              calendarStyles['cells-component-row__header__number--disabled'],
+              calendarStyles['calendar-item-header__number--disabled'],
             dateInfo.isCurrentDay &&
-              calendarStyles[
-                'cells-component-row__header__number--current-day'
-              ],
+              calendarStyles['calendar-item-header__number--current-day'],
           )}
         >
           {dateInfo.day}
@@ -203,7 +206,7 @@ const Calendar: FC<CalendarProps> = ({
             style={{
               backgroundColor: preparedColorDots.dateKeys[dateInfo.date]?.color,
             }}
-            className={calendarStyles['cells-component-row__header__color-dot']}
+            className={calendarStyles['calendar-item-header__color-dot']}
           />
         )}
       </div>
@@ -220,7 +223,7 @@ const Calendar: FC<CalendarProps> = ({
     const renderHourElement = idx === 0 && isWeekHoursOrDay && (
       <div
         className={
-          calendarStyles['cells-component-row__horizontal-border-hour']
+          calendarStyles['calendar-week-or-hour-row__horizontal-border-hour']
         }
       >
         {getTimeUnitString(hour - 1)}
@@ -229,7 +232,9 @@ const Calendar: FC<CalendarProps> = ({
 
     return (
       <HtmlElement
-        className={calendarStyles['cells-component-row__horizontal-border']}
+        className={
+          calendarStyles['calendar-week-or-hour-row__horizontal-border']
+        }
         key={dateInfo.date}
       >
         {renderHourElement}
@@ -266,8 +271,8 @@ const Calendar: FC<CalendarProps> = ({
       <div
         key={`${week[0].date}/${index}`}
         className={cn(
-          calendarStyles['cells-component-row'],
-          calendarStyles[`cells-component-row__${currentView}`],
+          calendarStyles['calendar-week-or-hour-row'],
+          calendarStyles[`calendar-week-or-hour-row__${currentView}`],
         )}
         ref={(el) => (weekRefs.current[index] = el!)}
         data-week-index={index}
@@ -286,18 +291,18 @@ const Calendar: FC<CalendarProps> = ({
           setCurrentDate={setCurrentDate}
         />
       )}
-      <div className={calendarStyles['calendar-wrapper']}>
+      <div className={calendarStyles['calendar']}>
         {renderDays}
-        <div className={calendarStyles['cells-component']}>
+        <div className={calendarStyles['calendar__inside']}>
           {currentView !== CurrentView.DAY && (
-            <div className={calendarStyles['border-container']}>
+            <div className={calendarStyles['vertical-borders-container']}>
               {Array.from(Array(7)).map((_, key) => (
                 <div
                   data-cy="CellsBorder"
                   key={key}
                   className={cn(
-                    calendarStyles['border-container'],
-                    calendarStyles['border-container__border'],
+                    calendarStyles['vertical-borders-container'],
+                    calendarStyles['vertical-borders-container__border'],
                   )}
                 />
               ))}
@@ -306,14 +311,25 @@ const Calendar: FC<CalendarProps> = ({
           {getAllWeeksInMonthBasedOnView.map(renderWeeksOrDay)}
         </div>
         {!isEmpty(preparedColorDots) && (
-          <div className={calendarStyles['color-dots-legend-wrapper']}>
+          <div className={calendarStyles['calendar-color-dots-legend']}>
             {Object.keys(preparedColorDots.colorKeys).map((color) => (
-              <div key={color} className={calendarStyles['color-dots-legend']}>
+              <div
+                key={color}
+                className={calendarStyles['calendar-color-dots-legend__flex']}
+              >
                 <p
                   style={{ background: color }}
-                  className={calendarStyles['color-dots-legend__color-dot']}
+                  className={
+                    calendarStyles[
+                      'calendar-color-dots-legend__flex__color-dot'
+                    ]
+                  }
                 />
-                <p className={calendarStyles['color-dots-legend__text']}>
+                <p
+                  className={
+                    calendarStyles['calendar-color-dots-legend__flex__text']
+                  }
+                >
                   {preparedColorDots?.colorKeys[color]?.text}
                 </p>
               </div>

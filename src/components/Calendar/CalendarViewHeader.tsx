@@ -52,16 +52,12 @@ const DataViewsCalendarHeader: React.FC<CalendarHeaderProps> = ({
   };
 
   return (
-    <div className={calendarStyles['data-views__header-calendar']}>
+    <div className={calendarStyles['calendar__navigation']}>
       <Button arrowSide="left" onClick={() => changeMonth('sub')} />
       <Button arrowSide="right" onClick={() => changeMonth('add')} />
 
-      <div
-        className={calendarStyles['data-views__header-calendar__month-text']}
-      >
-        <span data-cy="NavigationDateText">
-          {formatMonthAndYear(parsedCurrentDate)}
-        </span>
+      <div className={calendarStyles['calendar__navigation__month-text']}>
+        <span>{formatMonthAndYear(parsedCurrentDate)}</span>
       </div>
       <Button
         label="Now"
