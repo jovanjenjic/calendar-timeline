@@ -55,11 +55,11 @@
   grid-auto-flow: dense;
   grid-template-columns: repeat(7, 1fr);
 
-  &__day {
+  &__DAY {
     grid-template-rows: repeat(24, minmax(40px, auto));
     grid-template-columns: repeat(1, 1fr);
   }
-  &__week-time {
+  &__WEEK_HOURS {
     grid-template-rows: repeat(24, minmax(40px, auto));
   }
 

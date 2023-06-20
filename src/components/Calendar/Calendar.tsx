@@ -1,4 +1,11 @@
-import React, { useMemo, FC, useState, useLayoutEffect, useRef } from 'react';
+import React, {
+  useMemo,
+  FC,
+  useState,
+  useLayoutEffect,
+  useRef,
+  ReactElement,
+} from 'react';
 import cn from 'classnames';
 import {
   add,
@@ -24,8 +31,6 @@ import {
 import DataViewsCalendarHeader from './CalendarViewHeader';
 import {
   addTimeUnit,
-  calculateNumOfColumnsBasedOnView,
-  calculateNumOfRowsBasedOnView,
   getNextTimeUnit,
   getTimeUnitString,
 } from './Calendar.helper';
@@ -93,20 +98,11 @@ const Calendar: FC<CalendarProps> = ({
     return () => observer.disconnect();
   }, [visibleWeeks]);
 
-  const numOfColumns = React.useMemo(
-    () => calculateNumOfColumnsBasedOnView(currentView),
-    [currentView],
-  );
-  const numOfRows = React.useMemo(
-    () => calculateNumOfRowsBasedOnView(currentView),
-    [currentView],
-  );
-
   /**
    * It will contain all the days of the month structured by weeks.
    * The first array is an array of weeks, and each week is an array of days in that week.
    */
-  const getAllWeeksInMonth = useMemo(() => {
+  const getAllWeeksInMonthBasedOnView = useMemo(() => {
     const startOfWeekOptions = { weekStartsOn } as const;
     const parsedCurrentDate = parseFullDate(currentDate);
     const forParsing =
@@ -152,14 +148,136 @@ const Calendar: FC<CalendarProps> = ({
     return newValue;
   }, [colorDots]);
 
-  const HtmlElement =
-    currentView === CurrentView.WEEK_HOURS || currentView === CurrentView.DAY
-      ? 'div'
-      : React.Fragment;
+  const renderDays = React.useMemo((): ReactElement => {
+    const renderContent = () => {
+      switch (currentView) {
+        case CurrentView.DAY:
+          return (
+            <div className={calendarStyles['days-component__day']}>
+              {formatShortWeekday(new Date(currentDate))}
+            </div>
+          );
+        case CurrentView.WEEK_HOURS:
+        case CurrentView.WEEK:
+        case CurrentView.MONTH:
+          return (
+            <>
+              {Array.from(Array(7)).map((_, i) => (
+                <div key={i} className={calendarStyles['days-component__day']}>
+                  {formatShortWeekday(
+                    add(startOfWeek(new Date(), { weekStartsOn }), {
+                      days: i,
+                    }),
+                  )}
+                </div>
+              ))}
+            </>
+          );
+      }
+    };
+    return (
+      <div className={calendarStyles['days-component']}>{renderContent()}</div>
+    );
+  }, [currentDate, currentView]);
+
+  const renderRowHeader = React.useCallback(
+    (dateInfo): ReactElement => (
+      <div className={calendarStyles['cells-component-row__header']}>
+        <p
+          className={cn(
+            calendarStyles['cells-component-row__header__number'],
+            !dateInfo.isCurrentMonth &&
+              calendarStyles['cells-component-row__header__number--disabled'],
+            dateInfo.isCurrentDay &&
+              calendarStyles[
+                'cells-component-row__header__number--current-day'
+              ],
+          )}
+        >
+          {dateInfo.day}
+        </p>
+        {preparedColorDots.dateKeys?.[dateInfo.date] && (
+          <p
+            data-cy="ColorDot"
+            data-date={dateInfo.date}
+            style={{
+              backgroundColor: preparedColorDots.dateKeys[dateInfo.date]?.color,
+            }}
+            className={calendarStyles['cells-component-row__header__color-dot']}
+          />
+        )}
+      </div>
+    ),
+    [],
+  );
+
+  const renderWeekOrHour = (dateInfo, hour, idx, index) => {
+    const isWeekHoursOrDay =
+      currentView === CurrentView.WEEK_HOURS || currentView === CurrentView.DAY;
+
+    const HtmlElement = isWeekHoursOrDay ? 'div' : React.Fragment;
+
+    return (
+      <HtmlElement
+        className={calendarStyles['cells-component-row__horizontal-border']}
+        key={dateInfo.date}
+      >
+        {idx === 0 && isWeekHoursOrDay && (
+          <div
+            className={
+              calendarStyles['cells-component-row__horizontal-border-hour']
+            }
+          >
+            {getTimeUnitString(hour - 1)}
+          </div>
+        )}
+        {hour === 0 && renderRowHeader(dateInfo)}
+        {visibleWeeks.includes(index) && renderItems({ dateInfo, hour, idx })}
+      </HtmlElement>
+    );
+  };
+
+  const renderWeeksOrDay = (week, index) => {
+    const renderContent = () => {
+      switch (currentView) {
+        case CurrentView.DAY:
+          return Array.from(Array(24)).map((_, hour) =>
+            renderWeekOrHour(week[0], hour, 0, 1),
+          );
+        case CurrentView.WEEK_HOURS:
+          return Array.from(Array(24)).map((_, hour) =>
+            week.map((dateInfo, idx) =>
+              renderWeekOrHour(dateInfo, hour, idx, index),
+            ),
+          );
+        case CurrentView.MONTH:
+        case CurrentView.WEEK:
+          return week.map((dateInfo, idx) =>
+            renderWeekOrHour(dateInfo, 0, idx, index),
+          );
+        default:
+          return null;
+      }
+    };
+
+    return (
+      <div
+        key={`${week[0].date}/${index}`}
+        className={cn(
+          calendarStyles['cells-component-row'],
+          calendarStyles[`cells-component-row__${currentView}`],
+        )}
+        ref={(el) => (weekRefs.current[index] = el!)}
+        data-week-index={index}
+      >
+        {renderContent()}
+      </div>
+    );
+  };
 
   return (
     <>
-      {showNavigation && setCurrentDate && (
+      {showNavigation && !!setCurrentDate && (
         <DataViewsCalendarHeader
           currentDate={currentDate}
           currentView={currentView}
@@ -167,122 +285,23 @@ const Calendar: FC<CalendarProps> = ({
         />
       )}
       <div className={calendarStyles['calendar-wrapper']}>
-        <div className={calendarStyles['days-component']}>
-          {Array.from(Array(numOfColumns)).map((_, i) => (
-            <div key={i} className={calendarStyles['days-component__day']}>
-              {formatShortWeekday(
-                currentView !== CurrentView.DAY
-                  ? add(startOfWeek(new Date(), { weekStartsOn }), {
-                      days: i,
-                    })
-                  : new Date(currentDate),
-              )}
-            </div>
-          ))}
-        </div>
+        {renderDays}
         <div className={calendarStyles['cells-component']}>
-          <div className={calendarStyles['border-container']}>
-            {Array.from(Array(numOfColumns)).map((_, key) => (
-              <div
-                data-cy="CellsBorder"
-                key={key}
-                className={cn(
-                  calendarStyles['border-container'],
-                  calendarStyles['border-container__border'],
-                )}
-              />
-            ))}
-          </div>
-          {getAllWeeksInMonth.map((week: DateInfo[], index: number) => (
-            // One row is one week and there are seven columns for each day of the week. The entire row is one grid container in which elements are implicitly placed
-            <div
-              key={`${week[0].date}/${index}`}
-              className={cn(
-                calendarStyles['cells-component-row'],
-                calendarStyles[
-                  `cells-component-row__${
-                    (currentView === CurrentView.DAY && 'day') ||
-                    (currentView === CurrentView.WEEK_HOURS && 'week-time')
-                  }`
-                ],
-              )}
-              ref={(el) => (weekRefs.current[index] = el!)}
-            >
-              {Array.from(Array(numOfRows)).map((_, hour) =>
-                week.map((dateInfo: DateInfo, idx: number) => (
-                  <HtmlElement
-                    className={
-                      calendarStyles['cells-component-row__horizontal-border']
-                    }
-                    key={dateInfo.date}
-                  >
-                    {idx === 0 &&
-                      (currentView === CurrentView.DAY ||
-                        currentView === CurrentView.WEEK_HOURS) && (
-                        <div
-                          className={
-                            calendarStyles[
-                              'cells-component-row__horizontal-border-hour'
-                            ]
-                          }
-                        >
-                          {getTimeUnitString(hour - 1)}
-                        </div>
-                      )}
-                    {hour === 0 && (
-                      <div
-                        className={
-                          calendarStyles['cells-component-row__header']
-                        }
-                      >
-                        <p
-                          data-cy="DayNumber"
-                          data-day-type={
-                            dateInfo.isCurrentDay
-                              ? 'current'
-                              : !dateInfo.isCurrentMonth && 'disabled'
-                          }
-                          className={cn(
-                            calendarStyles[
-                              'cells-component-row__header__number'
-                            ],
-                            !dateInfo.isCurrentMonth &&
-                              calendarStyles[
-                                'cells-component-row__header__number--disabled'
-                              ],
-                            dateInfo.isCurrentDay &&
-                              calendarStyles[
-                                'cells-component-row__header__number--current-day'
-                              ],
-                          )}
-                        >
-                          {dateInfo.day}
-                        </p>
-                        {preparedColorDots.dateKeys?.[dateInfo.date] && (
-                          <p
-                            data-cy="ColorDot"
-                            data-date={dateInfo.date}
-                            style={{
-                              backgroundColor:
-                                preparedColorDots.dateKeys[dateInfo.date]
-                                  ?.color,
-                            }}
-                            className={
-                              calendarStyles[
-                                'cells-component-row__header__color-dot'
-                              ]
-                            }
-                          />
-                        )}
-                      </div>
-                    )}
-                    {visibleWeeks.includes(index) &&
-                      renderItems({ dateInfo, hour, idx })}
-                  </HtmlElement>
-                )),
-              )}
+          {currentView !== CurrentView.DAY && (
+            <div className={calendarStyles['border-container']}>
+              {Array.from(Array(7)).map((_, key) => (
+                <div
+                  data-cy="CellsBorder"
+                  key={key}
+                  className={cn(
+                    calendarStyles['border-container'],
+                    calendarStyles['border-container__border'],
+                  )}
+                />
+              ))}
             </div>
-          ))}
+          )}
+          {getAllWeeksInMonthBasedOnView.map(renderWeeksOrDay)}
         </div>
         {!isEmpty(preparedColorDots) && (
           <div className={calendarStyles['color-dots-legend-wrapper']}>
