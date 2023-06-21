@@ -66,7 +66,9 @@ export const prepareCalendarDataWeekHours = (
   const result = {};
   const [startIntervalKey, endIntervalKey = startIntervalKey] = (
     activeTimeDateField ?? ''
-  ).split('-');
+  )
+    .split('-')
+    .map((str) => str.replace(/\s/g, ''));
 
   // A sorted array based on the date and time that was selected within configurations
   const sortedCalendarValue = calendarData.sort(
@@ -122,7 +124,9 @@ export const prepareCalendarData = (
   const result = {};
   const [startIntervalKey, endIntervalKey = startIntervalKey] = (
     activeTimeDateField ?? ''
-  ).split('-');
+  )
+    .split('-')
+    .map((str) => str.replace(/\s/g, ''));
 
   // A sorted array based on the date and time that was selected within configurations
   const sortedCalendarValue = calendarData.sort(

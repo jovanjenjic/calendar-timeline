@@ -122,15 +122,15 @@ const colorDots = [
   },
 ];
 
-const dataViewConfig = (currentDate, setCurrentDate) => ({
+const dataViewConfig = (currentDate, setCurrentDate, cellDisplayMode) => ({
   data: data,
   currentDate,
   setCurrentDate,
   onItemClick: () => {
     (() => [1, 2].map())();
   },
-  currentView: CurrentView.MONTH,
-  onlyOneOnPlace: false,
+  currentView: CurrentView.WEEK_HOURS,
+  cellDisplayMode,
   availableTimeDate: [
     {
       isIntervalTimeDate: false,

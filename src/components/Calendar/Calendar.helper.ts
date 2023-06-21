@@ -6,7 +6,8 @@ import {
   addHours,
   format,
 } from 'date-fns';
-import { CurrentView } from './Calendar.types';
+import { CurrentView, DateInfo } from './Calendar.types';
+import { formatFullDateTime } from '@base/utils';
 
 export const getNextTimeUnit = (
   currentView: CurrentView,
@@ -63,7 +64,27 @@ export const addTimeUnit = (
 };
 
 export const getTimeUnitString = (num: number): string => {
-  const date = addHours(0, num);
-  const label = num === -1 ? format(date, 'z') : format(date, 'ha');
+  const date = addHours(0, num - 1);
+  const label = num === 0 ? format(date, 'z') : format(date, 'ha');
   return label;
+};
+
+export const getKeyFromDateInfo = (
+  currentView,
+  dateInfo: DateInfo,
+  hour: number,
+): string => {
+  let key: string = dateInfo.date;
+
+  if (
+    currentView === CurrentView.WEEK_HOURS ||
+    currentView === CurrentView.DAY
+  ) {
+    const currentHour: Date = add(new Date(`${dateInfo.date} 00:00:00`), {
+      hours: hour,
+    });
+    key = formatFullDateTime(currentHour);
+  }
+
+  return key;
 };

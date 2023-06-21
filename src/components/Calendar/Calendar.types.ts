@@ -5,6 +5,7 @@ export interface DateInfo {
   day: number;
   month: number;
   year: number;
+  [key: string]: any;
 }
 
 export interface DateInfoFunction {
@@ -20,6 +21,12 @@ export enum CurrentView {
   DAY = 'DAY',
 }
 
+export enum CellDisplayModeState {
+  ALL_COLLAPSED = 'ALL_COLLAPSED',
+  ALL_EXPANDED = 'ALL_EXPANDED',
+  CUSTOM = 'CUSTOM',
+}
+
 export interface ColorDot {
   color: string;
   text: string;
@@ -27,14 +34,31 @@ export interface ColorDot {
   [key: string]: any;
 }
 
+export interface CellData {
+  date: string;
+  day: number;
+  month: number;
+  year: number;
+  cellKey: string;
+  hour?: number;
+}
+
+interface CellDisplayMode {
+  state: CellDisplayModeState;
+  activeCells: string[];
+}
+
 export interface CalendarProps {
   renderItems: ({ dateInfo, idx }: DateInfoFunction) => JSX.Element[];
   currentView: CurrentView;
-  onlyOneOnPlace: boolean;
   currentDate: string;
   setCurrentDate: (date: string) => void;
   colorDots?: ColorDot[];
-  showNavigation?: boolean;
+  onDayNumberClick: (day: Date) => void;
+  onDayStringClick: (day: Date) => void;
+  onHourClick: (value: CellData) => void;
+  onColorDotClick: (value: ColorDot) => void;
+  onCellClick: (value: CellData) => void;
 }
 
 export interface CalendarViewProps {
@@ -43,8 +67,14 @@ export interface CalendarViewProps {
   setCurrentDate: (date: string) => void;
   activeTimeDateField: string;
   currentView: CurrentView;
-  onlyOneOnPlace: boolean;
+  cellDisplayMode: CellDisplayMode;
   colorDots: ColorDot[];
+  onDayNumberClick: (day: Date) => void;
+  onDayStringClick: (day: Date) => void;
+  onHourClick: (value: CellData) => void;
+  onColorDotClick: (value: ColorDot) => void;
+  onItemClick: (item: Record<string, any>) => void;
+  onCellClick: (value: CellData) => void;
 }
 
 export interface CalendarHeaderProps {

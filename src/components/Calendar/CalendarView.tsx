@@ -1,18 +1,17 @@
 import React from 'react';
-import { add } from 'date-fns';
-import calendarStyles from '@components/Calendar/Calendar.module.scss';
 import Calendar from '@base/components/Calendar/Calendar';
 import {
   CalendarViewProps,
+  CellDisplayModeState,
   CurrentView,
-  DateInfo,
   DateInfoFunction,
 } from '@base/components/Calendar/Calendar.types';
+import calendarStyles from '@components/Calendar/Calendar.module.scss';
 import {
-  formatFullDateTime,
   prepareCalendarData,
   prepareCalendarDataWeekHours,
 } from '@base/utils/index';
+import { getKeyFromDateInfo } from './Calendar.helper';
 
 const CalendarView: React.FC<CalendarViewProps> = ({
   data,
@@ -20,8 +19,14 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   setCurrentDate,
   activeTimeDateField,
   currentView,
-  onlyOneOnPlace,
+  cellDisplayMode,
   colorDots,
+  onDayNumberClick,
+  onDayStringClick,
+  onHourClick,
+  onColorDotClick,
+  onItemClick,
+  onCellClick,
 }) => {
   // Prepared data so that for each item in the array there is all the data as well as the length of the interval
   const preparedData = React.useMemo(
@@ -32,54 +37,55 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     [data, activeTimeDateField, currentView],
   );
 
-  // In case it is WEEK_HOURS or DAY view, it is needed to add the hours in order to keep track of the hours as well
-  const getKeyFromDateInfo = (dateInfo: DateInfo, hour: number): string => {
-    let key: string = dateInfo.date;
-
-    if (
-      currentView === CurrentView.WEEK_HOURS ||
-      currentView === CurrentView.DAY
-    ) {
-      const currentHour: Date = add(new Date(`${dateInfo.date} 00:00:00`), {
-        hours: hour,
-      });
-      key = formatFullDateTime(currentHour);
-    }
-
-    return key;
-  };
-
   // Based on the prepared data, it is iterated through each day of the week and all elements in
   // that data are placed at the appropriate position and length within grid container.
   const renderItems = ({ dateInfo, idx, hour }: DateInfoFunction) => {
-    const key = getKeyFromDateInfo(dateInfo, hour);
+    const key = getKeyFromDateInfo(currentView, dateInfo, hour);
 
-    const arrayData = onlyOneOnPlace
-      ? preparedData[key]?.slice(-1)
-      : preparedData[key] || [];
-    const numOfElements = onlyOneOnPlace && (preparedData[key]?.length || 0);
+    const arrayData =
+      cellDisplayMode.state === CellDisplayModeState.ALL_COLLAPSED ||
+      (cellDisplayMode.state === CellDisplayModeState.CUSTOM &&
+        cellDisplayMode.activeCells.includes(key))
+        ? preparedData[key]?.slice(-1)
+        : preparedData[key] || [];
 
     return (arrayData || []).map((value, index) => (
       <div
         key={`${index}-${dateInfo.date}`}
         style={{
-          gridColumn: `${idx + 1} / ${idx + (value?.length || 1) + 1}`,
+          gridColumn: `${idx + 1} / ${
+            idx +
+            (cellDisplayMode.state === CellDisplayModeState.ALL_COLLAPSED ||
+            (cellDisplayMode.state === CellDisplayModeState.CUSTOM &&
+              cellDisplayMode.activeCells.includes(key))
+              ? 1
+              : value?.length || 1) +
+            1
+          }`,
         }}
+        className={calendarStyles['calendar-item']}
       >
-        {value?.keykey} {value?.id} {numOfElements}
+        <>
+          <p onClick={() => onItemClick(value)}>
+            {value?.keykey} {value?.id}
+          </p>
+        </>
       </div>
     ));
   };
 
   return (
     <Calendar
-      showNavigation={true}
       renderItems={renderItems}
       setCurrentDate={setCurrentDate}
       currentView={currentView}
       colorDots={colorDots}
       currentDate={currentDate}
-      onlyOneOnPlace={onlyOneOnPlace}
+      onDayNumberClick={onDayNumberClick}
+      onDayStringClick={onDayStringClick}
+      onHourClick={onHourClick}
+      onColorDotClick={onColorDotClick}
+      onCellClick={onCellClick}
     />
   );
 };
