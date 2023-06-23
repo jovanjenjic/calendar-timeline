@@ -1,10 +1,6 @@
 import React from 'react';
-import {
-  formatFullDate,
-  formatMonthAndYear,
-  parseFullDate,
-} from '@utils/index';
-import { add, sub } from 'date-fns';
+import { formatFullDate, parseFullDate } from '@utils/index';
+import { add, sub, format } from 'date-fns';
 import calendarStyles from '@components/Calendar/Calendar.module.scss';
 import Button from '@base/components/Button/Button';
 import {
@@ -16,6 +12,7 @@ const DataViewsCalendarHeader: React.FC<CalendarHeaderProps> = ({
   setCurrentDate,
   currentDate,
   currentView,
+  timeDateFormat,
 }) => {
   const parsedCurrentDate = parseFullDate(currentDate);
 
@@ -57,7 +54,7 @@ const DataViewsCalendarHeader: React.FC<CalendarHeaderProps> = ({
       <Button arrowSide="right" onClick={() => changeMonth('add')} />
 
       <div className={calendarStyles['calendar__navigation__month-text']}>
-        <span>{formatMonthAndYear(parsedCurrentDate)}</span>
+        <span>{format(parsedCurrentDate, timeDateFormat.monthYear)}</span>
       </div>
       <Button
         label="Now"

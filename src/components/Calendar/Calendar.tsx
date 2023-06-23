@@ -15,22 +15,20 @@ import {
   isToday,
   startOfMonth,
   startOfWeek,
+  format,
 } from 'date-fns';
-import { isEmpty, isEqual } from 'lodash-es';
+import { isEmpty, isEqual, omit } from 'lodash-es';
 import calendarStyles from '@components/Calendar/Calendar.module.scss';
 import {
   CalendarProps,
   CurrentView,
   DateInfo,
 } from '@base/components/Calendar/Calendar.types';
-import {
-  parseFullDate,
-  formatFullDate,
-  formatShortWeekday,
-} from '@base/utils/index';
+import { parseFullDate, formatFullDate } from '@base/utils/index';
 import DataViewsCalendarHeader from './CalendarViewHeader';
 import {
   addTimeUnit,
+  getKeyFromDateInfo,
   getNextTimeUnit,
   getTimeUnitString,
 } from './Calendar.helper';
@@ -51,13 +49,19 @@ const Calendar: FC<CalendarProps> = ({
   currentView,
   currentDate,
   colorDots,
-  showNavigation,
   setCurrentDate,
+  onDayNumberClick,
+  onDayStringClick,
+  onHourClick,
+  onColorDotClick,
+  onCellClick,
+  timeDateFormat,
 }) => {
   // It is necessary to render the rows (weeks) that are visible in the viewport
   const [visibleWeeks, setVisibleWeeks] = useState<number[]>([0]);
   const weekRefs = useRef<HTMLDivElement[]>([]);
-  const weekStartsOn = 1;
+  const weekStartsOn =
+    (timeDateFormat.weekStartsOn as 0 | 1 | 2 | 3 | 4 | 5 | 6) ?? 1;
 
   useLayoutEffect(() => {
     setVisibleWeeks([0]);
@@ -153,8 +157,11 @@ const Calendar: FC<CalendarProps> = ({
       switch (currentView) {
         case CurrentView.DAY:
           return (
-            <div className={calendarStyles['calendar-days-component__day']}>
-              {formatShortWeekday(new Date(currentDate))}
+            <div
+              onClick={() => onDayStringClick(new Date(currentDate))}
+              className={calendarStyles['calendar-days-component__day']}
+            >
+              {format(new Date(currentDate), timeDateFormat.day)}
             </div>
           );
         case CurrentView.WEEK_HOURS:
@@ -166,11 +173,22 @@ const Calendar: FC<CalendarProps> = ({
                 <div
                   key={i}
                   className={calendarStyles['calendar-days-component__day']}
+                  onClick={() =>
+                    onDayStringClick(
+                      add(
+                        startOfWeek(new Date(currentDate), { weekStartsOn }),
+                        {
+                          days: i,
+                        },
+                      ),
+                    )
+                  }
                 >
-                  {formatShortWeekday(
-                    add(startOfWeek(new Date(), { weekStartsOn }), {
+                  {format(
+                    add(startOfWeek(new Date(currentDate), { weekStartsOn }), {
                       days: i,
                     }),
+                    timeDateFormat.day,
                   )}
                 </div>
               ))}
@@ -196,6 +214,7 @@ const Calendar: FC<CalendarProps> = ({
             dateInfo.isCurrentDay &&
               calendarStyles['calendar-item-header__number--current-day'],
           )}
+          onClick={() => onDayNumberClick(new Date(dateInfo.date))}
         >
           {dateInfo.day}
         </p>
@@ -207,6 +226,9 @@ const Calendar: FC<CalendarProps> = ({
               backgroundColor: preparedColorDots.dateKeys[dateInfo.date]?.color,
             }}
             className={calendarStyles['calendar-item-header__color-dot']}
+            onClick={() =>
+              onColorDotClick(preparedColorDots.dateKeys[dateInfo.date])
+            }
           />
         )}
       </div>
@@ -223,23 +245,44 @@ const Calendar: FC<CalendarProps> = ({
     const renderHourElement = idx === 0 && isWeekHoursOrDay && (
       <div
         className={
-          calendarStyles['calendar-week-or-hour-row__horizontal-border-hour']
+          calendarStyles['calendar-week-or-hour-row__day-hour-cell-hour-number']
+        }
+        onClick={() =>
+          onHourClick({
+            ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
+            hour,
+          })
         }
       >
-        {getTimeUnitString(hour - 1)}
+        {getTimeUnitString(hour, timeDateFormat)}
       </div>
     );
 
     return (
       <HtmlElement
-        className={
-          calendarStyles['calendar-week-or-hour-row__horizontal-border']
-        }
+        className={calendarStyles['calendar-week-or-hour-row__day-hour-cell']}
         key={dateInfo.date}
       >
-        {renderHourElement}
-        {hour === 0 && renderRowHeader(dateInfo)}
-        {visibleWeeks.includes(index) && renderItems({ dateInfo, hour, idx })}
+        <>
+          <div
+            className={
+              calendarStyles['calendar-week-or-hour-row__day-hour-cell-cover']
+            }
+            style={{
+              gridColumn: `${idx + 1} / ${idx + 2}`,
+            }}
+            onClick={() =>
+              onCellClick({
+                ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
+                hour,
+                cellKey: getKeyFromDateInfo(currentView, dateInfo, hour),
+              })
+            }
+          />
+          {renderHourElement}
+          {hour === 0 && renderRowHeader(dateInfo)}
+          {visibleWeeks.includes(index) && renderItems({ dateInfo, hour, idx })}
+        </>
       </HtmlElement>
     );
   };
@@ -284,11 +327,12 @@ const Calendar: FC<CalendarProps> = ({
 
   return (
     <>
-      {showNavigation && !!setCurrentDate && (
+      {!!setCurrentDate && (
         <DataViewsCalendarHeader
           currentDate={currentDate}
           currentView={currentView}
           setCurrentDate={setCurrentDate}
+          timeDateFormat={timeDateFormat}
         />
       )}
       <div className={calendarStyles['calendar']}>
@@ -316,6 +360,9 @@ const Calendar: FC<CalendarProps> = ({
               <div
                 key={color}
                 className={calendarStyles['calendar-color-dots-legend__flex']}
+                onClick={() =>
+                  onColorDotClick(preparedColorDots?.colorKeys[color])
+                }
               >
                 <p
                   style={{ background: color }}

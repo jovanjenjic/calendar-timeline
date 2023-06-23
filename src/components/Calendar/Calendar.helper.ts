@@ -4,9 +4,13 @@ import {
   getMonth,
   startOfWeek,
   addHours,
+  eachDayOfInterval,
   format,
+  startOfMonth,
+  endOfMonth,
 } from 'date-fns';
-import { CurrentView } from './Calendar.types';
+import { CurrentView, DateInfo, TimeFormat } from './Calendar.types';
+import { formatFullDateTime } from '@base/utils';
 
 export const getNextTimeUnit = (
   currentView: CurrentView,
@@ -36,7 +40,7 @@ export const addTimeUnit = (
   currentView: CurrentView,
   date: Date,
   day: number,
-  startOfWeekOptions: { weekStartsOn: 1 | 0 },
+  startOfWeekOptions: { weekStartsOn },
 ): number => {
   let nextTimeUnit;
 
@@ -62,8 +66,43 @@ export const addTimeUnit = (
   return nextTimeUnit;
 };
 
-export const getTimeUnitString = (num: number): string => {
-  const date = addHours(0, num);
-  const label = num === -1 ? format(date, 'z') : format(date, 'ha');
+export const getTimeUnitString = (
+  num: number,
+  timeDateFormat: TimeFormat,
+): string => {
+  const date = addHours(0, num - 1);
+  const label =
+    num === 0
+      ? format(date, timeDateFormat.hourTimeZone)
+      : format(date, timeDateFormat.hour);
   return label;
+};
+
+export const getKeyFromDateInfo = (
+  currentView,
+  dateInfo: DateInfo,
+  hour: number,
+): string => {
+  let key: string = dateInfo.date;
+
+  if (
+    currentView === CurrentView.WEEK_HOURS ||
+    currentView === CurrentView.DAY
+  ) {
+    const currentHour: Date = add(new Date(`${dateInfo.date} 00:00:00`), {
+      hours: hour,
+    });
+    key = formatFullDateTime(currentHour);
+  }
+
+  return key;
+};
+
+export const getAllDaysInMonth = (dateString) => {
+  const daysOfMonth = eachDayOfInterval({
+    start: startOfMonth(new Date(dateString)),
+    end: endOfMonth(new Date(dateString)),
+  }).map((day) => format(day, 'yyyy-MM-dd'));
+
+  return daysOfMonth;
 };
