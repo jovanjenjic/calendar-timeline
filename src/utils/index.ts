@@ -1,4 +1,5 @@
 import { TimeDateFormat } from '@base/components/Calendar/Calendar.constants';
+import { WeekStartsOn } from '@base/components/Calendar/Calendar.types';
 import {
   differenceInDays,
   differenceInHours,
@@ -120,6 +121,7 @@ export const prepareCalendarDataWeekHours = (
 export const prepareCalendarData = (
   calendarData: Record<string, any>[],
   activeTimeDateField: any,
+  weekStartsOn: WeekStartsOn,
 ): Record<string, Record<string, any>[]> => {
   const result = {};
   const [startIntervalKey, endIntervalKey = startIntervalKey] = (
@@ -157,7 +159,7 @@ export const prepareCalendarData = (
       const isStartInterval: boolean = key === formatFullDate(startDate);
 
       // If the interval is large enough to continue in the next week. day() returns serial number of day in week
-      const isNextWeek: boolean = getDay(nextDay) === 1;
+      const isNextWeek: boolean = getDay(nextDay) === (weekStartsOn ?? 1);
 
       if (isStartInterval || isNextWeek) {
         const res = {

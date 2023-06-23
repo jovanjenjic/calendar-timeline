@@ -5,15 +5,32 @@ import dataViewConfig from '@base/dataView';
 import GoUrbanStyleguide from './components/style-guide/GoUrbanStyleguide';
 import {
   CellData,
+  CellDisplayMode,
   CellDisplayModeState,
 } from './components/Calendar/Calendar.types';
 
 const Playground = () => {
   const [currentDate, setCurrentDate] = React.useState('2023-06-03');
-  const [cellDisplayMode, setCellDisplayMode] = React.useState({
-    activeCells: [''],
-    state: CellDisplayModeState.CUSTOM,
-  });
+  const [cellDisplayMode, setCellDisplayMode] = React.useState<CellDisplayMode>(
+    {
+      MONTH: {
+        inactiveCells: ['2023-06-03'],
+        state: CellDisplayModeState.ALL_COLLAPSED,
+      },
+      WEEK: {
+        inactiveCells: ['2023-06-03'],
+        state: CellDisplayModeState.CUSTOM,
+      },
+      WEEK_HOURS: {
+        inactiveCells: ['2023-06-03'],
+        state: CellDisplayModeState.ALL_EXPANDED,
+      },
+      DAY: {
+        inactiveCells: ['2023-06-03'],
+        state: CellDisplayModeState.ALL_EXPANDED,
+      },
+    },
+  );
 
   const onDayNumberClick = (day) => console.log('day', day);
   const onDayStringClick = (day) => console.log(day);
@@ -22,20 +39,31 @@ const Playground = () => {
   const onItemClick = (item) => console.log('item', item);
   const onCellClick = (value: CellData) => {
     setCellDisplayMode(() => {
-      if (cellDisplayMode.activeCells.includes(value.cellKey)) {
+      if (cellDisplayMode['DAY'].inactiveCells.includes(value.cellKey)) {
         return {
           ...cellDisplayMode,
-          activeCells: cellDisplayMode.activeCells.filter(
-            (val) => val !== value?.cellKey,
-          ),
+          DAY: {
+            ...cellDisplayMode['DAY'],
+            inactiveCells: cellDisplayMode['DAY'].inactiveCells.filter(
+              (val) => val !== value?.cellKey,
+            ),
+          },
         };
       }
       return {
         ...cellDisplayMode,
-        activeCells: [...cellDisplayMode.activeCells, value?.cellKey],
+        DAY: {
+          ...cellDisplayMode['DAY'],
+          inactiveCells: [
+            ...cellDisplayMode['DAY'].inactiveCells,
+            value?.cellKey,
+          ],
+        },
       };
     });
   };
+
+  console.log('cellDisplayModecellDisplayMode', cellDisplayMode);
 
   const dataView = dataViewConfig(currentDate, setCurrentDate, cellDisplayMode);
   return (

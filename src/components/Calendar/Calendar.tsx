@@ -15,6 +15,7 @@ import {
   isToday,
   startOfMonth,
   startOfWeek,
+  format,
 } from 'date-fns';
 import { isEmpty, isEqual, omit } from 'lodash-es';
 import calendarStyles from '@components/Calendar/Calendar.module.scss';
@@ -23,11 +24,7 @@ import {
   CurrentView,
   DateInfo,
 } from '@base/components/Calendar/Calendar.types';
-import {
-  parseFullDate,
-  formatFullDate,
-  formatShortWeekday,
-} from '@base/utils/index';
+import { parseFullDate, formatFullDate } from '@base/utils/index';
 import DataViewsCalendarHeader from './CalendarViewHeader';
 import {
   addTimeUnit,
@@ -58,11 +55,13 @@ const Calendar: FC<CalendarProps> = ({
   onHourClick,
   onColorDotClick,
   onCellClick,
+  timeDateFormat,
 }) => {
   // It is necessary to render the rows (weeks) that are visible in the viewport
   const [visibleWeeks, setVisibleWeeks] = useState<number[]>([0]);
   const weekRefs = useRef<HTMLDivElement[]>([]);
-  const weekStartsOn = 1;
+  const weekStartsOn =
+    (timeDateFormat.weekStartsOn as 0 | 1 | 2 | 3 | 4 | 5 | 6) ?? 1;
 
   useLayoutEffect(() => {
     setVisibleWeeks([0]);
@@ -162,7 +161,7 @@ const Calendar: FC<CalendarProps> = ({
               onClick={() => onDayStringClick(new Date(currentDate))}
               className={calendarStyles['calendar-days-component__day']}
             >
-              {formatShortWeekday(new Date(currentDate))}
+              {format(new Date(currentDate), timeDateFormat.day)}
             </div>
           );
         case CurrentView.WEEK_HOURS:
@@ -185,10 +184,11 @@ const Calendar: FC<CalendarProps> = ({
                     )
                   }
                 >
-                  {formatShortWeekday(
+                  {format(
                     add(startOfWeek(new Date(currentDate), { weekStartsOn }), {
                       days: i,
                     }),
+                    timeDateFormat.day,
                   )}
                 </div>
               ))}
@@ -254,7 +254,7 @@ const Calendar: FC<CalendarProps> = ({
           })
         }
       >
-        {getTimeUnitString(hour)}
+        {getTimeUnitString(hour, timeDateFormat)}
       </div>
     );
 
@@ -332,6 +332,7 @@ const Calendar: FC<CalendarProps> = ({
           currentDate={currentDate}
           currentView={currentView}
           setCurrentDate={setCurrentDate}
+          timeDateFormat={timeDateFormat}
         />
       )}
       <div className={calendarStyles['calendar']}>

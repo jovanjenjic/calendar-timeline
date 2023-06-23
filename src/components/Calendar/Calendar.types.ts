@@ -27,6 +27,16 @@ export enum CellDisplayModeState {
   CUSTOM = 'CUSTOM',
 }
 
+export enum WeekStartsOn {
+  SUNDAY = 0,
+  MONDAY = 1,
+  TUESDAY = 2,
+  WEDNESDAY = 3,
+  THURSDAY = 4,
+  FRIDAY = 5,
+  SATURDAY = 6,
+}
+
 export interface ColorDot {
   color: string;
   text: string;
@@ -43,9 +53,19 @@ export interface CellData {
   hour?: number;
 }
 
-interface CellDisplayMode {
-  state: CellDisplayModeState;
-  activeCells: string[];
+export interface CellDisplayMode {
+  [key: string]: {
+    state: CellDisplayModeState;
+    inactiveCells: string[];
+  };
+}
+
+export interface TimeFormat {
+  day: string;
+  hour: string;
+  hourTimeZone: string;
+  monthYear: string;
+  weekStartsOn?: WeekStartsOn;
 }
 
 export interface CalendarProps {
@@ -59,6 +79,7 @@ export interface CalendarProps {
   onHourClick: (value: CellData) => void;
   onColorDotClick: (value: ColorDot) => void;
   onCellClick: (value: CellData) => void;
+  timeDateFormat: TimeFormat;
 }
 
 export interface CalendarViewProps {
@@ -75,10 +96,12 @@ export interface CalendarViewProps {
   onColorDotClick: (value: ColorDot) => void;
   onItemClick: (item: Record<string, any>) => void;
   onCellClick: (value: CellData) => void;
+  timeDateFormat: TimeFormat;
 }
 
 export interface CalendarHeaderProps {
   setCurrentDate: (date: string) => void;
   currentView: CurrentView;
   currentDate: string;
+  timeDateFormat: TimeFormat;
 }
