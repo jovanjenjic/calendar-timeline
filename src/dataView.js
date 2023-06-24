@@ -61,7 +61,7 @@ const dataViewConfig = (currentDate, setCurrentDate, cellDisplayMode) => ({
   onItemClick: () => {
     (() => [1, 2].map())();
   },
-  currentView: CurrentView.MONTH,
+  currentView: CurrentView.WEEK_TIME,
   cellDisplayMode,
   timeDateFormat: {
     day: 'EEE',
@@ -70,7 +70,7 @@ const dataViewConfig = (currentDate, setCurrentDate, cellDisplayMode) => ({
     monthYear: 'LLLL yyyy',
     weekStartsOn: WeekStartsOn.MONDAY,
   },
-  activeTimeDateField: 'createdAt-updatedAt',
+  activeTimeDateField: 'createdAt',
   colorDots,
 });
 

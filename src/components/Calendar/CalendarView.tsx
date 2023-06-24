@@ -1,6 +1,5 @@
 import React from 'react';
 import { parseISO, isBefore } from 'date-fns';
-import Calendar from '@base/components/Calendar/Calendar';
 import {
   CalendarViewProps,
   CellDisplayModeState,
@@ -13,6 +12,7 @@ import {
   prepareCalendarDataWeekHours,
 } from '@base/utils/index';
 import { getAllDaysInMonth, getKeyFromDateInfo } from './Calendar.helper';
+import CalendarComponent from './CalendarComponent';
 
 const CalendarView: React.FC<CalendarViewProps> = ({
   data,
@@ -33,7 +33,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   // Prepared data so that for each item in the array there is all the data as well as the length of the interval
   const preparedData = React.useMemo(
     () =>
-      currentView === CurrentView.WEEK_HOURS || currentView === CurrentView.DAY
+      currentView === CurrentView.WEEK_TIME || currentView === CurrentView.DAY
         ? prepareCalendarDataWeekHours(data, activeTimeDateField)
         : prepareCalendarData(
             data,
@@ -118,7 +118,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   };
 
   return (
-    <Calendar
+    <CalendarComponent
       renderItems={renderItems}
       setCurrentDate={setCurrentDate}
       currentView={currentView}

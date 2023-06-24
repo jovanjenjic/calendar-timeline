@@ -15,19 +15,19 @@ const Playground = () => {
     {
       MONTH: {
         inactiveCells: ['2023-06-03'],
-        state: CellDisplayModeState.ALL_COLLAPSED,
+        state: CellDisplayModeState.CUSTOM,
       },
       WEEK: {
         inactiveCells: ['2023-06-03'],
         state: CellDisplayModeState.CUSTOM,
       },
-      WEEK_HOURS: {
+      WEEK_TIME: {
         inactiveCells: ['2023-06-03'],
-        state: CellDisplayModeState.ALL_EXPANDED,
+        state: CellDisplayModeState.CUSTOM,
       },
       DAY: {
         inactiveCells: ['2023-06-03'],
-        state: CellDisplayModeState.ALL_EXPANDED,
+        state: CellDisplayModeState.CUSTOM,
       },
     },
   );
@@ -39,12 +39,12 @@ const Playground = () => {
   const onItemClick = (item) => console.log('item', item);
   const onCellClick = (value: CellData) => {
     setCellDisplayMode(() => {
-      if (cellDisplayMode['DAY'].inactiveCells.includes(value.cellKey)) {
+      if (cellDisplayMode['MONTH'].inactiveCells.includes(value.cellKey)) {
         return {
           ...cellDisplayMode,
-          DAY: {
-            ...cellDisplayMode['DAY'],
-            inactiveCells: cellDisplayMode['DAY'].inactiveCells.filter(
+          MONTH: {
+            ...cellDisplayMode['MONTH'],
+            inactiveCells: cellDisplayMode['MONTH'].inactiveCells.filter(
               (val) => val !== value?.cellKey,
             ),
           },
@@ -52,10 +52,10 @@ const Playground = () => {
       }
       return {
         ...cellDisplayMode,
-        DAY: {
-          ...cellDisplayMode['DAY'],
+        MONTH: {
+          ...cellDisplayMode['MONTH'],
           inactiveCells: [
-            ...cellDisplayMode['DAY'].inactiveCells,
+            ...cellDisplayMode['MONTH'].inactiveCells,
             value?.cellKey,
           ],
         },

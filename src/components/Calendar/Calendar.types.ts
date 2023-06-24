@@ -17,7 +17,7 @@ export interface DateInfoFunction {
 export enum CurrentView {
   MONTH = 'MONTH',
   WEEK = 'WEEK',
-  WEEK_HOURS = 'WEEK_HOURS',
+  WEEK_TIME = 'WEEK_TIME',
   DAY = 'DAY',
 }
 
