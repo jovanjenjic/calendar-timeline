@@ -26,7 +26,7 @@ const DataViewsCalendarHeader: React.FC<CalendarHeaderProps> = ({
       case CurrentView.WEEK:
         nextTimeUnit = 'weeks';
         break;
-      case CurrentView.WEEK_HOURS:
+      case CurrentView.WEEK_TIME:
         nextTimeUnit = 'weeks';
         break;
       case CurrentView.DAY:

@@ -11,6 +11,7 @@ import {
 } from 'date-fns';
 import { CurrentView, DateInfo, TimeFormat } from './Calendar.types';
 import { formatFullDateTime } from '@base/utils';
+import { TimeDateFormat } from './Calendar.constants';
 
 export const getNextTimeUnit = (
   currentView: CurrentView,
@@ -23,7 +24,7 @@ export const getNextTimeUnit = (
       nextTimeUnit = getMonth(add(date, { months: 1 }));
       break;
     case CurrentView.WEEK:
-    case CurrentView.WEEK_HOURS:
+    case CurrentView.WEEK_TIME:
       nextTimeUnit = getDate(add(date, { weeks: 1 }));
       break;
     case CurrentView.DAY:
@@ -51,7 +52,7 @@ export const addTimeUnit = (
       );
       break;
     case CurrentView.WEEK:
-    case CurrentView.WEEK_HOURS:
+    case CurrentView.WEEK_TIME:
       nextTimeUnit = getDate(
         startOfWeek(add(date, { days: day }), startOfWeekOptions),
       );
@@ -73,8 +74,11 @@ export const getTimeUnitString = (
   const date = addHours(0, num - 1);
   const label =
     num === 0
-      ? format(date, timeDateFormat.hourTimeZone)
-      : format(date, timeDateFormat.hour);
+      ? format(
+          date,
+          timeDateFormat.hourTimeZone || TimeDateFormat.HOUR_TIMEZONE,
+        )
+      : format(date, timeDateFormat.hour || TimeDateFormat.HOUR);
   return label;
 };
 
@@ -86,7 +90,7 @@ export const getKeyFromDateInfo = (
   let key: string = dateInfo.date;
 
   if (
-    currentView === CurrentView.WEEK_HOURS ||
+    currentView === CurrentView.WEEK_TIME ||
     currentView === CurrentView.DAY
   ) {
     const currentHour: Date = add(new Date(`${dateInfo.date} 00:00:00`), {
