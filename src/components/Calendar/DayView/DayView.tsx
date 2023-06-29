@@ -3,7 +3,7 @@ import cn from 'classnames';
 import { getDate, getMonth, getYear, isToday, format } from 'date-fns';
 import { omit } from 'lodash-es';
 import calendarStyles from '@components/Calendar/DayView/DayView.module.scss';
-import { getKeyFromDateInfo, getTimeUnitString } from '../Calendar.helper';
+import { getTimeUnitString } from '../Calendar.helper';
 import { TimeDateFormat } from '../Calendar.constants';
 import { DayTimeViewProps } from './DayView.types';
 import { DateInfo } from '../Calendar.types';

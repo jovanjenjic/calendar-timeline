@@ -11,7 +11,7 @@ const data = [
   },
   {
     id: 2222,
-    updatedAt: '2023-06-03T05:01:00Z',
+    updatedAt: '2023-06-02T23:03:00Z',
     createdAt: '2023-06-02T05:05:06.628591Z',
   },
   {
@@ -71,7 +71,7 @@ const dataViewConfig = (currentDate, setCurrentDate, cellDisplayMode) => ({
   onItemClick: () => {
     (() => [1, 2].map())();
   },
-  currentView: CurrentView.WEEK_TIME,
+  currentView: CurrentView.MONTH,
   cellDisplayMode,
   timeDateFormat: {
     day: 'EEE',

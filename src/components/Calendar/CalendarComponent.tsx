@@ -7,6 +7,8 @@ import calendarStyles from '@components/Calendar/Calendar.module.scss';
 import { isEmpty } from 'lodash-es';
 import WeekTimeView from './WeekTimeView/WeekTimeView';
 import DayView from './DayView/DayView';
+import DayInPlaceView from './DayInPlaceView/DayInPlaceView';
+import WeekTimeInPlaceView from './WeekTimeInPlaceView/WeekTimeInPlaceView';
 
 const CalendarComponent: FC<CalendarProps> = ({
   renderItems,
@@ -89,6 +91,34 @@ const CalendarComponent: FC<CalendarProps> = ({
             preparedColorDots={preparedColorDots}
             renderItems={renderItems}
             renderHeaderItems={renderHeaderItems}
+            currentView={currentView}
+            currentDate={currentDate}
+            onDayNumberClick={onDayNumberClick}
+            onDayStringClick={onDayStringClick}
+            onColorDotClick={onColorDotClick}
+            onCellClick={onCellClick}
+            timeDateFormat={timeDateFormat}
+            onHourClick={onHourClick}
+          />
+        )}
+        {currentView === CurrentView.WEEK_IN_PLACE && (
+          <WeekTimeInPlaceView
+            preparedColorDots={preparedColorDots}
+            renderItems={renderItems}
+            currentView={currentView}
+            currentDate={currentDate}
+            onDayNumberClick={onDayNumberClick}
+            onDayStringClick={onDayStringClick}
+            onColorDotClick={onColorDotClick}
+            onCellClick={onCellClick}
+            timeDateFormat={timeDateFormat}
+            onHourClick={onHourClick}
+          />
+        )}
+        {currentView === CurrentView.DAY_IN_PLACE && (
+          <DayInPlaceView
+            preparedColorDots={preparedColorDots}
+            renderItems={renderItems}
             currentView={currentView}
             currentDate={currentDate}
             onDayNumberClick={onDayNumberClick}

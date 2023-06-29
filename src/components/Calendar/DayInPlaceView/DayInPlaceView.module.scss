@@ -1,0 +1,118 @@
+@import '../../../assets/scss/_mixins';
+
+.day-view-inside {
+  background-color: var(--gs-50);
+  border: 1px solid var(--gs-200);
+  border-radius: 4px;
+  position: relative;
+}
+
+.day-component {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: calc(var(--spacing) * 1.5);
+
+  &__day {
+    font: var(--font-c-1);
+    color: var(--gs-500);
+    width: calc(var(--spacing) * 4);
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.vertical-borders-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+
+  &__border {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    &:not(:last-of-type) {
+      border-right: 1px solid var(--gs-200);
+    }
+  }
+}
+
+.hour-row {
+  z-index: 10;
+  position: relative;
+  width: 100%;
+  min-height: 160px;
+  display: grid;
+  grid-auto-flow: dense;
+  grid-template-columns: repeat(1, 1fr);
+  grid-template-rows: repeat(24, minmax(40px, auto));
+
+  @include breakpoint('xl') {
+    min-height: 220px;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--gs-200);
+  }
+
+  &__hour-cell {
+    height: 100%;
+    width: 100%;
+    position: relative;
+  
+    &:not(:last-of-type) {
+      border-bottom: 1px solid var(--gs-200);
+    }
+
+    &--cover {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    &-hour-number {
+      height: 0px;
+      position: relative;
+      left: -60px;
+      top: -11px;
+    }
+  }
+}
+
+.cell-header {
+  position: relative;
+  z-index: 10;
+  height: max-content;
+  width: max-content;
+  margin: calc(var(--spacing)) auto 0 auto;
+  &__number {
+    font: var(--font-h-6);
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    height: 18px;
+    width: 24px;
+    color: var(--gs-900);
+
+    &--disabled {
+      color: var(--gs-300);
+    }
+
+    &--current-day {
+      background: var(--gs-900);
+      border-radius: 4px;
+      color: var(--gs-0);
+    }
+  }
+
+  &__color-dot {
+    width: 10px;
+    height: 10px;
+    display: flex;
+    margin: var(--spacing) auto 0 auto !important;
+    border-radius: 50%;
+    margin-right: var(--spacing);
+  }
+}

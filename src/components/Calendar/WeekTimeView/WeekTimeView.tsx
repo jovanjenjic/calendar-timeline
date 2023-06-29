@@ -13,7 +13,7 @@ import { omit } from 'lodash-es';
 import weekTimeViewStyles from '@components/Calendar/WeekTimeView/WeekTimeView.module.scss';
 import { DateInfo } from '@base/components/Calendar/Calendar.types';
 import { formatFullDate } from '@base/utils/index';
-import { getKeyFromDateInfo, getTimeUnitString } from '../Calendar.helper';
+import { getTimeUnitString } from '../Calendar.helper';
 import { WeekTimeViewProps } from './WeekTimeView.types';
 
 const getDateInfo = (date: Date, currentMonth: number): DateInfo => {

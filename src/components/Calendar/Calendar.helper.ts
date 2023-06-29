@@ -18,6 +18,7 @@ import {
 import {
   dayInWeekBasedOnWeekStarts,
   formatFullDate,
+  formatFullDateTime,
   getAllDaysInMonth,
 } from '@base/utils';
 import { TimeDateFormat } from './Calendar.constants';
@@ -61,10 +62,15 @@ export const getTimeUnitString = (
   return label;
 };
 
-export const getKeyFromDateInfo = (dateInfo: DateInfo): string => {
-  const key: string = dateInfo.date;
+export const getKeyFromDateInfo = (
+  dateInfo: DateInfo,
+  hour: number,
+): string => {
+  const currentHour: Date = add(new Date(`${dateInfo.date} 00:00:00`), {
+    hours: hour,
+  });
 
-  return key;
+  return formatFullDateTime(currentHour);
 };
 
 export const shouldShowItem = (
