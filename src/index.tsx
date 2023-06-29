@@ -29,6 +29,14 @@ const Playground = () => {
         inactiveCells: ['2023-06-03'],
         state: CellDisplayModeState.CUSTOM,
       },
+      DAY_IN_PLACE: {
+        inactiveCells: ['2023-08-03'],
+        state: CellDisplayModeState.CUSTOM,
+      },
+      WEEK_IN_PLACE: {
+        inactiveCells: ['2023-08-03'],
+        state: CellDisplayModeState.CUSTOM,
+      },
     },
   );
 

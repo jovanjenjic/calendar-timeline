@@ -3,6 +3,7 @@ import {
   DateInfo,
   PreparedDataWithTime,
   PreparedDataWithTimeFull,
+  PreparedDataWithTimeInPlace,
   PreparedDataWithoutTime,
   WeekStartsOn,
 } from '@base/components/Calendar/Calendar.types';
@@ -23,6 +24,8 @@ import {
   eachDayOfInterval,
   startOfMonth,
   endOfMonth,
+  startOfHour,
+  differenceInHours,
 } from 'date-fns';
 
 export const formatFullDate = (date: Date): string =>
@@ -237,6 +240,34 @@ export const prepareCalendarDataWithTime = (
       processMatchingItems(result, key, expendedRes);
     }
   });
+
+  return result;
+};
+
+export const prepareCalendarDataInPlace = (
+  calendarData: Record<string, any>[],
+  activeTimeDateField: string,
+): PreparedDataWithTimeInPlace => {
+  const result = {};
+  const [startIntervalKey] = (activeTimeDateField ?? '')
+    .split('-')
+    .map((str) => str.replace(/\s/g, ''));
+
+  // A sorted array based on the date and time that was selected within configurations
+  const sortedCalendarValue = calendarData.sort(
+    (a, b) =>
+      new Date(a?.[startIntervalKey]).valueOf() -
+      new Date(b?.[startIntervalKey]).valueOf(),
+  );
+
+  for (const obj of sortedCalendarValue) {
+    const startDate = new Date(obj?.[startIntervalKey]);
+    const roundedStartTime = startOfHour(startDate);
+
+    const key: string = formatFullDateTime(roundedStartTime);
+
+    result[key] = [...(result[key] || []), obj];
+  }
 
   return result;
 };

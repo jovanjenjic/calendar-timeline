@@ -4,18 +4,21 @@ import {
   CurrentView,
   DateInfoFunction,
   PreparedDataWithTimeFull,
+  PreparedDataWithTimeInPlace,
   PreparedDataWithoutTime,
 } from '@base/components/Calendar/Calendar.types';
 import calendarStyles from '@components/Calendar/Calendar.module.scss';
 import {
+  formatFullDate,
   prepareCalendarData,
+  prepareCalendarDataInPlace,
   prepareCalendarDataWithTime,
 } from '@base/utils/index';
 import {
-  getKeyFromDateInfo,
   shouldCollapse,
   shouldShowItem,
   calculatePosition,
+  getKeyFromDateInfo,
 } from './Calendar.helper';
 import CalendarComponent from './CalendarComponent';
 
@@ -38,7 +41,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   // Prepared data so that for each item in the array there is all the data as well as the length of the interval
   const preparedData:
     | PreparedDataWithTimeFull
-    | Record<string, PreparedDataWithoutTime[]>[] = React.useMemo(() => {
+    | Record<string, PreparedDataWithoutTime[]>[]
+    | PreparedDataWithTimeInPlace = React.useMemo(() => {
     switch (currentView) {
       case CurrentView.DAY:
       case CurrentView.WEEK_TIME:
@@ -50,14 +54,20 @@ const CalendarView: React.FC<CalendarViewProps> = ({
           activeTimeDateField,
           timeDateFormat?.weekStartsOn || 1,
         );
+      case CurrentView.DAY_IN_PLACE:
+      case CurrentView.WEEK_IN_PLACE:
+        return prepareCalendarDataInPlace(data, activeTimeDateField);
     }
   }, [data, activeTimeDateField, currentView]);
 
-  const renderItemsWithoutTime = ({
+  const renderItemsWithoutTimeOrInPlace = ({
     dateInfo,
     idx,
+    hour,
   }: DateInfoFunction): ReactElement[] => {
-    const key = getKeyFromDateInfo(dateInfo);
+    const key = hour
+      ? getKeyFromDateInfo(dateInfo, hour)
+      : formatFullDate(new Date(dateInfo.date));
 
     const isCollapsed = shouldCollapse(cellDisplayMode, currentView, key);
 
@@ -101,7 +111,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   const renderItemsWithTime = ({
     dateInfo,
   }: DateInfoFunction): ReactElement[] => {
-    const key = getKeyFromDateInfo(dateInfo);
+    const key = formatFullDate(new Date(dateInfo.date));
 
     return ((preparedData as PreparedDataWithTimeFull).day[key] || []).map(
       (preparedDataItem, index) => {
@@ -172,9 +182,11 @@ const CalendarView: React.FC<CalendarViewProps> = ({
         return renderItemsWithTime;
       case CurrentView.MONTH:
       case CurrentView.WEEK:
-        return renderItemsWithoutTime;
+      case CurrentView.WEEK_IN_PLACE:
+      case CurrentView.DAY_IN_PLACE:
+        return renderItemsWithoutTimeOrInPlace;
       default:
-        return renderItemsWithoutTime;
+        return renderItemsWithoutTimeOrInPlace;
     }
   }, [currentView, cellDisplayMode]);
 

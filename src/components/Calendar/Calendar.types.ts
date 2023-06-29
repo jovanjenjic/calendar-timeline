@@ -9,6 +9,12 @@ export interface DateInfo {
 export interface DateInfoFunction {
   dateInfo: DateInfo;
   idx: number;
+  hour?: number;
+}
+export interface DateInfoExtendedFunction {
+  dateInfo: DateInfo;
+  hour: number;
+  idx: number;
 }
 
 export interface PreparedDataWithoutTime {
@@ -34,11 +40,17 @@ export interface PreparedDataWithTimeFull {
   day: Record<string, PreparedDataWithTime>[];
 }
 
+export interface PreparedDataWithTimeInPlace {
+  [key: string]: any;
+}
+
 export enum CurrentView {
   MONTH = 'MONTH',
   WEEK = 'WEEK',
   WEEK_TIME = 'WEEK_TIME',
   DAY = 'DAY',
+  WEEK_IN_PLACE = 'WEEK_IN_PLACE',
+  DAY_IN_PLACE = 'DAY_IN_PLACE',
 }
 
 export enum CellDisplayModeState {

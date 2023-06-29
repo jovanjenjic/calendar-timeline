@@ -23,8 +23,10 @@ const DataViewsCalendarHeader: React.FC<CalendarHeaderProps> = ({
       case CurrentView.WEEK:
         return 'weeks';
       case CurrentView.WEEK_TIME:
+      case CurrentView.WEEK_IN_PLACE:
         return 'weeks';
       case CurrentView.DAY:
+      case CurrentView.DAY_IN_PLACE:
         return 'days';
       default:
         return 'months';

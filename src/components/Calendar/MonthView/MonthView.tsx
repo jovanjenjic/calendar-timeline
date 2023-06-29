@@ -13,7 +13,6 @@ import { isEqual, omit } from 'lodash-es';
 import monthViewStyles from '@components/Calendar/MonthView/MonthView.module.scss';
 import { DateInfo } from '@base/components/Calendar/Calendar.types';
 import { formatFullDate } from '@base/utils/index';
-import { getKeyFromDateInfo } from '../Calendar.helper';
 import { MonthViewProps } from './MonthVIew.types';
 
 const getDateInfo = (date: Date, currentMonth: number): DateInfo => {
@@ -174,7 +173,7 @@ const MonthView: FC<MonthViewProps> = ({
                       onCellClick({
                         ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
                         hour: 0,
-                        cellKey: getKeyFromDateInfo(dateInfo),
+                        cellKey: formatFullDate(new Date(dateInfo.date)),
                       })
                     }
                   />

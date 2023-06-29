@@ -7,7 +7,7 @@ import {
   TimeFormat,
 } from '../Calendar.types';
 
-export interface DayInPlaceViewProps {
+export interface WeekInPlaceViewProps {
   renderItems: ({
     dateInfo,
     hour,
