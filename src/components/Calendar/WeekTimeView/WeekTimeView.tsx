@@ -14,8 +14,9 @@ import weekTimeViewStyles from '@components/Calendar/WeekTimeView/WeekTimeView.m
 import { DateInfo } from '@base/components/Calendar/Calendar.types';
 import { formatFullDate } from '@base/utils/index';
 import { getKeyFromDateInfo, getTimeUnitString } from '../Calendar.helper';
+import { WeekTimeViewProps } from './WeekTimeView.types';
 
-const getDateInfo = (date: Date, currentMonth: number): any => {
+const getDateInfo = (date: Date, currentMonth: number): DateInfo => {
   return {
     day: getDate(date),
     month: getMonth(date),
@@ -26,8 +27,9 @@ const getDateInfo = (date: Date, currentMonth: number): any => {
   };
 };
 
-const WeekTimeView: FC<any> = ({
+const WeekTimeView: FC<WeekTimeViewProps> = ({
   renderItems,
+  renderHeaderItems,
   currentView,
   currentDate,
   onDayNumberClick,
@@ -110,24 +112,17 @@ const WeekTimeView: FC<any> = ({
             />
           ))}
         </div>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            width: '100%',
-            position: 'absolute',
-          }}
-        >
-          {Array.from(Array(7)).map((_, i) => (
-            <>
-              <div style={{ margin: '4px auto auto auto' }}>
+        <div className={weekTimeViewStyles['header']}>
+          <>
+            {Array.from(Array(7)).map((_, i) => (
+              <div className={weekTimeViewStyles['header--margin']}>
                 <p
                   className={cn(
-                    weekTimeViewStyles['cell-header__number'],
+                    weekTimeViewStyles['header__number'],
                     !getCurrentWeek[i].isCurrentMonth &&
-                      weekTimeViewStyles['cell-header__number--disabled'],
+                      weekTimeViewStyles['header__number--disabled'],
                     getCurrentWeek[i].isCurrentDay &&
-                      weekTimeViewStyles['cell-header__number--current-day'],
+                      weekTimeViewStyles['header__number--current-day'],
                   )}
                   onClick={() =>
                     onDayNumberClick(new Date(getCurrentWeek[i].date))
@@ -144,7 +139,7 @@ const WeekTimeView: FC<any> = ({
                         preparedColorDots.dateKeys[getCurrentWeek[i].date]
                           ?.color,
                     }}
-                    className={weekTimeViewStyles['cell-header__color-dot']}
+                    className={weekTimeViewStyles['header__color-dot']}
                     onClick={() =>
                       onColorDotClick(
                         preparedColorDots.dateKeys[getCurrentWeek[i].date],
@@ -153,54 +148,34 @@ const WeekTimeView: FC<any> = ({
                   />
                 )}
               </div>
-            </>
-          ))}
+            ))}
+            {renderHeaderItems(
+              getCurrentWeek[0]?.date,
+              getCurrentWeek[getCurrentWeek.length - 1]?.date,
+            )}
+          </>
         </div>
-        <div
-          style={{ paddingTop: '35px' }}
-          className={cn(weekTimeViewStyles['week-row'])}
-        >
-          {Array.from(Array(24)).map((_, hour) =>
-            getCurrentWeek.map((dateInfo, idx) => (
-              <div
-                className={weekTimeViewStyles['week-row__hour-cell']}
-                key={dateInfo.date}
-              >
-                <>
-                  <div
-                    className={weekTimeViewStyles['week-row__hour-cell--cover']}
-                    onClick={() =>
-                      onCellClick({
-                        ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
-                        hour,
-                        cellKey: getKeyFromDateInfo(
-                          currentView,
-                          dateInfo,
-                          hour,
-                        ),
-                      })
+        <div className={weekTimeViewStyles['week']}>
+          <>
+            <div className={weekTimeViewStyles['week__border-bottom']}>
+              {Array.from(Array(24)).map((_, hour) => (
+                <div className={weekTimeViewStyles['week__border-bottom-row']}>
+                  <p
+                    className={
+                      weekTimeViewStyles['week__border-bottom-hour-unit']
                     }
-                  />
-                  {idx === 0 && (
-                    <div
-                      className={
-                        weekTimeViewStyles['week-row__hour-cell-hour-number']
-                      }
-                      onClick={() =>
-                        onHourClick({
-                          ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
-                          hour,
-                        })
-                      }
-                    >
-                      {getTimeUnitString(hour, timeDateFormat)}
-                    </div>
-                  )}
-                  {renderItems({ dateInfo, hour, idx })}
-                </>
+                  >
+                    {getTimeUnitString(hour, timeDateFormat)}
+                  </p>
+                </div>
+              ))}
+            </div>
+            {getCurrentWeek.map((dateInfo, idx) => (
+              <div className={weekTimeViewStyles['week__column']}>
+                <>{renderItems({ dateInfo, idx })}</>
               </div>
-            )),
-          )}
+            ))}
+          </>
         </div>
       </div>
     </>

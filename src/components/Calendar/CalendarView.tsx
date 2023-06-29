@@ -1,17 +1,22 @@
-import React from 'react';
-import { parseISO, isBefore } from 'date-fns';
+import React, { ReactElement } from 'react';
 import {
   CalendarViewProps,
-  CellDisplayModeState,
   CurrentView,
   DateInfoFunction,
+  PreparedDataWithTimeFull,
+  PreparedDataWithoutTime,
 } from '@base/components/Calendar/Calendar.types';
 import calendarStyles from '@components/Calendar/Calendar.module.scss';
 import {
   prepareCalendarData,
-  prepareCalendarDataWeekHours,
+  prepareCalendarDataWithTime,
 } from '@base/utils/index';
-import { getAllDaysInMonth, getKeyFromDateInfo } from './Calendar.helper';
+import {
+  getKeyFromDateInfo,
+  shouldCollapse,
+  shouldShowItem,
+  calculatePosition,
+} from './Calendar.helper';
 import CalendarComponent from './CalendarComponent';
 
 const CalendarView: React.FC<CalendarViewProps> = ({
@@ -31,73 +36,49 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   timeDateFormat,
 }) => {
   // Prepared data so that for each item in the array there is all the data as well as the length of the interval
-  const preparedData = React.useMemo(
-    () =>
-      currentView === CurrentView.WEEK_TIME || currentView === CurrentView.DAY
-        ? prepareCalendarDataWeekHours(data, activeTimeDateField)
-        : prepareCalendarData(
-            data,
-            activeTimeDateField,
-            timeDateFormat?.weekStartsOn ?? 1,
-          ),
-    [data, activeTimeDateField, currentView],
-  );
-
-  const shouldShowItem = (itemInDayCell, currentDayCell) => {
-    let retValue = true;
-    if (
-      itemInDayCell.isStart ||
-      cellDisplayMode[currentView].state === CellDisplayModeState.ALL_EXPANDED
-    ) {
-      return true;
-    }
-
-    const calendarDays =
-      cellDisplayMode[currentView].state === CellDisplayModeState.ALL_COLLAPSED
-        ? getAllDaysInMonth(currentDate)
-        : cellDisplayMode[currentView].inactiveCells;
-
-    for (let i = 0; i < calendarDays.length && retValue; i++) {
-      const dayCell = calendarDays[i];
-      if (isBefore(parseISO(currentDayCell), parseISO(dayCell))) {
-        retValue = true;
-      } else if (currentDayCell !== dayCell) {
-        const closedCellItems = preparedData[dayCell] || [];
-        retValue = !closedCellItems.find(
-          (item) => item.id === itemInDayCell.id,
+  const preparedData:
+    | PreparedDataWithTimeFull
+    | Record<string, PreparedDataWithoutTime[]>[] = React.useMemo(() => {
+    switch (currentView) {
+      case CurrentView.DAY:
+      case CurrentView.WEEK_TIME:
+        return prepareCalendarDataWithTime(data, activeTimeDateField);
+      case CurrentView.MONTH:
+      case CurrentView.WEEK:
+        return prepareCalendarData(
+          data,
+          activeTimeDateField,
+          timeDateFormat?.weekStartsOn || 1,
         );
-      }
     }
+  }, [data, activeTimeDateField, currentView]);
 
-    return retValue;
-  };
+  const renderItemsWithoutTime = ({
+    dateInfo,
+    idx,
+  }: DateInfoFunction): ReactElement[] => {
+    const key = getKeyFromDateInfo(dateInfo);
 
-  // Based on the prepared data, it is iterated through each day of the week and all elements in
-  // that data are placed at the appropriate position and length within grid container.
-  const renderItems = ({ dateInfo, idx, hour }: DateInfoFunction) => {
-    const dayCell = getKeyFromDateInfo(currentView, dateInfo, hour);
+    const isCollapsed = shouldCollapse(cellDisplayMode, currentView, key);
 
-    const shouldCollapse =
-      cellDisplayMode[currentView].state ===
-        CellDisplayModeState.ALL_COLLAPSED ||
-      (cellDisplayMode[currentView].state === CellDisplayModeState.CUSTOM &&
-        cellDisplayMode[currentView].inactiveCells.includes(dayCell));
+    const arrayData: PreparedDataWithoutTime[] =
+      (isCollapsed ? preparedData?.[key]?.slice(-1) : preparedData?.[key]) ||
+      [];
 
-    const arrayData = shouldCollapse
-      ? preparedData[dayCell]?.slice(-1) || []
-      : preparedData[dayCell] || [];
-
-    return arrayData.map((itemInDayCell, index) => {
-      const shouldShow =
-        currentView !== CurrentView.MONTH ||
-        shouldShowItem(itemInDayCell, dayCell);
-
-      return shouldShow ? (
+    return arrayData.map((preparedDataItem, index) => {
+      return shouldShowItem(
+        preparedDataItem,
+        key,
+        cellDisplayMode,
+        currentView,
+        preparedData,
+        currentDate,
+      ) ? (
         <div
           key={`${index}-${dateInfo.date}`}
           style={{
             gridColumn: `${idx + 1} / ${
-              idx + (shouldCollapse ? 1 : itemInDayCell?.length || 1) + 1
+              idx + (isCollapsed ? 1 : preparedDataItem?.length || 1) + 1
             }`,
           }}
           className={calendarStyles['calendar-item']}
@@ -105,9 +86,9 @@ const CalendarView: React.FC<CalendarViewProps> = ({
           <div>
             <p
               style={{ background: 'lime', margin: '10px' }}
-              onClick={() => onItemClick(itemInDayCell)}
+              onClick={() => onItemClick(preparedDataItem)}
             >
-              {itemInDayCell?.keykey} {itemInDayCell?.id}
+              {preparedDataItem?.id}
             </p>
           </div>
         </div>
@@ -117,9 +98,90 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     });
   };
 
+  const renderItemsWithTime = ({
+    dateInfo,
+  }: DateInfoFunction): ReactElement[] => {
+    const key = getKeyFromDateInfo(dateInfo);
+
+    return ((preparedData as PreparedDataWithTimeFull).day[key] || []).map(
+      (preparedDataItem, index) => {
+        return (
+          <div
+            key={`${index}-${dateInfo.date}`}
+            style={{
+              gridRow: `${+preparedDataItem.startMinute} / ${+preparedDataItem.endMinute}`,
+              gridColumn: '1 / 3',
+              backgroundColor: 'rgba(0, 0, 255, 0.5)',
+              border: '1px solid white',
+              width: preparedDataItem.width || '99%',
+              position: 'relative',
+              left: preparedDataItem.left || '0%',
+              margin: preparedDataItem.margin,
+            }}
+          >
+            <p onClick={() => onItemClick(preparedDataItem)}>
+              {preparedDataItem?.id}
+            </p>
+          </div>
+        );
+      },
+    );
+  };
+
+  const renderHeaderItems = (
+    startDate: string,
+    endDate?: string,
+  ): (JSX.Element | null)[] => {
+    const weekItems = preparedData as PreparedDataWithTimeFull;
+
+    return weekItems.week.map((preparedDataItem, index) => {
+      const gridColumn = calculatePosition(
+        startDate,
+        endDate || startDate,
+        preparedDataItem[preparedDataItem.startIntervalKey],
+        preparedDataItem[preparedDataItem.endIntervalKey],
+        timeDateFormat.weekStartsOn ?? 1,
+      );
+
+      if (!gridColumn) {
+        return null;
+      }
+
+      return (
+        <div
+          key={`${index}-${startDate}`}
+          style={{
+            gridColumn,
+            background: 'lime',
+            margin: '5px',
+          }}
+          className={calendarStyles['calendar-item']}
+        >
+          <p onClick={() => onItemClick(preparedDataItem)}>
+            {preparedDataItem?.id}
+          </p>
+        </div>
+      );
+    });
+  };
+
+  const renderItems = React.useMemo(() => {
+    switch (currentView) {
+      case CurrentView.DAY:
+      case CurrentView.WEEK_TIME:
+        return renderItemsWithTime;
+      case CurrentView.MONTH:
+      case CurrentView.WEEK:
+        return renderItemsWithoutTime;
+      default:
+        return renderItemsWithoutTime;
+    }
+  }, [currentView, cellDisplayMode]);
+
   return (
     <CalendarComponent
       renderItems={renderItems}
+      renderHeaderItems={renderHeaderItems}
       setCurrentDate={setCurrentDate}
       currentView={currentView}
       colorDots={colorDots}

@@ -1,5 +1,5 @@
 import React, { FC, useMemo } from 'react';
-import { CalendarProps, CurrentView } from './Calendar.types';
+import { CalendarProps, ColorDotFull, CurrentView } from './Calendar.types';
 import MonthView from './MonthView/MonthView';
 import WeekView from './WeekView/WeekView';
 import DataViewsCalendarHeader from './CalendarNavigation';
@@ -10,6 +10,7 @@ import DayView from './DayView/DayView';
 
 const CalendarComponent: FC<CalendarProps> = ({
   renderItems,
+  renderHeaderItems,
   currentView,
   currentDate,
   colorDots,
@@ -22,7 +23,7 @@ const CalendarComponent: FC<CalendarProps> = ({
   timeDateFormat,
 }) => {
   // Object that will be used to display the color dot for each day, but also for the legend below the calendar
-  const preparedColorDots = useMemo(() => {
+  const preparedColorDots: ColorDotFull = useMemo(() => {
     const newValue = { dateKeys: {}, colorKeys: {} };
     (colorDots || []).forEach((dot) => {
       newValue.dateKeys[dot.date] = dot;
@@ -72,6 +73,7 @@ const CalendarComponent: FC<CalendarProps> = ({
           <WeekTimeView
             preparedColorDots={preparedColorDots}
             renderItems={renderItems}
+            renderHeaderItems={renderHeaderItems}
             currentView={currentView}
             currentDate={currentDate}
             onDayNumberClick={onDayNumberClick}
@@ -86,6 +88,7 @@ const CalendarComponent: FC<CalendarProps> = ({
           <DayView
             preparedColorDots={preparedColorDots}
             renderItems={renderItems}
+            renderHeaderItems={renderHeaderItems}
             currentView={currentView}
             currentDate={currentDate}
             onDayNumberClick={onDayNumberClick}

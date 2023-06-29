@@ -23,7 +23,7 @@ const Playground = () => {
       },
       WEEK_TIME: {
         inactiveCells: ['2023-06-03'],
-        state: CellDisplayModeState.CUSTOM,
+        state: CellDisplayModeState.ALL_COLLAPSED,
       },
       DAY: {
         inactiveCells: ['2023-06-03'],
@@ -32,6 +32,7 @@ const Playground = () => {
     },
   );
 
+  console.log('cellDisplayMode', cellDisplayMode);
   const onDayNumberClick = (day) => console.log('day', day);
   const onDayStringClick = (day) => console.log(day);
   const onHourClick = (day) => console.log(day);

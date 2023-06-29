@@ -14,8 +14,9 @@ import monthViewStyles from '@components/Calendar/MonthView/MonthView.module.scs
 import { DateInfo } from '@base/components/Calendar/Calendar.types';
 import { formatFullDate } from '@base/utils/index';
 import { getKeyFromDateInfo } from '../Calendar.helper';
+import { MonthViewProps } from './MonthVIew.types';
 
-const getDateInfo = (date: Date, currentMonth: number): any => {
+const getDateInfo = (date: Date, currentMonth: number): DateInfo => {
   return {
     day: getDate(date),
     month: getMonth(date),
@@ -26,7 +27,7 @@ const getDateInfo = (date: Date, currentMonth: number): any => {
   };
 };
 
-const MonthView: FC<any> = ({
+const MonthView: FC<MonthViewProps> = ({
   renderItems,
   currentView,
   currentDate,
@@ -173,7 +174,7 @@ const MonthView: FC<any> = ({
                       onCellClick({
                         ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
                         hour: 0,
-                        cellKey: getKeyFromDateInfo(currentView, dateInfo, 0),
+                        cellKey: getKeyFromDateInfo(dateInfo),
                       })
                     }
                   />
@@ -208,7 +209,7 @@ const MonthView: FC<any> = ({
                     )}
                   </div>
                   {visibleWeeks.includes(index) &&
-                    renderItems({ dateInfo, hour: 0, idx })}
+                    renderItems({ dateInfo, idx })}
                 </React.Fragment>
               ))}
             </div>

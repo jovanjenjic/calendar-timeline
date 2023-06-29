@@ -16,31 +16,23 @@ const DataViewsCalendarHeader: React.FC<CalendarHeaderProps> = ({
 }) => {
   const parsedCurrentDate = parseFullDate(currentDate);
 
-  const getNextTimeUnit = () => {
-    let nextTimeUnit;
-
+  const getNextTimeUnit = React.useMemo(() => {
     switch (currentView) {
       case CurrentView.MONTH:
-        nextTimeUnit = 'months';
-        break;
+        return 'months';
       case CurrentView.WEEK:
-        nextTimeUnit = 'weeks';
-        break;
+        return 'weeks';
       case CurrentView.WEEK_TIME:
-        nextTimeUnit = 'weeks';
-        break;
+        return 'weeks';
       case CurrentView.DAY:
-        nextTimeUnit = 'days';
-        break;
+        return 'days';
       default:
-        break;
+        return 'months';
     }
-
-    return nextTimeUnit;
-  };
+  }, [currentView]);
 
   const changeMonth = (type: 'add' | 'sub'): void => {
-    const duration = { [getNextTimeUnit()]: 1 };
+    const duration = { [getNextTimeUnit]: 1 };
     const newDate =
       type === 'add'
         ? formatFullDate(add(parsedCurrentDate, duration))

@@ -1,17 +1,37 @@
 export interface DateInfo {
   isCurrentDay: boolean;
-  isCurrentMonth: boolean;
+  isCurrentMonth?: boolean;
   date: string;
   day: number;
   month: number;
   year: number;
-  [key: string]: any;
 }
-
 export interface DateInfoFunction {
   dateInfo: DateInfo;
   idx: number;
-  hour: number;
+}
+
+export interface PreparedDataWithoutTime {
+  isStart: boolean;
+  length: number;
+  [key: string]: any;
+}
+
+export interface PreparedDataWithTime {
+  startIntervalKey: string;
+  endIntervalKey: string;
+  startMinute: number;
+  endMinute: number;
+  fromPreviousDay?: boolean;
+  numberInRow?: number;
+  margin?: string;
+  width?: string;
+  left?: string;
+  [key: string]: any;
+}
+export interface PreparedDataWithTimeFull {
+  week: PreparedDataWithTime[];
+  day: Record<string, PreparedDataWithTime>[];
 }
 
 export enum CurrentView {
@@ -44,6 +64,11 @@ export interface ColorDot {
   [key: string]: any;
 }
 
+export interface ColorDotFull {
+  dateKeys: Record<string, ColorDot>[] | object;
+  colorKeys: Record<string, ColorDot>[] | object;
+}
+
 export interface CellData {
   date: string;
   day: number;
@@ -70,6 +95,10 @@ export interface TimeFormat {
 
 export interface CalendarProps {
   renderItems: ({ dateInfo, idx }: DateInfoFunction) => JSX.Element[];
+  renderHeaderItems: (
+    startDate: string,
+    endDate?: string,
+  ) => (JSX.Element | null)[];
   currentView: CurrentView;
   currentDate: string;
   setCurrentDate: (date: string) => void;
