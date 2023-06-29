@@ -14,8 +14,9 @@ import weekViewStyles from '@components/Calendar/WeekView/WeekVIew.module.scss';
 import { DateInfo } from '@base/components/Calendar/Calendar.types';
 import { formatFullDate } from '@base/utils/index';
 import { getKeyFromDateInfo } from '../Calendar.helper';
+import { WeekViewProps } from './WeekView.types';
 
-const getDateInfo = (date: Date, currentMonth: number): any => {
+const getDateInfo = (date: Date, currentMonth: number): DateInfo => {
   return {
     day: getDate(date),
     month: getMonth(date),
@@ -26,7 +27,7 @@ const getDateInfo = (date: Date, currentMonth: number): any => {
   };
 };
 
-const WeekView: FC<any> = ({
+const WeekView: FC<WeekViewProps> = ({
   renderItems,
   currentView,
   currentDate,
@@ -118,7 +119,7 @@ const WeekView: FC<any> = ({
                   onCellClick({
                     ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
                     hour: 0,
-                    cellKey: getKeyFromDateInfo(currentView, dateInfo, 0),
+                    cellKey: getKeyFromDateInfo(dateInfo),
                   })
                 }
               />
@@ -150,7 +151,7 @@ const WeekView: FC<any> = ({
                   />
                 )}
               </div>
-              {renderItems({ dateInfo, hour: 0, idx })}
+              {renderItems({ dateInfo, idx })}
             </React.Fragment>
           ))}
         </div>

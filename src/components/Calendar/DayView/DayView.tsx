@@ -5,20 +5,22 @@ import { omit } from 'lodash-es';
 import calendarStyles from '@components/Calendar/DayView/DayView.module.scss';
 import { getKeyFromDateInfo, getTimeUnitString } from '../Calendar.helper';
 import { TimeDateFormat } from '../Calendar.constants';
+import { DayTimeViewProps } from './DayView.types';
+import { DateInfo } from '../Calendar.types';
 
-const getDateInfo = (date: Date, currentMonth: number): any => {
+const getDateInfo = (date: Date): DateInfo => {
   return {
     day: getDate(date),
     month: getMonth(date),
     year: getYear(date),
-    isCurrentMonth: getMonth(date) === currentMonth,
     isCurrentDay: isToday(date),
     date: format(date, TimeDateFormat.FULL_DATE),
   };
 };
 
-const DayView: FC<any> = ({
+const DayView: FC<DayTimeViewProps> = ({
   renderItems,
+  renderHeaderItems,
   currentView,
   currentDate,
   onDayNumberClick,
@@ -34,7 +36,7 @@ const DayView: FC<any> = ({
    * The first array is an array of weeks, and each week is an array of days in that week.
    */
   const parsedCurrentDay = useMemo(() => {
-    return getDateInfo(new Date(currentDate), getMonth(new Date(currentDate)));
+    return getDateInfo(new Date(currentDate));
   }, [currentDate]);
 
   return (
@@ -51,14 +53,12 @@ const DayView: FC<any> = ({
         </div>
       </div>
       <div className={calendarStyles['day-view-inside']}>
-        <div className={calendarStyles['cell-header']}>
+        <div className={calendarStyles['header']}>
           <p
             className={cn(
-              calendarStyles['cell-header__number'],
-              !parsedCurrentDay.isCurrentMonth &&
-                calendarStyles['cell-header__number--disabled'],
+              calendarStyles['header__number'],
               parsedCurrentDay.isCurrentDay &&
-                calendarStyles['cell-header__number--current-day'],
+                calendarStyles['header__number--current-day'],
             )}
             onClick={() => onDayNumberClick(new Date(parsedCurrentDay.date))}
           >
@@ -72,7 +72,7 @@ const DayView: FC<any> = ({
                 backgroundColor:
                   preparedColorDots.dateKeys[parsedCurrentDay.date]?.color,
               }}
-              className={calendarStyles['cell-header__color-dot']}
+              className={calendarStyles['header__color-dot']}
               onClick={() =>
                 onColorDotClick(
                   preparedColorDots.dateKeys[parsedCurrentDay.date],
@@ -80,52 +80,29 @@ const DayView: FC<any> = ({
               }
             />
           )}
+          {renderHeaderItems(parsedCurrentDay?.date)}
         </div>
-        <div
-          key={parsedCurrentDay.date}
-          className={cn(calendarStyles['hour-row'])}
-        >
-          {Array.from(Array(24)).map((_, hour) => (
-            <div
-              className={calendarStyles['hour-row__hour-cell']}
-              key={parsedCurrentDay.date}
-            >
-              <>
+        <div className={calendarStyles['hour-rows']}>
+          <>
+            <div className={calendarStyles['hour-rows__border-bottom']}>
+              {Array.from(Array(24)).map((_, hour) => (
                 <div
-                  className={calendarStyles['hour-row__hour-cell--cover']}
-                  onClick={() =>
-                    onCellClick({
-                      ...omit(parsedCurrentDay, [
-                        'isCurrentDay',
-                        'isCurrentMonth',
-                      ]),
-                      hour,
-                      cellKey: getKeyFromDateInfo(
-                        currentView,
-                        parsedCurrentDay,
-                        hour,
-                      ),
-                    })
-                  }
-                />
-                <div
-                  className={calendarStyles['hour-row__hour-cell-hour-number']}
-                  onClick={() =>
-                    onHourClick({
-                      ...omit(parsedCurrentDay, [
-                        'isCurrentDay',
-                        'isCurrentMonth',
-                      ]),
-                      hour,
-                    })
-                  }
+                  className={calendarStyles['hour-rows__border-bottom-line']}
                 >
-                  {getTimeUnitString(hour, timeDateFormat)}
+                  <p
+                    className={
+                      calendarStyles['hour-rows__border-bottom-hour-unit']
+                    }
+                  >
+                    {getTimeUnitString(hour, timeDateFormat)}
+                  </p>
                 </div>
-                {renderItems({ dateInfo: parsedCurrentDay, hour, idx: 0 })}
-              </>
+              ))}
             </div>
-          ))}
+            <div className={calendarStyles['hour-rows__items']}>
+              <>{renderItems({ dateInfo: parsedCurrentDay, idx: 0 })}</>
+            </div>
+          </>
         </div>
       </div>
     </>
