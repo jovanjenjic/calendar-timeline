@@ -8,6 +8,7 @@ import {
   isToday,
   startOfWeek,
   format,
+  startOfMonth,
 } from 'date-fns';
 import { isEqual, omit } from 'lodash-es';
 import monthViewStyles from '@components/Calendar/MonthView/MonthView.module.scss';
@@ -89,7 +90,10 @@ const MonthView: FC<MonthViewProps> = ({
   const getAllWeeksInMonth = useMemo(() => {
     const startOfWeekOptions = { weekStartsOn } as const;
 
-    const startDate = startOfWeek(new Date(currentDate), startOfWeekOptions);
+    const startDate = startOfWeek(
+      startOfMonth(new Date(currentDate)),
+      startOfWeekOptions,
+    );
     const nextMonth = getMonth(add(new Date(currentDate), { months: 1 }));
 
     const allDates: DateInfo[][] = [];

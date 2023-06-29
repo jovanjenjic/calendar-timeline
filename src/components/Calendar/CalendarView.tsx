@@ -52,7 +52,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
         return prepareCalendarData(
           data,
           activeTimeDateField,
-          timeDateFormat?.weekStartsOn || 1,
+          timeDateFormat?.weekStartsOn ?? 1,
         );
       case CurrentView.DAY_IN_PLACE:
       case CurrentView.WEEK_IN_PLACE:
