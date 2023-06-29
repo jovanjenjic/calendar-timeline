@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatFullDate, parseFullDate } from '@utils/index';
+import { formatFullDate } from '@utils/index';
 import { add, sub, format } from 'date-fns';
 import calendarStyles from '@components/Calendar/Calendar.module.scss';
 import Button from '@base/components/Button/Button';
@@ -14,8 +14,6 @@ const DataViewsCalendarHeader: React.FC<CalendarHeaderProps> = ({
   currentView,
   timeDateFormat,
 }) => {
-  const parsedCurrentDate = parseFullDate(currentDate);
-
   const getNextTimeUnit = React.useMemo(() => {
     switch (currentView) {
       case CurrentView.MONTH:
@@ -37,8 +35,8 @@ const DataViewsCalendarHeader: React.FC<CalendarHeaderProps> = ({
     const duration = { [getNextTimeUnit]: 1 };
     const newDate =
       type === 'add'
-        ? formatFullDate(add(parsedCurrentDate, duration))
-        : formatFullDate(sub(parsedCurrentDate, duration));
+        ? formatFullDate(add(new Date(currentDate), duration))
+        : formatFullDate(sub(new Date(currentDate), duration));
     setCurrentDate(newDate);
   };
 
@@ -48,7 +46,7 @@ const DataViewsCalendarHeader: React.FC<CalendarHeaderProps> = ({
       <Button arrowSide="right" onClick={() => changeMonth('add')} />
 
       <div className={calendarStyles['calendar__navigation__month-text']}>
-        <span>{format(parsedCurrentDate, timeDateFormat.monthYear)}</span>
+        <span>{format(new Date(currentDate), timeDateFormat.monthYear)}</span>
       </div>
       <Button
         label="Now"

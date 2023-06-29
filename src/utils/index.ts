@@ -34,9 +34,6 @@ export const formatFullDate = (date: Date): string =>
 export const formatFullDateTime = (date: Date): string =>
   format(date, TimeDateFormat.FULL_DATE_TIME);
 
-export const parseFullDate = (timeDate: string): Date =>
-  parse(timeDate, TimeDateFormat.FULL_DATE, new Date());
-
 export const dayInWeekBasedOnWeekStarts = (
   timeDate: string,
   weekStartsOn = 1,
