@@ -111,17 +111,10 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
             />
           ))}
         </div>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            width: '100%',
-            position: 'absolute',
-          }}
-        >
+        <div className={weekViewStyles['header']}>
           {Array.from(Array(7)).map((_, i) => (
             <>
-              <div style={{ margin: '4px auto auto auto' }}>
+              <div className={weekViewStyles['cell-header']}>
                 <p
                   className={cn(
                     weekViewStyles['cell-header__number'],
@@ -157,10 +150,7 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
             </>
           ))}
         </div>
-        <div
-          style={{ paddingTop: '35px' }}
-          className={cn(weekViewStyles['week-row'])}
-        >
+        <div className={cn(weekViewStyles['week-row'])}>
           {Array.from(Array(24)).map((_, hour) =>
             getCurrentWeek.map((dateInfo, idx) => (
               <div

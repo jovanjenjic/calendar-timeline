@@ -20,13 +20,7 @@ export const getTimeUnitString = (
   timeDateFormat: TimeFormat,
 ): string => {
   const date = addHours(0, num - 1);
-  const label =
-    num === 0
-      ? format(
-          date,
-          timeDateFormat.hourTimeZone || TimeDateFormat.HOUR_TIMEZONE,
-        )
-      : format(date, timeDateFormat.hour || TimeDateFormat.HOUR);
+  const label = format(date, timeDateFormat.hour || TimeDateFormat.HOUR);
   return label;
 };
 

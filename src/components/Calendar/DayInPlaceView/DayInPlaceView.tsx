@@ -41,10 +41,10 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
 
   return (
     <>
-      <div className={calendarStyles['day-component']}>
+      <div className={calendarStyles['days-component']}>
         <div
           onClick={() => onDayStringClick(new Date(currentDate))}
-          className={calendarStyles['day-component__day']}
+          className={calendarStyles['days-component__day']}
         >
           {format(
             new Date(currentDate),

@@ -1,4 +1,5 @@
 @import '../../../assets/scss/_mixins';
+@import '../../../assets//scss/_components';
 
 .week-time-view-inside {
   background-color: var(--gs-50);
@@ -7,37 +8,8 @@
   position: relative;
 }
 
-.days-component {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding-bottom: calc(var(--spacing) * 1.5);
-
-  &__day {
-    font: var(--font-c-1);
-    color: var(--gs-500);
-    width: calc(var(--spacing) * 4);
-    display: flex;
-    justify-content: center;
-  }
-}
-
-.vertical-borders-container {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-
-  &__border {
-    height: 100%;
-    width: 100%;
-    position: relative;
-    &:not(:last-of-type) {
-      border-right: 1px solid var(--gs-200);
-    }
-  }
-}
+@include days-component;
+@include vertical-borders-container;
   
 .week-row {
   z-index: 10;
@@ -82,38 +54,17 @@
   }
 }
 
+.header {
+  display: flex;
+  border-bottom: 1px solid var(--gs-200);
+  align-items: center;}
+
 .cell-header {
   position: relative;
   z-index: 10;
-  height: max-content;
-  width: max-content;
-  margin: calc(var(--spacing)) auto 0 auto;
-  &__number {
-    font: var(--font-h-6);
-    display: flex;
-    justify-content: center;
-    margin: 0 auto;
-    height: 18px;
-    width: 24px;
-    color: var(--gs-900);
+  width: 100%;
+  
+  @include number;
 
-    &--disabled {
-      color: var(--gs-300);
-    }
-
-    &--current-day {
-      background: var(--gs-900);
-      border-radius: 4px;
-      color: var(--gs-0);
-    }
-  }
-
-  &__color-dot {
-    width: 10px;
-    height: 10px;
-    display: flex;
-    margin: var(--spacing) auto 0 auto !important;
-    border-radius: 50%;
-    margin-right: var(--spacing);
-  }
+  @include color-dot;
 }

@@ -2,14 +2,18 @@
   min-width: 35px;
   height: 32px;
   background-color: white;
-  color: var(--gs-900);
-  padding: 10px;
-  border: var(--gs-500) solid 1px;
+  color: var(--gs-800);
+  padding: 10px 12px;
   cursor: pointer;
   position: relative;
+  font-family: Roboto,Inter,sans-serif;
 
   &:hover {
     background-color: var(--gs-100);
+  }
+
+  &--border {
+    border: 1px solid var(--gs-200);
   }
   
   &__right {
@@ -20,7 +24,7 @@
       border: solid var(--gs-500);
       border-width: 0 2px 2px 0;
       display: inline-block;
-      padding: 3px;
+      padding: calc(var(--spacing) * 0.5);
       transform: rotate(-45deg);  
     }
   }
@@ -33,10 +37,9 @@
       border: solid var(--gs-500);
       border-width: 0 2px 2px 0;
       display: inline-block;
-      padding: 3px;
+      padding: calc(var(--spacing) * 0.5);
       transform: rotate(135deg);  
     }
-    margin-right: 5px;
   }
 }
 

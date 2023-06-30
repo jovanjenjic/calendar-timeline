@@ -9,6 +9,7 @@ const Button: React.FC<ButtonProps> = ({
   arrowSide,
   label,
   dataCy,
+  withBorder,
 }) => {
   return (
     <button
@@ -17,6 +18,7 @@ const Button: React.FC<ButtonProps> = ({
       className={cn(
         buttonStyles['arrow-button'],
         buttonStyles[`arrow-button__${arrowSide}`],
+        withBorder && buttonStyles['arrow-button--border'],
       )}
     >
       {label}

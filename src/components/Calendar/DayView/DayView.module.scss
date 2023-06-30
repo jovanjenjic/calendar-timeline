@@ -1,4 +1,5 @@
 @import '../../../assets/scss/_mixins';
+@import '../../../assets//scss/_components';
 
 .day-view-inside {
   background-color: var(--gs-50);
@@ -7,37 +8,7 @@
   position: relative;
 }
 
-.day-component {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding-bottom: calc(var(--spacing) * 1.5);
-
-  &__day {
-    font: var(--font-c-1);
-    color: var(--gs-500);
-    width: calc(var(--spacing) * 4);
-    display: flex;
-    justify-content: center;
-  }
-}
-
-.vertical-borders-container {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-
-  &__border {
-    height: 100%;
-    width: 100%;
-    position: relative;
-    &:not(:last-of-type) {
-      border-right: 1px solid var(--gs-200);
-    }
-  }
-}
+@include days-component;
 
 .hour-rows {
   z-index: 10;
@@ -85,33 +56,13 @@
 .header {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  padding: calc(var(--spacing) * 0.5) calc(var(--spacing) * 0.5);
-  &__number {
-    font: var(--font-h-6);
+  
+  &__number-color-dot {
     display: flex;
-    justify-content: center;
-    margin: 0 auto;
-    height: 18px;
-    width: 24px;
-    color: var(--gs-900);
-
-    &--disabled {
-      color: var(--gs-300);
-    }
-
-    &--current-day {
-      background: var(--gs-900);
-      border-radius: 4px;
-      color: var(--gs-0);
-    }
+    align-items: center;
+    position: relative;
   }
+  @include number;
+  @include color-dot;
 
-  &__color-dot {
-    width: 10px;
-    height: 10px;
-    display: flex;
-    margin: var(--spacing) auto 0 auto !important;
-    border-radius: 50%;
-    margin-right: var(--spacing);
-  }
 }
