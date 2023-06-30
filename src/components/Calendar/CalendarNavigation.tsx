@@ -44,15 +44,23 @@ const CalendarNavigation: React.FC<CalendarHeaderProps> = ({
       className={calendarStyles['calendar__navigation']}
     >
       <Button
-        dataCy="NavigationLeftButton"
-        arrowSide="left"
-        onClick={() => changeMonth('sub')}
+        dataCy="NavigationNowButton"
+        label="Today"
+        onClick={() => setCurrentDate(formatFullDate(new Date()))}
+        withBorder
       />
-      <Button
-        dataCy="NavigationRightButton"
-        arrowSide="right"
-        onClick={() => changeMonth('add')}
-      />
+      <div className={calendarStyles['calendar__navigation-arrow-buttons']}>
+        <Button
+          dataCy="NavigationLeftButton"
+          arrowSide="left"
+          onClick={() => changeMonth('sub')}
+        />
+        <Button
+          dataCy="NavigationRightButton"
+          arrowSide="right"
+          onClick={() => changeMonth('add')}
+        />
+      </div>
 
       <div className={calendarStyles['calendar__navigation__month-text']}>
         <span data-cy="NavigationTimeDateText">
@@ -62,11 +70,6 @@ const CalendarNavigation: React.FC<CalendarHeaderProps> = ({
           )}
         </span>
       </div>
-      <Button
-        dataCy="NavigationNowButton"
-        label="Now"
-        onClick={() => setCurrentDate(formatFullDate(new Date()))}
-      />
     </div>
   );
 };

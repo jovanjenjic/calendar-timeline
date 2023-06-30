@@ -111,7 +111,7 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
         <div className={weekTimeViewStyles['header']}>
           <>
             {Array.from(Array(7)).map((_, i) => (
-              <div className={weekTimeViewStyles['header--margin']}>
+              <div className={weekTimeViewStyles['header--item']}>
                 <p
                   className={cn(
                     weekTimeViewStyles['header__number'],

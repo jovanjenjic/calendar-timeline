@@ -41,10 +41,10 @@ const DayView: FC<DayTimeViewProps> = ({
 
   return (
     <>
-      <div className={calendarStyles['day-component']}>
+      <div className={calendarStyles['days-component']}>
         <div
           onClick={() => onDayStringClick(new Date(currentDate))}
-          className={calendarStyles['day-component__day']}
+          className={calendarStyles['days-component__day']}
         >
           {format(
             new Date(currentDate),
@@ -54,32 +54,34 @@ const DayView: FC<DayTimeViewProps> = ({
       </div>
       <div className={calendarStyles['day-view-inside']}>
         <div className={calendarStyles['header']}>
-          <p
-            className={cn(
-              calendarStyles['header__number'],
-              parsedCurrentDay.isCurrentDay &&
-                calendarStyles['header__number--current-day'],
-            )}
-            onClick={() => onDayNumberClick(new Date(parsedCurrentDay.date))}
-          >
-            {parsedCurrentDay.day}
-          </p>
-          {preparedColorDots.dateKeys?.[parsedCurrentDay.date] && (
+          <div className={calendarStyles['header__number-color-dot']}>
             <p
-              data-cy="ColorDot"
-              data-date={parsedCurrentDay.date}
-              style={{
-                backgroundColor:
-                  preparedColorDots.dateKeys[parsedCurrentDay.date]?.color,
-              }}
-              className={calendarStyles['header__color-dot']}
-              onClick={() =>
-                onColorDotClick(
-                  preparedColorDots.dateKeys[parsedCurrentDay.date],
-                )
-              }
-            />
-          )}
+              className={cn(
+                calendarStyles['header__number'],
+                parsedCurrentDay.isCurrentDay &&
+                  calendarStyles['header__number--current-day'],
+              )}
+              onClick={() => onDayNumberClick(new Date(parsedCurrentDay.date))}
+            >
+              {parsedCurrentDay.day}
+            </p>
+            {preparedColorDots.dateKeys?.[parsedCurrentDay.date] && (
+              <p
+                data-cy="ColorDot"
+                data-date={parsedCurrentDay.date}
+                style={{
+                  backgroundColor:
+                    preparedColorDots.dateKeys[parsedCurrentDay.date]?.color,
+                }}
+                className={calendarStyles['header__color-dot']}
+                onClick={() =>
+                  onColorDotClick(
+                    preparedColorDots.dateKeys[parsedCurrentDay.date],
+                  )
+                }
+              />
+            )}
+          </div>
           {renderHeaderItems(parsedCurrentDay?.date)}
         </div>
         <div className={calendarStyles['hour-rows']}>

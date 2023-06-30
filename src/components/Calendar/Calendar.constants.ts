@@ -7,5 +7,4 @@ export enum TimeDateFormat {
   DISPLAY_DATE_TIME = 'PPpp',
   SHORT_WEEKDAY = 'EEE',
   HOUR = 'hh a',
-  HOUR_TIMEZONE = 'z',
 }

@@ -47,6 +47,7 @@ export const yellowColorVariations = () => {
 
 export const orangeColorVariations = () => {
   return `
+      --o-600: #f08300;
       --o-500: #E35F2E;
       --o-400: #EE7A4C;
       --o-300: #F0916B;
@@ -85,8 +86,8 @@ export const grayScaleColorVariations = () => {
       --gs-400: #8898AC;
       --gs-300: #A0AEC0;
       --gs-200: #CBD5E0;
-      --gs-100: #E6ECF1;
-      --gs-50: #F7FAFC;
+      --gs-100: #F9F9F9;
+      --gs-50: #FEFEFE;
       --gs-0: #FFFFFF;
     `;
 };
@@ -99,6 +100,7 @@ export const fontVariations = () => {
       --font-h-4: normal normal 500 20px/28px 'Inter', sans-serif;
       --font-h-5: normal normal 500 16px/24px 'Inter', sans-serif;
       --font-h-6: normal normal 500 14px/20px 'Inter', sans-serif;
+      --font-h-7: normal normal 500 12px/18px 'Inter', sans-serif;
 
       --font-p-1: normal normal 400 18px/28px 'Inter', sans-serif;
       --font-p-2: normal normal 400 16px/24px 'Inter', sans-serif;
