@@ -11,9 +11,9 @@ import {
   startOfMonth,
 } from 'date-fns';
 import { isEqual, omit } from 'lodash-es';
-import monthViewStyles from '@components/Calendar/MonthView/MonthView.module.scss';
-import { DateInfo } from '@base/components/Calendar/Calendar.types';
-import { formatFullDate } from '@base/utils/index';
+import monthViewStyles from './MonthView.module.scss';
+import { DateInfo } from '../Calendar.types';
+import { formatFullDate } from '../../../utils/index';
 import { MonthViewProps } from './MonthVIew.types';
 
 const getDateInfo = (date: Date, currentMonth: number): DateInfo => {
@@ -118,7 +118,7 @@ const MonthView: FC<MonthViewProps> = ({
 
   return (
     <>
-      <div className={monthViewStyles['days-component']}>
+      <div data-cy="StringDays" className={monthViewStyles['days-component']}>
         {Array.from(Array(7)).map((_, i) => (
           <div
             key={i}
@@ -140,8 +140,14 @@ const MonthView: FC<MonthViewProps> = ({
           </div>
         ))}
       </div>
-      <div className={monthViewStyles['month-view-inside']}>
-        <div className={monthViewStyles['vertical-borders-container']}>
+      <div
+        data-cy="MonthViewInside"
+        className={monthViewStyles['month-view-inside']}
+      >
+        <div
+          data-cy="VerticalBorders"
+          className={monthViewStyles['vertical-borders-container']}
+        >
           {Array.from(Array(7)).map((_, key) => (
             <div
               key={key}
@@ -160,6 +166,7 @@ const MonthView: FC<MonthViewProps> = ({
               className={cn(monthViewStyles['week-row'])}
               ref={(el) => (weekRefs.current[index] = el!)}
               data-week-index={index}
+              data-cy="WeekRow"
             >
               {week.map((dateInfo, idx) => (
                 <React.Fragment key={dateInfo.date}>
@@ -178,6 +185,12 @@ const MonthView: FC<MonthViewProps> = ({
                   />
                   <div className={monthViewStyles['cell-header']}>
                     <p
+                      data-cy="DayNumber"
+                      data-day-type={
+                        dateInfo.isCurrentDay
+                          ? 'current'
+                          : !dateInfo.isCurrentMonth && 'disabled'
+                      }
                       className={cn(
                         monthViewStyles['cell-header__number'],
                         !dateInfo.isCurrentMonth &&

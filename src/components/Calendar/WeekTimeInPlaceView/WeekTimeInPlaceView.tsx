@@ -10,9 +10,9 @@ import {
   format,
 } from 'date-fns';
 import { omit } from 'lodash-es';
-import weekViewStyles from '@components/Calendar/WeekTimeInPlaceView/WeekTimeInPlaceView.module.scss';
-import { DateInfo } from '@base/components/Calendar/Calendar.types';
-import { formatFullDate } from '@base/utils/index';
+import weekViewStyles from './WeekTimeInPlaceView.module.scss';
+import { DateInfo } from '../Calendar.types';
+import { formatFullDate } from '../../../utils/index';
 import { getKeyFromDateInfo, getTimeUnitString } from '../Calendar.helper';
 import { WeekInPlaceViewProps } from './WeekTimeInPlaceView.types';
 

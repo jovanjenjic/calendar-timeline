@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import CalendarView from './components/Calendar/CalendarView';
-import dataViewConfig from '@base/dataView';
+import dataViewConfig from '../src/dataView';
 import GoUrbanStyleguide from './components/style-guide/GoUrbanStyleguide';
 import {
   CellData,
@@ -40,7 +40,6 @@ const Playground = () => {
     },
   );
 
-  console.log('cellDisplayMode', cellDisplayMode);
   const onDayNumberClick = (day) => console.log('day', day);
   const onDayStringClick = (day) => console.log(day);
   const onHourClick = (day) => console.log(day);
@@ -72,9 +71,12 @@ const Playground = () => {
     });
   };
 
-  console.log('cellDisplayModecellDisplayMode', cellDisplayMode);
-
-  const dataView = dataViewConfig(currentDate, setCurrentDate, cellDisplayMode);
+  const dataView = dataViewConfig(
+    currentDate,
+    setCurrentDate,
+    cellDisplayMode,
+    setCellDisplayMode,
+  );
   return (
     <div style={{ padding: '80px' }}>
       <GoUrbanStyleguide />

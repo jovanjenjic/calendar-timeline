@@ -12,7 +12,7 @@ import {
   formatFullDate,
   formatFullDateTime,
   getAllDaysInMonth,
-} from '@base/utils';
+} from '../../utils/index';
 import { TimeDateFormat } from './Calendar.constants';
 
 export const getTimeUnitString = (
@@ -52,18 +52,18 @@ export const shouldShowItem = (
   let retValue = true;
   if (
     preparedDataItem.isStart ||
-    cellDisplayMode[currentView].state === CellDisplayModeState.ALL_EXPANDED ||
+    cellDisplayMode[currentView]?.state === CellDisplayModeState.ALL_EXPANDED ||
     currentView !== CurrentView.MONTH
   ) {
     return true;
   }
 
   const calendarDays =
-    cellDisplayMode[currentView].state === CellDisplayModeState.ALL_COLLAPSED
+    cellDisplayMode[currentView]?.state === CellDisplayModeState.ALL_COLLAPSED
       ? getAllDaysInMonth(currentDate)
-      : cellDisplayMode[currentView].inactiveCells;
+      : cellDisplayMode[currentView]?.inactiveCells;
 
-  for (let i = 0; i < calendarDays.length && retValue; i++) {
+  for (let i = 0; i < calendarDays?.length && retValue; i++) {
     const dayCell = calendarDays[i];
     if (isBefore(parseISO(dateKey), parseISO(dayCell))) {
       retValue = true;
@@ -83,8 +83,8 @@ export const shouldCollapse = (
   currentView: CurrentView,
   dateKey: string,
 ): boolean =>
-  cellDisplayMode[currentView].state === CellDisplayModeState.ALL_COLLAPSED ||
-  (cellDisplayMode[currentView].state === CellDisplayModeState.CUSTOM &&
+  cellDisplayMode[currentView]?.state === CellDisplayModeState.ALL_COLLAPSED ||
+  (cellDisplayMode[currentView]?.state === CellDisplayModeState.CUSTOM &&
     cellDisplayMode[currentView].inactiveCells.includes(dateKey));
 
 export const calculatePosition = (

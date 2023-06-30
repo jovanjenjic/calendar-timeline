@@ -16,6 +16,5 @@
     "module": "esnext",
     "jsx": "react-jsx"
   },
-  "extends": "./tsconfig.paths.json",
   "include": ["src", "cypress", "**/*.ts", "cypress.config.js"]
 }

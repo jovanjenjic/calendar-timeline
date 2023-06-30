@@ -2,4 +2,4 @@
 console.warn(
   '@deprecated: Svg/manifest is no longer available. Please use "import type IconName from "gourban/ui-components"',
 );
-export { default } from '@components/style-guide/manifest';
+export { default } from '../style-guide/manifest';

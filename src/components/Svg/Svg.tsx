@@ -2,7 +2,7 @@ import React from 'react';
 import cn from 'classnames';
 import SVG from 'react-inlinesvg';
 
-import icons from '@components/style-guide/manifest';
+import icons from '../style-guide/manifest';
 import { SVG as SvgT } from './Svg.types';
 import cssModules from './Svg.module.scss';
 

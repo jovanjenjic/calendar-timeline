@@ -6,14 +6,14 @@ import {
   PreparedDataWithTimeFull,
   PreparedDataWithTimeInPlace,
   PreparedDataWithoutTime,
-} from '@base/components/Calendar/Calendar.types';
-import calendarStyles from '@components/Calendar/Calendar.module.scss';
+} from '../Calendar/Calendar.types';
+import calendarStyles from '../Calendar/Calendar.module.scss';
 import {
   formatFullDate,
   prepareCalendarData,
   prepareCalendarDataInPlace,
   prepareCalendarDataWithTime,
-} from '@base/utils/index';
+} from '../../utils/index';
 import {
   shouldCollapse,
   shouldShowItem,

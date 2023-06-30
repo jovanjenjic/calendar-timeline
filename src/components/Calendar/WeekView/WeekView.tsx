@@ -10,9 +10,9 @@ import {
   format,
 } from 'date-fns';
 import { omit } from 'lodash-es';
-import weekViewStyles from '@components/Calendar/WeekView/WeekVIew.module.scss';
-import { DateInfo } from '@base/components/Calendar/Calendar.types';
-import { formatFullDate } from '@base/utils/index';
+import weekViewStyles from './WeekVIew.module.scss';
+import { DateInfo } from '../Calendar.types';
+import { formatFullDate } from '../../../utils/index';
 import { WeekViewProps } from './WeekView.types';
 
 const getDateInfo = (date: Date, currentMonth: number): DateInfo => {
