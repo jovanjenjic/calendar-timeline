@@ -1,14 +1,12 @@
 import React from 'react';
-import { formatFullDate } from '@utils/index';
+import { formatFullDate } from '../../utils/index';
 import { add, sub, format } from 'date-fns';
-import calendarStyles from '@components/Calendar/Calendar.module.scss';
-import Button from '@base/components/Button/Button';
-import {
-  CalendarHeaderProps,
-  CurrentView,
-} from '@base/components/Calendar/Calendar.types';
+import calendarStyles from './Calendar.module.scss';
+import Button from '../Button/Button';
+import { CalendarHeaderProps, CurrentView } from './Calendar.types';
+import { TimeDateFormat } from './Calendar.constants';
 
-const DataViewsCalendarHeader: React.FC<CalendarHeaderProps> = ({
+const CalendarNavigation: React.FC<CalendarHeaderProps> = ({
   setCurrentDate,
   currentDate,
   currentView,
@@ -41,14 +39,31 @@ const DataViewsCalendarHeader: React.FC<CalendarHeaderProps> = ({
   };
 
   return (
-    <div className={calendarStyles['calendar__navigation']}>
-      <Button arrowSide="left" onClick={() => changeMonth('sub')} />
-      <Button arrowSide="right" onClick={() => changeMonth('add')} />
+    <div
+      data-cy="CalendarNavigation"
+      className={calendarStyles['calendar__navigation']}
+    >
+      <Button
+        dataCy="NavigationLeftButton"
+        arrowSide="left"
+        onClick={() => changeMonth('sub')}
+      />
+      <Button
+        dataCy="NavigationRightButton"
+        arrowSide="right"
+        onClick={() => changeMonth('add')}
+      />
 
       <div className={calendarStyles['calendar__navigation__month-text']}>
-        <span>{format(new Date(currentDate), timeDateFormat.monthYear)}</span>
+        <span data-cy="NavigationTimeDateText">
+          {format(
+            new Date(currentDate),
+            timeDateFormat?.monthYear || TimeDateFormat.MONTH_YEAR,
+          )}
+        </span>
       </div>
       <Button
+        dataCy="NavigationNowButton"
         label="Now"
         onClick={() => setCurrentDate(formatFullDate(new Date()))}
       />
@@ -56,4 +71,4 @@ const DataViewsCalendarHeader: React.FC<CalendarHeaderProps> = ({
   );
 };
 
-export default DataViewsCalendarHeader;
+export default CalendarNavigation;

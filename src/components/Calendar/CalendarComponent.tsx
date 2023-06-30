@@ -2,8 +2,8 @@ import React, { FC, useMemo } from 'react';
 import { CalendarProps, ColorDotFull, CurrentView } from './Calendar.types';
 import MonthView from './MonthView/MonthView';
 import WeekView from './WeekView/WeekView';
-import DataViewsCalendarHeader from './CalendarNavigation';
-import calendarStyles from '@components/Calendar/Calendar.module.scss';
+import CalendarNavigation from './CalendarNavigation';
+import calendarStyles from './Calendar.module.scss';
 import { isEmpty } from 'lodash-es';
 import WeekTimeView from './WeekTimeView/WeekTimeView';
 import DayView from './DayView/DayView';
@@ -38,7 +38,7 @@ const CalendarComponent: FC<CalendarProps> = ({
     <>
       <div>
         {!!setCurrentDate && (
-          <DataViewsCalendarHeader
+          <CalendarNavigation
             currentDate={currentDate}
             currentView={currentView}
             setCurrentDate={setCurrentDate}
@@ -131,7 +131,10 @@ const CalendarComponent: FC<CalendarProps> = ({
         )}
       </div>
       {!isEmpty(preparedColorDots) && (
-        <div className={calendarStyles['calendar-color-dots-legend']}>
+        <div
+          data-cy="ColorDots"
+          className={calendarStyles['calendar-color-dots-legend']}
+        >
           {Object.keys(preparedColorDots.colorKeys).map((color) => (
             <div
               key={color}

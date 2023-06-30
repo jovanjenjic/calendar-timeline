@@ -2,7 +2,7 @@ import React, { useMemo, FC } from 'react';
 import cn from 'classnames';
 import { getDate, getMonth, getYear, isToday, format } from 'date-fns';
 import { omit } from 'lodash-es';
-import calendarStyles from '@components/Calendar/DayView/DayView.module.scss';
+import calendarStyles from './DayView.module.scss';
 import { getTimeUnitString } from '../Calendar.helper';
 import { TimeDateFormat } from '../Calendar.constants';
 import { DayTimeViewProps } from './DayView.types';

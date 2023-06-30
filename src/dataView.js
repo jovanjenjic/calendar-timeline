@@ -1,7 +1,7 @@
 import {
   CurrentView,
   WeekStartsOn,
-} from '@base/components/Calendar/Calendar.types';
+} from './components/Calendar/Calendar.types';
 
 const data = [
   {
@@ -64,15 +64,18 @@ const colorDots = [
   },
 ];
 
-const dataViewConfig = (currentDate, setCurrentDate, cellDisplayMode) => ({
+const dataViewConfig = (
+  currentDate = '2022-06-03',
+  setCurrentDate,
+  cellDisplayMode = {},
+  setCellDisplayMode,
+) => ({
   data: data,
   currentDate,
   setCurrentDate,
-  onItemClick: () => {
-    (() => [1, 2].map())();
-  },
   currentView: CurrentView.MONTH,
   cellDisplayMode,
+  setCellDisplayMode,
   timeDateFormat: {
     day: 'EEE',
     hour: 'hh a',

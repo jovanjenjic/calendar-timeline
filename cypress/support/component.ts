@@ -1,4 +1,3 @@
-/* eslint-disable */
 // ***********************************************************
 // This example support/component.ts is processed and
 // loaded automatically before your test files.
@@ -15,12 +14,12 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands';
+import './commands'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
-import { mount } from 'cypress/react18';
+import { mount } from 'cypress/react18'
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.
@@ -29,12 +28,12 @@ import { mount } from 'cypress/react18';
 declare global {
   namespace Cypress {
     interface Chainable {
-      mount: typeof mount;
+      mount: typeof mount
     }
   }
 }
 
-Cypress.Commands.add('mount', mount);
+Cypress.Commands.add('mount', mount)
 
 // Example use:
 // cy.mount(<MyComponent />)

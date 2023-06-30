@@ -1,11 +1,11 @@
-import { TimeDateFormat } from '@base/components/Calendar/Calendar.constants';
+import { TimeDateFormat } from '../components/Calendar/Calendar.constants';
 import {
   PreparedDataWithTime,
   PreparedDataWithTimeFull,
   PreparedDataWithTimeInPlace,
   PreparedDataWithoutTime,
   WeekStartsOn,
-} from '@base/components/Calendar/Calendar.types';
+} from '../components/Calendar/Calendar.types';
 import {
   differenceInDays,
   add,
