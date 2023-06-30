@@ -1,12 +1,4 @@
-import {
-  add,
-  getDate,
-  getMonth,
-  addHours,
-  format,
-  isBefore,
-  parseISO,
-} from 'date-fns';
+import { add, addHours, format, isBefore, parseISO } from 'date-fns';
 import {
   CellDisplayMode,
   CellDisplayModeState,
@@ -22,30 +14,6 @@ import {
   getAllDaysInMonth,
 } from '@base/utils';
 import { TimeDateFormat } from './Calendar.constants';
-
-export const getNextTimeUnit = (
-  currentView: CurrentView,
-  date: Date,
-): number => {
-  let nextTimeUnit;
-
-  switch (currentView) {
-    case CurrentView.MONTH:
-      nextTimeUnit = getMonth(add(date, { months: 1 }));
-      break;
-    case CurrentView.WEEK:
-    case CurrentView.WEEK_TIME:
-      nextTimeUnit = getDate(add(date, { weeks: 1 }));
-      break;
-    case CurrentView.DAY:
-      nextTimeUnit = getDate(add(date, { days: 1 }));
-      break;
-    default:
-      break;
-  }
-
-  return nextTimeUnit;
-};
 
 export const getTimeUnitString = (
   num: number,

@@ -1,6 +1,5 @@
 import { TimeDateFormat } from '@base/components/Calendar/Calendar.constants';
 import {
-  DateInfo,
   PreparedDataWithTime,
   PreparedDataWithTimeFull,
   PreparedDataWithTimeInPlace,
@@ -12,7 +11,6 @@ import {
   add,
   getDay,
   format,
-  parse,
   startOfDay,
   differenceInMinutes,
   getHours,
@@ -25,7 +23,6 @@ import {
   startOfMonth,
   endOfMonth,
   startOfHour,
-  differenceInHours,
 } from 'date-fns';
 
 export const formatFullDate = (date: Date): string =>

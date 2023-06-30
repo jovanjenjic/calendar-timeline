@@ -62,7 +62,7 @@
     width: 100%;
     position: relative;
   
-    &:not(:last-of-type) {
+    &--border-bottom {
       border-bottom: 1px solid var(--gs-200);
     }
 
@@ -73,10 +73,11 @@
     }
 
     &-hour-number {
-      height: 0px;
       position: relative;
-      left: -60px;
-      top: -11px;
+      left: -35px;
+      top: -13px;
+      color: var(--gs-600);
+      font-size: 10px;
     }
   }
 }

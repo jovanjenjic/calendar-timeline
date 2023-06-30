@@ -39,7 +39,6 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
     return getDateInfo(new Date(currentDate), getMonth(new Date(currentDate)));
   }, [currentDate]);
 
-  console.log('parsedCurrentDayparsedCurrentDay', parsedCurrentDay);
   return (
     <>
       <div className={calendarStyles['day-component']}>

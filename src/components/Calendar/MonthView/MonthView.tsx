@@ -41,8 +41,7 @@ const MonthView: FC<MonthViewProps> = ({
   // It is necessary to render the rows (weeks) that are visible in the viewport
   const [visibleWeeks, setVisibleWeeks] = useState<number[]>([0]);
   const weekRefs = useRef<HTMLDivElement[]>([]);
-  const weekStartsOn =
-    (timeDateFormat.weekStartsOn as 0 | 1 | 2 | 3 | 4 | 5 | 6) ?? 1;
+  const weekStartsOn = timeDateFormat.weekStartsOn ?? 1;
 
   useLayoutEffect(() => {
     setVisibleWeeks([0]);
@@ -88,12 +87,9 @@ const MonthView: FC<MonthViewProps> = ({
    * The first array is an array of weeks, and each week is an array of days in that week.
    */
   const getAllWeeksInMonth = useMemo(() => {
-    const startOfWeekOptions = { weekStartsOn } as const;
-
-    const startDate = startOfWeek(
-      startOfMonth(new Date(currentDate)),
-      startOfWeekOptions,
-    );
+    const startDate = startOfWeek(startOfMonth(new Date(currentDate)), {
+      weekStartsOn,
+    });
     const nextMonth = getMonth(add(new Date(currentDate), { months: 1 }));
 
     const allDates: DateInfo[][] = [];
@@ -101,9 +97,8 @@ const MonthView: FC<MonthViewProps> = ({
     let day = 0;
 
     while (
-      getMonth(
-        startOfWeek(add(startDate, { days: day }), startOfWeekOptions),
-      ) !== nextMonth
+      getMonth(startOfWeek(add(startDate, { days: day }), { weekStartsOn })) !==
+      nextMonth
     ) {
       weekDates.push(
         getDateInfo(
