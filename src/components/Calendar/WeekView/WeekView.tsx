@@ -37,16 +37,14 @@ const WeekView: FC<WeekViewProps> = ({
   timeDateFormat,
   preparedColorDots,
 }) => {
-  const weekStartsOn =
-    (timeDateFormat.weekStartsOn as 0 | 1 | 2 | 3 | 4 | 5 | 6) ?? 1;
+  const weekStartsOn = timeDateFormat.weekStartsOn ?? 1;
 
   /**
    * It will contain all the days of the month structured by weeks.
    * The first array is an array of weeks, and each week is an array of days in that week.
    */
   const getCurrentWeek = useMemo(() => {
-    const startOfWeekOptions = { weekStartsOn } as const;
-    const startDate = startOfWeek(new Date(currentDate), startOfWeekOptions);
+    const startDate = startOfWeek(new Date(currentDate), { weekStartsOn });
 
     const nextTimeUnit = getDate(add(startDate, { weeks: 1 }));
 
@@ -54,9 +52,8 @@ const WeekView: FC<WeekViewProps> = ({
     let day = 0;
 
     while (
-      getDate(
-        startOfWeek(add(startDate, { days: day }), startOfWeekOptions),
-      ) !== nextTimeUnit
+      getDate(startOfWeek(add(startDate, { days: day }), { weekStartsOn })) !==
+      nextTimeUnit
     ) {
       weekDates.push(
         getDateInfo(

@@ -164,7 +164,11 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
           {Array.from(Array(24)).map((_, hour) =>
             getCurrentWeek.map((dateInfo, idx) => (
               <div
-                className={weekViewStyles['week-row__hour-cell']}
+                className={cn(
+                  weekViewStyles['week-row__hour-cell'],
+                  hour !== 23 &&
+                    weekViewStyles['week-row__hour-cell--border-bottom'],
+                )}
                 key={dateInfo.date}
               >
                 <>
