@@ -8,6 +8,8 @@ import {
   isToday,
   startOfWeek,
   format,
+  getHours,
+  getMinutes,
 } from 'date-fns';
 import { omit } from 'lodash-es';
 import weekTimeViewStyles from './WeekTimeView.module.scss';
@@ -168,7 +170,17 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
             </div>
             {getCurrentWeek.map((dateInfo, idx) => (
               <div className={weekTimeViewStyles['week__column']}>
-                <>{renderItems({ dateInfo, idx })}</>
+                {renderItems({ dateInfo, idx })}
+                {dateInfo.isCurrentDay && (
+                  <div
+                    className={weekTimeViewStyles['current-minute-line']}
+                    style={{
+                      gridColumn: '1/3',
+                      gridRow:
+                        getHours(new Date()) * 60 + getMinutes(new Date()),
+                    }}
+                  />
+                )}
               </div>
             ))}
           </>
