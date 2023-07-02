@@ -49,7 +49,7 @@ const DayView: FC<DayTimeViewProps> = ({
 
   return (
     <>
-      <div className={calendarStyles['days-component']}>
+      <div data-cy="StringDay" className={calendarStyles['days-component']}>
         <div
           onClick={() => onDayStringClick(new Date(currentDate))}
           className={calendarStyles['days-component__day']}
@@ -60,10 +60,14 @@ const DayView: FC<DayTimeViewProps> = ({
           )}
         </div>
       </div>
-      <div className={calendarStyles['day-view-inside']}>
+      <div
+        data-cy="DayViewInside"
+        className={calendarStyles['day-view-inside']}
+      >
         <div className={calendarStyles['header']}>
           <div className={calendarStyles['header__number-color-dot']}>
             <p
+              data-cy="DayNumber"
               className={cn(
                 calendarStyles['header__number'],
                 parsedCurrentDay.isCurrentDay &&
@@ -94,7 +98,10 @@ const DayView: FC<DayTimeViewProps> = ({
         </div>
         <div className={calendarStyles['hour-rows']}>
           <>
-            <div className={calendarStyles['hour-rows__border-bottom']}>
+            <div
+              data-cy="HourRows"
+              className={calendarStyles['hour-rows__border-bottom']}
+            >
               {Array.from(Array(24)).map((_, hour) => (
                 <div
                   className={calendarStyles['hour-rows__border-bottom-line']}
@@ -113,6 +120,7 @@ const DayView: FC<DayTimeViewProps> = ({
               {renderItems({ dateInfo: parsedCurrentDay, idx: 0 })}
               {parsedCurrentDay.isCurrentDay && (
                 <div
+                  data-cy="CurrentMinutLine"
                   className={calendarStyles['current-minute-line']}
                   style={{
                     gridColumn: '1/3',

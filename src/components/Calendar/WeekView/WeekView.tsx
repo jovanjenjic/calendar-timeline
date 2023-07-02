@@ -69,7 +69,7 @@ const WeekView: FC<WeekViewProps> = ({
 
   return (
     <>
-      <div className={weekViewStyles['days-component']}>
+      <div data-cy="StringDays" className={weekViewStyles['days-component']}>
         {Array.from(Array(7)).map((_, i) => (
           <div
             key={i}
@@ -91,8 +91,14 @@ const WeekView: FC<WeekViewProps> = ({
           </div>
         ))}
       </div>
-      <div className={weekViewStyles['week-view-inside']}>
-        <div className={weekViewStyles['vertical-borders-container']}>
+      <div
+        data-cy="WeekViewInside"
+        className={weekViewStyles['week-view-inside']}
+      >
+        <div
+          data-cy="VerticalBorders"
+          className={weekViewStyles['vertical-borders-container']}
+        >
           {Array.from(Array(7)).map((_, key) => (
             <div
               key={key}
@@ -103,7 +109,7 @@ const WeekView: FC<WeekViewProps> = ({
             />
           ))}
         </div>
-        <div className={cn(weekViewStyles['week-row'])}>
+        <div data-cy="WeekRow" className={cn(weekViewStyles['week-row'])}>
           {getCurrentWeek.map((dateInfo, idx) => (
             <React.Fragment key={dateInfo.date}>
               <div
@@ -121,6 +127,12 @@ const WeekView: FC<WeekViewProps> = ({
               />
               <div className={weekViewStyles['cell-header']}>
                 <p
+                  data-cy="DayNumber"
+                  data-day-type={
+                    dateInfo.isCurrentDay
+                      ? 'current'
+                      : !dateInfo.isCurrentMonth && 'disabled'
+                  }
                   className={cn(
                     weekViewStyles['cell-header__number'],
                     !dateInfo.isCurrentMonth &&

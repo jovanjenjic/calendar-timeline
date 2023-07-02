@@ -7,7 +7,7 @@ import dataViewConfig from '../../../dataView';
 import { TimeDateFormat } from '../Calendar.constants';
 
 const calendarComponent = "*[data-cy='StringDays']";
-const calendarInside = "*[data-cy='MonthViewInside']";
+const calendarInside = "*[data-cy='WeekViewInside']";
 const verticalBorders = "*[data-cy='VerticalBorders']";
 const weekRow = "*[data-cy='WeekRow']";
 const colorDotsComponent = "*[data-cy='ColorDots']";
@@ -36,11 +36,6 @@ const colorDots = [
     color: 'rgb(222, 11, 55)',
     text: 'Text about green color',
     date: '2023-06-04',
-  },
-  {
-    color: 'rgb(22, 111, 55)',
-    text: 'Text about green color',
-    date: '2023-06-05',
   },
 ];
 
@@ -86,27 +81,27 @@ const checkAreSubcomponentsExist = () => {
 };
 
 const numberOfRowsAndColumns = () => {
-  cy.get(weekRow).should('have.length', 5);
+  cy.get(weekRow).should('have.length', 1);
   cy.get(verticalBorders).children().should('have.length', 7);
 };
 
-const navigateToPrevMonth = () => {
+const navigateToPrevWeek = () => {
   cy.get(navigationLeftButton).click();
   cy.get(navigationTimeDateText).should(
     'have.text',
     format(
-      sub(new Date(CURRENT_TIME_DATE), { months: 1 }),
+      sub(new Date(CURRENT_TIME_DATE), { weeks: 1 }),
       TimeDateFormat.MONTH_YEAR,
     ),
   );
 };
 
-const navigateToNextMonth = () => {
+const navigateToNextWeek = () => {
   cy.get(navigationRightButton).click();
   cy.get(navigationTimeDateText).should(
     'have.text',
     format(
-      add(new Date(CURRENT_TIME_DATE), { months: 1 }),
+      add(new Date(CURRENT_TIME_DATE), { weeks: 1 }),
       TimeDateFormat.MONTH_YEAR,
     ),
   );
@@ -117,7 +112,7 @@ const navigateToNextThenOnToday = () => {
   cy.get(navigationTimeDateText).should(
     'have.text',
     format(
-      add(new Date(CURRENT_TIME_DATE), { months: 1 }),
+      add(new Date(CURRENT_TIME_DATE), { weeks: 1 }),
       TimeDateFormat.MONTH_YEAR,
     ),
   );
@@ -153,28 +148,28 @@ const checkIndicatorDots = () => {
     });
 };
 
-describe('Calendar month view', () => {
+describe('Calendar week view', () => {
   beforeEach(() => {
-    cy.mount(<CalendarComponent currentView={CurrentView.MONTH} />);
+    cy.mount(<CalendarComponent currentView={CurrentView.WEEK} />);
   });
 
   it('should render correctly', () => {
     checkAreSubcomponentsExist();
   });
 
-  it('should has 5 rows for every week in month and 7 columns for every day in week', () => {
+  it('should has 1 row for one week and 7 columns for every day in week', () => {
     numberOfRowsAndColumns();
   });
 
-  it('should navigate to the previous month on left arrow click', () => {
-    navigateToPrevMonth();
+  it('should navigate to the previous week on left arrow click', () => {
+    navigateToPrevWeek();
   });
 
-  it('should navigate to the next month on right arrow click', () => {
-    navigateToNextMonth();
+  it('should navigate to the next week on right arrow click', () => {
+    navigateToNextWeek();
   });
 
-  it('should navigate to the next month then go on current month on Now click', () => {
+  it('should navigate to the next week then go on current week on Now click', () => {
     navigateToNextThenOnToday();
   });
 

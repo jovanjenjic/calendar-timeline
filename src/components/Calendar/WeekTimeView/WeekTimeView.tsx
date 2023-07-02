@@ -73,7 +73,10 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
 
   return (
     <>
-      <div className={weekTimeViewStyles['days-component']}>
+      <div
+        data-cy="StringDays"
+        className={weekTimeViewStyles['days-component']}
+      >
         {Array.from(Array(7)).map((_, i) => (
           <>
             <div
@@ -97,7 +100,10 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
           </>
         ))}
       </div>
-      <div className={weekTimeViewStyles['week-time-view-inside']}>
+      <div
+        data-cy="WeekTimeViewInside"
+        className={weekTimeViewStyles['week-time-view-inside']}
+      >
         <div className={weekTimeViewStyles['vertical-borders-container']}>
           {Array.from(Array(7)).map((_, key) => (
             <div
@@ -115,6 +121,12 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
             {Array.from(Array(7)).map((_, i) => (
               <div className={weekTimeViewStyles['header--item']}>
                 <p
+                  data-cy="DayNumber"
+                  data-day-type={
+                    getCurrentWeek[i].isCurrentDay
+                      ? 'current'
+                      : !getCurrentWeek[i].isCurrentMonth && 'disabled'
+                  }
                   className={cn(
                     weekTimeViewStyles['header__number'],
                     !getCurrentWeek[i].isCurrentMonth &&
@@ -155,7 +167,10 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
         </div>
         <div className={weekTimeViewStyles['week']}>
           <>
-            <div className={weekTimeViewStyles['week__border-bottom']}>
+            <div
+              data-cy="HourRows"
+              className={weekTimeViewStyles['week__border-bottom']}
+            >
               {Array.from(Array(24)).map((_, hour) => (
                 <div className={weekTimeViewStyles['week__border-bottom-row']}>
                   <p
@@ -173,6 +188,7 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
                 {renderItems({ dateInfo, idx })}
                 {dateInfo.isCurrentDay && (
                   <div
+                    data-cy="CurrentMinutLine"
                     className={weekTimeViewStyles['current-minute-line']}
                     style={{
                       gridColumn: '1/3',
