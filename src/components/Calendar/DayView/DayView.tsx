@@ -9,7 +9,6 @@ import {
   getMinutes,
   getHours,
 } from 'date-fns';
-import { omit } from 'lodash-es';
 import calendarStyles from './DayView.module.scss';
 import { getTimeUnitString } from '../Calendar.helper';
 import { TimeDateFormat } from '../Calendar.constants';
@@ -104,6 +103,7 @@ const DayView: FC<DayTimeViewProps> = ({
             >
               {Array.from(Array(24)).map((_, hour) => (
                 <div
+                  data-cy="Hours"
                   className={calendarStyles['hour-rows__border-bottom-line']}
                 >
                   <p

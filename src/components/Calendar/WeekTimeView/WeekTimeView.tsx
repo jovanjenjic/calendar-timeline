@@ -11,7 +11,6 @@ import {
   getHours,
   getMinutes,
 } from 'date-fns';
-import { omit } from 'lodash-es';
 import weekTimeViewStyles from './WeekTimeView.module.scss';
 import { DateInfo } from '../Calendar.types';
 import { formatFullDate } from '../../../utils/index';
@@ -172,7 +171,10 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
               className={weekTimeViewStyles['week__border-bottom']}
             >
               {Array.from(Array(24)).map((_, hour) => (
-                <div className={weekTimeViewStyles['week__border-bottom-row']}>
+                <div
+                  data-cy="Hours"
+                  className={weekTimeViewStyles['week__border-bottom-row']}
+                >
                   <p
                     className={
                       weekTimeViewStyles['week__border-bottom-hour-unit']
