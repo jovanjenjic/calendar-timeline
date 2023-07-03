@@ -41,7 +41,7 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
 
   return (
     <>
-      <div className={calendarStyles['days-component']}>
+      <div data-cy="StringDay" className={calendarStyles['days-component']}>
         <div
           onClick={() => onDayStringClick(new Date(currentDate))}
           className={calendarStyles['days-component__day']}
@@ -52,9 +52,13 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
           )}
         </div>
       </div>
-      <div className={calendarStyles['day-view-inside']}>
+      <div
+        data-cy="DayInPlaceViewInside"
+        className={calendarStyles['day-view-inside']}
+      >
         <div className={calendarStyles['cell-header']}>
           <p
+            data-cy="DayNumber"
             className={cn(
               calendarStyles['cell-header__number'],
               !parsedCurrentDay.isCurrentMonth &&
@@ -84,6 +88,7 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
           )}
         </div>
         <div
+          data-cy="Cells"
           key={parsedCurrentDay.date}
           className={cn(calendarStyles['hour-row'])}
         >
@@ -107,6 +112,7 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
                   }
                 />
                 <div
+                  data-cy="Hours"
                   className={calendarStyles['hour-row__hour-cell-hour-number']}
                   onClick={() =>
                     onHourClick({

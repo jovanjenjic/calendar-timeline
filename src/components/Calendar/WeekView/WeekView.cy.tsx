@@ -6,7 +6,7 @@ import CalendarView from '../CalendarView';
 import dataViewConfig from '../../../dataView';
 import { TimeDateFormat } from '../Calendar.constants';
 
-const calendarComponent = "*[data-cy='StringDays']";
+const stringDaysComponent = "*[data-cy='StringDays']";
 const calendarInside = "*[data-cy='WeekViewInside']";
 const verticalBorders = "*[data-cy='VerticalBorders']";
 const weekRow = "*[data-cy='WeekRow']";
@@ -62,7 +62,7 @@ const CalendarComponent = (params) => {
 };
 
 const checkAreSubcomponentsExist = () => {
-  cy.get(calendarComponent).should('exist');
+  cy.get(stringDaysComponent).should('exist');
   cy.get(calendarInside).should('exist');
   cy.get(verticalBorders).should('exist');
   cy.get(weekRow).should('exist');

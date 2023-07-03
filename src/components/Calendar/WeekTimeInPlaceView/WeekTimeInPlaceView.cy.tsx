@@ -6,8 +6,8 @@ import CalendarView from '../CalendarView';
 import dataViewConfig from '../../../dataView';
 import { TimeDateFormat } from '../Calendar.constants';
 
-const stringDayComponent = "*[data-cy='StringDay']";
-const calendarInside = "*[data-cy='DayViewInside']";
+const stringDaysComponent = "*[data-cy='StringDays']";
+const calendarInside = "*[data-cy='WeekTimeInPlaceViewInside']";
 const colorDotsComponent = "*[data-cy='ColorDots']";
 const calendarNavigation = "*[data-cy='CalendarNavigation']";
 const navigationLeftButton = "*[data-cy='NavigationLeftButton']";
@@ -16,8 +16,7 @@ const navigationNowButton = "*[data-cy='NavigationNowButton']";
 const navigationTimeDateText = "*[data-cy='NavigationTimeDateText']";
 const colorDot = "*[data-cy='ColorDot']";
 const dayNumber = "*[data-cy='DayNumber']";
-const hourRows = "*[data-cy='HourRows']";
-const currentMinutLine = "*[data-cy='CurrentMinutLine']";
+const cells = "*[data-cy='Cells']";
 const hours = "*[data-cy='Hours']";
 
 const RANDOM_TIME_DATE = '2023-06-03';
@@ -25,9 +24,19 @@ const CURRENT_TIME_DATE = new Date();
 
 const colorDots = [
   {
+    color: 'rgb(222, 111, 55)',
+    text: 'Text about blue color',
+    date: '2023-06-02',
+  },
+  {
     color: 'rgb(252, 111, 5)',
     text: 'Text about red color',
     date: '2023-06-03',
+  },
+  {
+    color: 'rgb(222, 11, 55)',
+    text: 'Text about green color',
+    date: '2023-06-04',
   },
 ];
 
@@ -53,57 +62,48 @@ const CalendarComponent = (params) => {
   );
 };
 
-const checkAreSubcomponentsExist = (isCurrentDay = false) => {
-  cy.get(stringDayComponent).should('exist');
+const checkAreSubcomponentsExist = () => {
+  cy.get(stringDaysComponent).should('exist');
   cy.get(calendarInside).should('exist');
   cy.get(calendarNavigation).should('exist');
   cy.get(colorDotsComponent).should('exist');
-  if (isCurrentDay) {
-    cy.get(currentMinutLine).should('exist');
-  } else {
-    cy.get(currentMinutLine).should('not.exist');
-  }
+  cy.get(hours).should('exist');
   cy.get(dayNumber).each((day) => {
-    if (isCurrentDay) {
+    if (day.attr('data-day-type') === 'current') {
       cy.wrap(day).should('have.css', 'background-color', 'rgb(240, 131, 0)');
       cy.wrap(day).should('have.css', 'color', 'rgb(255, 255, 255)');
+    } else if (day.attr('data-day-type') === 'disabled') {
+      cy.wrap(day).should('have.css', 'color', 'rgb(160, 174, 192)');
     } else {
       cy.wrap(day).should('have.css', 'color', 'rgb(61, 71, 87)');
     }
   });
 };
 
-const numberOfHours = () => {
-  cy.get(hourRows).children().should('have.length', 24);
+const numOfCellsAndHours = () => {
+  // 24h * 7 days = 168
+  cy.get(cells).children().should('have.length', 168);
   cy.get(hours).should('have.length', 24);
 };
 
-const navigateToPrevDay = (testTimeDate) => {
+const navigateToPrevWeek = (testTimeDate) => {
   cy.get(navigationLeftButton).click();
   cy.get(navigationTimeDateText).should(
     'have.text',
-    format(sub(new Date(testTimeDate), { days: 1 }), TimeDateFormat.MONTH_YEAR),
-  );
-  cy.get(stringDayComponent).should(
-    'have.text',
     format(
-      sub(new Date(testTimeDate), { days: 1 }),
-      TimeDateFormat.SHORT_WEEKDAY,
+      sub(new Date(testTimeDate), { weeks: 1 }),
+      TimeDateFormat.MONTH_YEAR,
     ),
   );
 };
 
-const navigateToNextDay = (testTimeDate) => {
+const navigateToNextWeek = (testTimeDate) => {
   cy.get(navigationRightButton).click();
   cy.get(navigationTimeDateText).should(
     'have.text',
-    format(add(new Date(testTimeDate), { days: 1 }), TimeDateFormat.MONTH_YEAR),
-  );
-  cy.get(stringDayComponent).should(
-    'have.text',
     format(
-      add(new Date(testTimeDate), { days: 1 }),
-      TimeDateFormat.SHORT_WEEKDAY,
+      add(new Date(testTimeDate), { weeks: 1 }),
+      TimeDateFormat.MONTH_YEAR,
     ),
   );
 };
@@ -112,23 +112,15 @@ const navigateToNextThenOnToday = (testTimeDate) => {
   cy.get(navigationRightButton).click();
   cy.get(navigationTimeDateText).should(
     'have.text',
-    format(add(new Date(testTimeDate), { days: 1 }), TimeDateFormat.MONTH_YEAR),
-  );
-  cy.get(stringDayComponent).should(
-    'have.text',
     format(
-      add(new Date(testTimeDate), { days: 1 }),
-      TimeDateFormat.SHORT_WEEKDAY,
+      add(new Date(testTimeDate), { weeks: 1 }),
+      TimeDateFormat.MONTH_YEAR,
     ),
   );
   cy.get(navigationNowButton).click();
   cy.get(navigationTimeDateText).should(
     'have.text',
     format(new Date(), TimeDateFormat.MONTH_YEAR),
-  );
-  cy.get(stringDayComponent).should(
-    'have.text',
-    format(new Date(), TimeDateFormat.SHORT_WEEKDAY),
   );
 };
 
@@ -157,11 +149,11 @@ const checkIndicatorDots = () => {
     });
 };
 
-describe('Calendar day view, random day', () => {
+describe('Calendar week time in place view, random current date', () => {
   beforeEach(() => {
     cy.mount(
       <CalendarComponent
-        currentView={CurrentView.DAY}
+        currentView={CurrentView.WEEK_IN_PLACE}
         currentDateProp={RANDOM_TIME_DATE}
       />,
     );
@@ -171,19 +163,19 @@ describe('Calendar day view, random day', () => {
     checkAreSubcomponentsExist();
   });
 
-  it('should has 24 row for every hour in day', () => {
-    numberOfHours();
+  it('should has 168 cells for every hour in week and 24 hour/string on left side', () => {
+    numOfCellsAndHours();
   });
 
-  it('should navigate to the previous day on left arrow click', () => {
-    navigateToPrevDay(RANDOM_TIME_DATE);
+  it('should navigate to the previous week on left arrow click', () => {
+    navigateToPrevWeek(RANDOM_TIME_DATE);
   });
 
-  it('should navigate to the next day on right arrow click', () => {
-    navigateToNextDay(RANDOM_TIME_DATE);
+  it('should navigate to the next week on right arrow click', () => {
+    navigateToNextWeek(RANDOM_TIME_DATE);
   });
 
-  it('should navigate to the next day then go on current day on Now click', () => {
+  it('should navigate to the next week then go on current week on Now click', () => {
     navigateToNextThenOnToday(RANDOM_TIME_DATE);
   });
 
@@ -192,33 +184,33 @@ describe('Calendar day view, random day', () => {
   });
 });
 
-describe('Calendar day view, current day', () => {
+describe('Calendar week time in place view, current day', () => {
   beforeEach(() => {
     cy.mount(
       <CalendarComponent
-        currentView={CurrentView.DAY}
+        currentView={CurrentView.WEEK_IN_PLACE}
         currentDateProp={CURRENT_TIME_DATE}
       />,
     );
   });
 
   it('should render correctly', () => {
-    checkAreSubcomponentsExist(true);
+    checkAreSubcomponentsExist();
   });
 
-  it('should has 24 row for every hour in day', () => {
-    numberOfHours();
+  it('should has 168 cells for every hour in week and 24 hour/string on left side', () => {
+    numOfCellsAndHours();
   });
 
-  it('should navigate to the previous day on left arrow click', () => {
-    navigateToPrevDay(CURRENT_TIME_DATE);
+  it('should navigate to the previous week on left arrow click', () => {
+    navigateToPrevWeek(CURRENT_TIME_DATE);
   });
 
-  it('should navigate to the next day on right arrow click', () => {
-    navigateToNextDay(CURRENT_TIME_DATE);
+  it('should navigate to the next week on right arrow click', () => {
+    navigateToNextWeek(CURRENT_TIME_DATE);
   });
 
-  it('should navigate to the next day then go on current day on Now click', () => {
+  it('should navigate to the next week then go on current week on Now click', () => {
     navigateToNextThenOnToday(CURRENT_TIME_DATE);
   });
 });

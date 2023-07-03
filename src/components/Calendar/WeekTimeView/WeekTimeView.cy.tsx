@@ -18,6 +18,7 @@ const colorDot = "*[data-cy='ColorDot']";
 const dayNumber = "*[data-cy='DayNumber']";
 const hourRows = "*[data-cy='HourRows']";
 const currentMinutLine = "*[data-cy='CurrentMinutLine']";
+const hours = "*[data-cy='Hours']";
 
 const RANDOM_TIME_DATE = '2023-06-03';
 const CURRENT_TIME_DATE = new Date();
@@ -86,6 +87,7 @@ const checkAreSubcomponentsExist = (isCurrentDay = false) => {
 
 const numberOfHours = () => {
   cy.get(hourRows).children().should('have.length', 24);
+  cy.get(hours).should('have.length', 24);
 };
 
 const navigateToPrevWeek = (testTimeDate) => {
@@ -99,7 +101,7 @@ const navigateToPrevWeek = (testTimeDate) => {
   );
 };
 
-const navigateToNextWeel = (testTimeDate) => {
+const navigateToNextWeek = (testTimeDate) => {
   cy.get(navigationRightButton).click();
   cy.get(navigationTimeDateText).should(
     'have.text',
@@ -174,7 +176,7 @@ describe('Calendar week time view, random current date', () => {
   });
 
   it('should navigate to the next week on right arrow click', () => {
-    navigateToNextWeel(RANDOM_TIME_DATE);
+    navigateToNextWeek(RANDOM_TIME_DATE);
   });
 
   it('should navigate to the next week then go on current week on Now click', () => {
@@ -186,7 +188,7 @@ describe('Calendar week time view, random current date', () => {
   });
 });
 
-describe('Calendar day view, current day', () => {
+describe('Calendar week time in place view, current day', () => {
   beforeEach(() => {
     cy.mount(
       <CalendarComponent
@@ -209,7 +211,7 @@ describe('Calendar day view, current day', () => {
   });
 
   it('should navigate to the next week on right arrow click', () => {
-    navigateToNextWeel(CURRENT_TIME_DATE);
+    navigateToNextWeek(CURRENT_TIME_DATE);
   });
 
   it('should navigate to the next week then go on current week on Now click', () => {

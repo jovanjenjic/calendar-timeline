@@ -73,7 +73,7 @@ const dataViewConfig = (
   data: data,
   currentDate,
   setCurrentDate,
-  currentView: CurrentView.WEEK_TIME,
+  currentView: CurrentView.WEEK_IN_PLACE,
   cellDisplayMode,
   setCellDisplayMode,
   timeDateFormat: {

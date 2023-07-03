@@ -7,7 +7,7 @@ import dataViewConfig from '../../../dataView';
 import { TimeDateFormat } from '../Calendar.constants';
 
 const stringDayComponent = "*[data-cy='StringDay']";
-const calendarInside = "*[data-cy='DayViewInside']";
+const calendarInside = "*[data-cy='DayInPlaceViewInside']";
 const colorDotsComponent = "*[data-cy='ColorDots']";
 const calendarNavigation = "*[data-cy='CalendarNavigation']";
 const navigationLeftButton = "*[data-cy='NavigationLeftButton']";
@@ -16,8 +16,7 @@ const navigationNowButton = "*[data-cy='NavigationNowButton']";
 const navigationTimeDateText = "*[data-cy='NavigationTimeDateText']";
 const colorDot = "*[data-cy='ColorDot']";
 const dayNumber = "*[data-cy='DayNumber']";
-const hourRows = "*[data-cy='HourRows']";
-const currentMinutLine = "*[data-cy='CurrentMinutLine']";
+const cells = "*[data-cy='Cells']";
 const hours = "*[data-cy='Hours']";
 
 const RANDOM_TIME_DATE = '2023-06-03';
@@ -58,11 +57,6 @@ const checkAreSubcomponentsExist = (isCurrentDay = false) => {
   cy.get(calendarInside).should('exist');
   cy.get(calendarNavigation).should('exist');
   cy.get(colorDotsComponent).should('exist');
-  if (isCurrentDay) {
-    cy.get(currentMinutLine).should('exist');
-  } else {
-    cy.get(currentMinutLine).should('not.exist');
-  }
   cy.get(dayNumber).each((day) => {
     if (isCurrentDay) {
       cy.wrap(day).should('have.css', 'background-color', 'rgb(240, 131, 0)');
@@ -73,8 +67,8 @@ const checkAreSubcomponentsExist = (isCurrentDay = false) => {
   });
 };
 
-const numberOfHours = () => {
-  cy.get(hourRows).children().should('have.length', 24);
+const numOfCellsAndHours = () => {
+  cy.get(cells).children().should('have.length', 24);
   cy.get(hours).should('have.length', 24);
 };
 
@@ -157,22 +151,22 @@ const checkIndicatorDots = () => {
     });
 };
 
-describe('Calendar day view, random day', () => {
+describe('Calendar day time in place view, random current date', () => {
   beforeEach(() => {
     cy.mount(
       <CalendarComponent
-        currentView={CurrentView.DAY}
+        currentView={CurrentView.DAY_IN_PLACE}
         currentDateProp={RANDOM_TIME_DATE}
       />,
     );
   });
 
   it('should render correctly', () => {
-    checkAreSubcomponentsExist();
+    checkAreSubcomponentsExist(false);
   });
 
-  it('should has 24 row for every hour in day', () => {
-    numberOfHours();
+  it('should has 24 cells for every hour in day and 24 hour/string on left side', () => {
+    numOfCellsAndHours();
   });
 
   it('should navigate to the previous day on left arrow click', () => {
@@ -192,11 +186,11 @@ describe('Calendar day view, random day', () => {
   });
 });
 
-describe('Calendar day view, current day', () => {
+describe('Calendar week time in place view, current day', () => {
   beforeEach(() => {
     cy.mount(
       <CalendarComponent
-        currentView={CurrentView.DAY}
+        currentView={CurrentView.DAY_IN_PLACE}
         currentDateProp={CURRENT_TIME_DATE}
       />,
     );
@@ -206,8 +200,8 @@ describe('Calendar day view, current day', () => {
     checkAreSubcomponentsExist(true);
   });
 
-  it('should has 24 row for every hour in day', () => {
-    numberOfHours();
+  it('should has 24 cells for every hour in day and 24 hour/string on left side', () => {
+    numOfCellsAndHours();
   });
 
   it('should navigate to the previous day on left arrow click', () => {

@@ -39,8 +39,7 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
   timeDateFormat,
   preparedColorDots,
 }) => {
-  const weekStartsOn =
-    (timeDateFormat.weekStartsOn as 0 | 1 | 2 | 3 | 4 | 5 | 6) ?? 1;
+  const weekStartsOn = timeDateFormat.weekStartsOn ?? 1;
 
   /**
    * It will contain all the days of the month structured by weeks.
@@ -74,7 +73,7 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
 
   return (
     <>
-      <div className={weekViewStyles['days-component']}>
+      <div data-cy="StringDays" className={weekViewStyles['days-component']}>
         {Array.from(Array(7)).map((_, i) => (
           <>
             <div
@@ -98,7 +97,10 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
           </>
         ))}
       </div>
-      <div className={weekViewStyles['week-time-view-inside']}>
+      <div
+        data-cy="WeekTimeInPlaceViewInside"
+        className={weekViewStyles['week-time-view-inside']}
+      >
         <div className={weekViewStyles['vertical-borders-container']}>
           {Array.from(Array(7)).map((_, key) => (
             <div
@@ -116,6 +118,12 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
             <>
               <div className={weekViewStyles['cell-header']}>
                 <p
+                  data-cy="DayNumber"
+                  data-day-type={
+                    getCurrentWeek[i].isCurrentDay
+                      ? 'current'
+                      : !getCurrentWeek[i].isCurrentMonth && 'disabled'
+                  }
                   className={cn(
                     weekViewStyles['cell-header__number'],
                     !getCurrentWeek[i].isCurrentMonth &&
@@ -150,7 +158,7 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
             </>
           ))}
         </div>
-        <div className={cn(weekViewStyles['week-row'])}>
+        <div data-cy="Cells" className={cn(weekViewStyles['week-row'])}>
           {Array.from(Array(24)).map((_, hour) =>
             getCurrentWeek.map((dateInfo, idx) => (
               <div
@@ -174,6 +182,7 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
                   />
                   {idx === 0 && (
                     <div
+                      data-cy="Hours"
                       className={
                         weekViewStyles['week-row__hour-cell-hour-number']
                       }
