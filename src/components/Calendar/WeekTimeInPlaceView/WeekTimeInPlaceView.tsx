@@ -9,7 +9,6 @@ import {
   startOfWeek,
   format,
 } from 'date-fns';
-import { omit } from 'lodash-es';
 import weekViewStyles from './WeekTimeInPlaceView.module.scss';
 import { DateInfo } from '../Calendar.types';
 import { formatFullDate } from '../../../utils/index';
@@ -172,13 +171,13 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
                 <>
                   <div
                     className={weekViewStyles['week-row__hour-cell--cover']}
-                    onClick={() =>
-                      onCellClick({
-                        ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
-                        hour,
-                        cellKey: getKeyFromDateInfo(dateInfo, hour),
-                      })
-                    }
+                    // onClick={() =>
+                    //   onCellClick({
+                    //     ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
+                    //     hour,
+                    //     cellKey: getKeyFromDateInfo(dateInfo, hour),
+                    //   })
+                    // }
                   />
                   {idx === 0 && (
                     <div
@@ -186,12 +185,12 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
                       className={
                         weekViewStyles['week-row__hour-cell-hour-number']
                       }
-                      onClick={() =>
-                        onHourClick({
-                          ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
-                          hour,
-                        })
-                      }
+                      // onClick={() =>
+                      //   onHourClick({
+                      //     ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
+                      //     hour,
+                      //   })
+                      // }
                     >
                       {getTimeUnitString(hour, timeDateFormat)}
                     </div>

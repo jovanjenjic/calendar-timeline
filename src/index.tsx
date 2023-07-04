@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import CalendarView from './components/Calendar/CalendarView';
 import dataViewConfig from '../src/dataView';
-import GoUrbanStyleguide from './components/style-guide/GoUrbanStyleguide';
+import GoUrbanStyleguide from './components/StyleGuide/StyleGuide';
 import {
   CellData,
   CellDisplayMode,
@@ -45,7 +45,7 @@ const Playground = () => {
   const onHourClick = (day) => console.log(day);
   const onColorDotClick = (day) => console.log('color', day);
   const onItemClick = (item) => console.log('item', item);
-  const onCellClick = (value: CellData) => {
+  const onCellClick = (value) => {
     setCellDisplayMode(() => {
       if (cellDisplayMode['MONTH'].inactiveCells.includes(value.cellKey)) {
         return {

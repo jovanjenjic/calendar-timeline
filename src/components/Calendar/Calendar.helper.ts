@@ -5,8 +5,6 @@ import {
   format,
   getHours,
   getMinutes,
-  isBefore,
-  parseISO,
   startOfWeek,
 } from 'date-fns';
 import {
@@ -70,7 +68,7 @@ export const shouldShowItem = (
 
   for (let i = 0; i < calendarDays?.length && retValue; i++) {
     const dayCell = calendarDays[i];
-    if (isBefore(parseISO(dateKey), parseISO(dayCell))) {
+    if (formatFullDate(new Date(dateKey)) < formatFullDate(new Date(dayCell))) {
       retValue = true;
     } else if (dateKey !== dayCell) {
       const closedCellItems = preparedData[dayCell] || [];

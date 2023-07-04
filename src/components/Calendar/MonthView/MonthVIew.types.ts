@@ -14,7 +14,7 @@ export interface MonthViewProps {
   onDayNumberClick: (day: Date) => void;
   onDayStringClick: (day: Date) => void;
   onColorDotClick: (value: ColorDot) => void;
-  onCellClick: (value: CellData) => void;
+  onCellClick: (value: any) => void;
   timeDateFormat: TimeFormat;
   preparedColorDots: ColorDotFull;
 }

@@ -1,12 +1,12 @@
 import React, { useMemo, FC } from 'react';
 import cn from 'classnames';
 import { getDate, getMonth, getYear, isToday, format } from 'date-fns';
-import { omit } from 'lodash-es';
 import calendarStyles from './DayInPlaceView.module.scss';
 import { getKeyFromDateInfo, getTimeUnitString } from '../Calendar.helper';
 import { TimeDateFormat } from '../Calendar.constants';
 import { DateInfo } from '../Calendar.types';
 import { DayInPlaceViewProps } from './DayInPlaceView.types';
+import { omit } from '../../../utils';
 
 const getDateInfo = (date: Date, currentMonth: number): DateInfo => {
   return {
@@ -100,29 +100,29 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
               <>
                 <div
                   className={calendarStyles['hour-row__hour-cell--cover']}
-                  onClick={() =>
-                    onCellClick({
-                      ...omit(parsedCurrentDay, [
-                        'isCurrentDay',
-                        'isCurrentMonth',
-                      ]),
-                      hour,
-                      cellKey: getKeyFromDateInfo(parsedCurrentDay, hour),
-                    })
-                  }
+                  // onClick={() =>
+                  //   onCellClick({
+                  //     ...omit(parsedCurrentDay, [
+                  //       'isCurrentDay',
+                  //       'isCurrentMonth',
+                  //     ]),
+                  //     hour,
+                  //     cellKey: getKeyFromDateInfo(parsedCurrentDay, hour),
+                  //   })
+                  // }
                 />
                 <div
                   data-cy="Hours"
                   className={calendarStyles['hour-row__hour-cell-hour-number']}
-                  onClick={() =>
-                    onHourClick({
-                      ...omit(parsedCurrentDay, [
-                        'isCurrentDay',
-                        'isCurrentMonth',
-                      ]),
-                      hour,
-                    })
-                  }
+                  // onClick={() =>
+                  //   onHourClick({
+                  //     ...omit(parsedCurrentDay, [
+                  //       'isCurrentDay',
+                  //       'isCurrentMonth',
+                  //     ]),
+                  //     hour,
+                  //   })
+                  // }
                 >
                   {getTimeUnitString(hour, timeDateFormat)}
                 </div>

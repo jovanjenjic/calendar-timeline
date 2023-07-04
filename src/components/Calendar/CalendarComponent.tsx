@@ -4,11 +4,11 @@ import MonthView from './MonthView/MonthView';
 import WeekView from './WeekView/WeekView';
 import CalendarNavigation from './CalendarNavigation';
 import calendarStyles from './Calendar.module.scss';
-import { isEmpty } from 'lodash-es';
 import WeekTimeView from './WeekTimeView/WeekTimeView';
 import DayView from './DayView/DayView';
 import DayInPlaceView from './DayInPlaceView/DayInPlaceView';
 import WeekTimeInPlaceView from './WeekTimeInPlaceView/WeekTimeInPlaceView';
+import { isEmptyObject } from '../../utils';
 
 const CalendarComponent: FC<CalendarProps> = ({
   renderItems,
@@ -130,7 +130,7 @@ const CalendarComponent: FC<CalendarProps> = ({
           />
         )}
       </div>
-      {!isEmpty(preparedColorDots) && (
+      {!isEmptyObject(preparedColorDots) && (
         <div
           data-cy="ColorDots"
           className={calendarStyles['calendar-color-dots-legend']}

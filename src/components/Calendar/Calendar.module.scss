@@ -21,7 +21,7 @@
     }   
       
     &__month-text {
-      font: var(--font-h-4);
+      font: var(--font-a-1);
       color: var(--gs-800);
       text-align: center;
       font-weight: 400;
@@ -46,7 +46,7 @@
       }
   
       &__text {
-        font: var(--font-p-4);
+        font: var(--font-b-2);
       }
     }
   }
@@ -66,14 +66,14 @@
 
 .sub-item {
   border-radius: 5px;
-  background-color: var(--o-700);
+  background-color: var(--o-200);
   color: var(--gs-700);
   border: 1px solid var(--gs-50);
   height: 100%;
   width: 100%;
 
   padding: var(--spacing);
-  font: var(--font-h-7);
+  font: var(--font-a-3);
   white-space: nowrap;
   word-wrap: break-word;
   overflow: hidden;
@@ -84,7 +84,7 @@
 
   &--hovered {
     z-index: 10;
-    background-color: var(--o-800);
+    background-color: var(--o-300);
     transition: background-color 0.3s ease;
   }
   
