@@ -1,5 +1,16 @@
-import { add, addHours, format, isBefore, parseISO } from 'date-fns';
 import {
+  add,
+  addHours,
+  endOfWeek,
+  format,
+  getHours,
+  getMinutes,
+  isBefore,
+  parseISO,
+  startOfWeek,
+} from 'date-fns';
+import {
+  CalculateStartAndEndMinuteFunc,
   CellDisplayMode,
   CellDisplayModeState,
   CurrentView,
@@ -109,4 +120,46 @@ export const calculatePosition = (
   return startWeekDate === endWeekDate
     ? '1'
     : `${startPosition + 1} / ${endPosition + 2}`;
+};
+
+export const isFromPreviousOrNextDateUnit = (
+  startDate: string,
+  endDate: string,
+  startIntervalDate: string,
+  endIntervalDate: string,
+  currentView: CurrentView,
+  weekStartsOn,
+): boolean[] => {
+  const response = [false, false];
+  if (currentView === CurrentView.DAY) {
+    response[0] =
+      formatFullDate(new Date(startIntervalDate)) <
+      formatFullDate(new Date(startDate));
+
+    response[1] =
+      formatFullDate(new Date(endIntervalDate)) >
+      formatFullDate(new Date(endDate));
+  } else {
+    response[0] =
+      formatFullDate(new Date(startIntervalDate)) <
+      formatFullDate(startOfWeek(new Date(startDate), { weekStartsOn }));
+
+    response[1] =
+      formatFullDate(new Date(endIntervalDate)) >
+      formatFullDate(endOfWeek(new Date(startDate), { weekStartsOn }));
+  }
+  return response;
+};
+
+export const calculateStartAndEndMinute = (
+  startDate: Date,
+  endDate: Date,
+): CalculateStartAndEndMinuteFunc => {
+  const startMinute = getHours(startDate) * 60 + getMinutes(startDate) || 1;
+  const endMinute = getHours(endDate) * 60 + getMinutes(endDate) || 1;
+
+  return {
+    startMinute,
+    endMinute: startMinute === endMinute ? endMinute + 30 : endMinute,
+  };
 };

@@ -24,8 +24,6 @@ export interface PreparedDataWithoutTime {
 }
 
 export interface PreparedDataWithTime {
-  startIntervalKey: string;
-  endIntervalKey: string;
   startMinute: number;
   endMinute: number;
   fromPreviousDay?: boolean;
@@ -145,4 +143,9 @@ export interface CalendarHeaderProps {
   currentView: CurrentView;
   currentDate: string;
   timeDateFormat: TimeFormat;
+}
+
+export interface CalculateStartAndEndMinuteFunc {
+  startMinute: number;
+  endMinute: number;
 }

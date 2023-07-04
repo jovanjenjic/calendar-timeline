@@ -30,11 +30,8 @@
   }
 
   &__hour-cell {
-    height: 100%;
-    width: 100%;
-    position: relative;
-  
     &--border-bottom {
+      min-width: 0px;
       border-bottom: 1px solid var(--gs-200);
     }
 

@@ -47,6 +47,8 @@ export const yellowColorVariations = () => {
 
 export const orangeColorVariations = () => {
   return `
+      --o-800: #fcb35b;
+      --o-700: #ffc681;
       --o-600: #f08300;
       --o-500: #E35F2E;
       --o-400: #EE7A4C;
