@@ -56,7 +56,7 @@ const data = [
 
 const colorDots = [
   {
-    color: 'blue',
+    color: 'orange',
     text: 'Text about blue color',
     date: '2023-06-02',
   },
@@ -70,11 +70,6 @@ const colorDots = [
     text: 'Text about green color',
     date: '2023-06-04',
   },
-  {
-    color: 'green',
-    text: 'Text about green color',
-    date: '2023-06-05',
-  },
 ];
 
 const dataViewConfig = (
@@ -86,7 +81,7 @@ const dataViewConfig = (
   data: data,
   currentDate,
   setCurrentDate,
-  currentView: CurrentView.MONTH,
+  currentView: CurrentView.WEEK_TIME,
   cellDisplayMode,
   setCellDisplayMode,
   timeDateFormat: {

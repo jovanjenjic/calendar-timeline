@@ -1,3 +1,5 @@
+@import '../scss//_mixins';
+
 @mixin days-component {
     .days-component {
         display: flex;
@@ -6,12 +8,16 @@
         padding-bottom: var(--spacing);
     
         &__day {
-            font: var(--font-c-1);
+            font: var(--font-c-3);
             text-transform: uppercase;
             color: var(--gs-500);
             width: calc(var(--spacing) * 4);
             display: flex;
             justify-content: center;
+
+            @include breakpoint('md') {
+                font: var(--font-c-1);
+            }
         }
     }
 }
@@ -37,7 +43,7 @@
 
 @mixin number {
     &__number {
-        font: var(--font-a-2);
+        font: var(--font-a-3);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -45,6 +51,10 @@
         width: 30px;
         color: var(--gs-700);
         margin: calc(var(--spacing) * 0.5) auto !important;
+
+        @include breakpoint('md') {
+            font: var(--font-a-2);
+        }
 
         &--disabled {
             color: var(--gs-300);
@@ -62,14 +72,19 @@
 
 @mixin color-dot {
     &__color-dot {
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         display: flex;
         border-radius: 50%;
 
         position: absolute;
         top: 5px;
         right: 5px;
+
+        @include breakpoint('md') {
+            width: 10px;
+            height: 10px;
+        }
     }   
 }
 

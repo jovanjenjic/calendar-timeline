@@ -14,14 +14,9 @@
   z-index: 10;
   position: relative;
   width: 100%;
-  min-height: 160px;
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   grid-template-rows: repeat(24, 60px);
-
-  @include breakpoint('xl') {
-    min-height: 220px;
-  }
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--gs-200);

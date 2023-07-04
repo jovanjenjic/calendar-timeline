@@ -34,102 +34,107 @@ const CalendarComponent: FC<CalendarProps> = ({
     return newValue;
   }, [colorDots]);
 
+  const leftMargin = [
+    CurrentView.DAY,
+    CurrentView.DAY_IN_PLACE,
+    CurrentView.WEEK_TIME,
+    CurrentView.WEEK_IN_PLACE,
+  ].includes(currentView);
+
   return (
-    <>
-      <div>
-        {!!setCurrentDate && (
-          <CalendarNavigation
-            currentDate={currentDate}
-            currentView={currentView}
-            setCurrentDate={setCurrentDate}
-            timeDateFormat={timeDateFormat}
-          />
-        )}
-        {currentView === CurrentView.MONTH && (
-          <MonthView
-            preparedColorDots={preparedColorDots}
-            renderItems={renderItems}
-            currentView={currentView}
-            currentDate={currentDate}
-            onDayNumberClick={onDayNumberClick}
-            onDayStringClick={onDayStringClick}
-            onColorDotClick={onColorDotClick}
-            onCellClick={onCellClick}
-            timeDateFormat={timeDateFormat}
-          />
-        )}
-        {currentView === CurrentView.WEEK && (
-          <WeekView
-            preparedColorDots={preparedColorDots}
-            renderItems={renderItems}
-            currentView={currentView}
-            currentDate={currentDate}
-            onDayNumberClick={onDayNumberClick}
-            onDayStringClick={onDayStringClick}
-            onColorDotClick={onColorDotClick}
-            onCellClick={onCellClick}
-            timeDateFormat={timeDateFormat}
-          />
-        )}
-        {currentView === CurrentView.WEEK_TIME && (
-          <WeekTimeView
-            preparedColorDots={preparedColorDots}
-            renderItems={renderItems}
-            renderHeaderItems={renderHeaderItems}
-            currentView={currentView}
-            currentDate={currentDate}
-            onDayNumberClick={onDayNumberClick}
-            onDayStringClick={onDayStringClick}
-            onColorDotClick={onColorDotClick}
-            onCellClick={onCellClick}
-            timeDateFormat={timeDateFormat}
-            onHourClick={onHourClick}
-          />
-        )}
-        {currentView === CurrentView.DAY && (
-          <DayView
-            preparedColorDots={preparedColorDots}
-            renderItems={renderItems}
-            renderHeaderItems={renderHeaderItems}
-            currentView={currentView}
-            currentDate={currentDate}
-            onDayNumberClick={onDayNumberClick}
-            onDayStringClick={onDayStringClick}
-            onColorDotClick={onColorDotClick}
-            onCellClick={onCellClick}
-            timeDateFormat={timeDateFormat}
-            onHourClick={onHourClick}
-          />
-        )}
-        {currentView === CurrentView.WEEK_IN_PLACE && (
-          <WeekTimeInPlaceView
-            preparedColorDots={preparedColorDots}
-            renderItems={renderItems}
-            currentView={currentView}
-            currentDate={currentDate}
-            onDayNumberClick={onDayNumberClick}
-            onDayStringClick={onDayStringClick}
-            onColorDotClick={onColorDotClick}
-            onCellClick={onCellClick}
-            timeDateFormat={timeDateFormat}
-            onHourClick={onHourClick}
-          />
-        )}
-        {currentView === CurrentView.DAY_IN_PLACE && (
-          <DayInPlaceView
-            preparedColorDots={preparedColorDots}
-            renderItems={renderItems}
-            currentView={currentView}
-            currentDate={currentDate}
-            onDayNumberClick={onDayNumberClick}
-            onDayStringClick={onDayStringClick}
-            onColorDotClick={onColorDotClick}
-            onCellClick={onCellClick}
-            timeDateFormat={timeDateFormat}
-            onHourClick={onHourClick}
-          />
-        )}
-      </div>
+    <div className={leftMargin && calendarStyles['calendar--left-margin']}>
+      {!!setCurrentDate && (
+        <CalendarNavigation
+          currentDate={currentDate}
+          currentView={currentView}
+          setCurrentDate={setCurrentDate}
+          timeDateFormat={timeDateFormat}
+        />
+      )}
+      {currentView === CurrentView.MONTH && (
+        <MonthView
+          preparedColorDots={preparedColorDots}
+          renderItems={renderItems}
+          currentView={currentView}
+          currentDate={currentDate}
+          onDayNumberClick={onDayNumberClick}
+          onDayStringClick={onDayStringClick}
+          onColorDotClick={onColorDotClick}
+          onCellClick={onCellClick}
+          timeDateFormat={timeDateFormat}
+        />
+      )}
+      {currentView === CurrentView.WEEK && (
+        <WeekView
+          preparedColorDots={preparedColorDots}
+          renderItems={renderItems}
+          currentView={currentView}
+          currentDate={currentDate}
+          onDayNumberClick={onDayNumberClick}
+          onDayStringClick={onDayStringClick}
+          onColorDotClick={onColorDotClick}
+          onCellClick={onCellClick}
+          timeDateFormat={timeDateFormat}
+        />
+      )}
+      {currentView === CurrentView.WEEK_TIME && (
+        <WeekTimeView
+          preparedColorDots={preparedColorDots}
+          renderItems={renderItems}
+          renderHeaderItems={renderHeaderItems}
+          currentView={currentView}
+          currentDate={currentDate}
+          onDayNumberClick={onDayNumberClick}
+          onDayStringClick={onDayStringClick}
+          onColorDotClick={onColorDotClick}
+          onCellClick={onCellClick}
+          timeDateFormat={timeDateFormat}
+          onHourClick={onHourClick}
+        />
+      )}
+      {currentView === CurrentView.DAY && (
+        <DayView
+          preparedColorDots={preparedColorDots}
+          renderItems={renderItems}
+          renderHeaderItems={renderHeaderItems}
+          currentView={currentView}
+          currentDate={currentDate}
+          onDayNumberClick={onDayNumberClick}
+          onDayStringClick={onDayStringClick}
+          onColorDotClick={onColorDotClick}
+          onCellClick={onCellClick}
+          timeDateFormat={timeDateFormat}
+          onHourClick={onHourClick}
+        />
+      )}
+      {currentView === CurrentView.WEEK_IN_PLACE && (
+        <WeekTimeInPlaceView
+          preparedColorDots={preparedColorDots}
+          renderItems={renderItems}
+          currentView={currentView}
+          currentDate={currentDate}
+          onDayNumberClick={onDayNumberClick}
+          onDayStringClick={onDayStringClick}
+          onColorDotClick={onColorDotClick}
+          onCellClick={onCellClick}
+          timeDateFormat={timeDateFormat}
+          onHourClick={onHourClick}
+        />
+      )}
+      {currentView === CurrentView.DAY_IN_PLACE && (
+        <DayInPlaceView
+          preparedColorDots={preparedColorDots}
+          renderItems={renderItems}
+          currentView={currentView}
+          currentDate={currentDate}
+          onDayNumberClick={onDayNumberClick}
+          onDayStringClick={onDayStringClick}
+          onColorDotClick={onColorDotClick}
+          onCellClick={onCellClick}
+          timeDateFormat={timeDateFormat}
+          onHourClick={onHourClick}
+        />
+      )}
       {!isEmptyObject(preparedColorDots) && (
         <div
           data-cy="ColorDots"
@@ -160,7 +165,7 @@ const CalendarComponent: FC<CalendarProps> = ({
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 };
 
