@@ -1,4 +1,5 @@
 import { TimeDateFormat } from '../components/Calendar/Calendar.constants';
+import { calculateStartAndEndMinute } from '../components/Calendar/Calendar.helper';
 import {
   PreparedDataWithTime,
   PreparedDataWithTimeFull,
@@ -30,6 +31,12 @@ export const formatFullDate = (date: Date): string =>
 
 export const formatFullDateTime = (date: Date): string =>
   format(date, TimeDateFormat.FULL_DATE_TIME);
+
+export const formatHour = (date: Date): string =>
+  format(date, TimeDateFormat.HOUR_MINUTE);
+
+export const formatMonthDayHour = (date: Date): string =>
+  format(date, TimeDateFormat.MONTH_DAY_HOUR);
 
 export const dayInWeekBasedOnWeekStarts = (
   timeDate: string,
@@ -87,9 +94,14 @@ export const prepareCalendarData = (
   );
 
   for (const obj of sortedCalendarValue) {
-    const startDate: Date = new Date(obj?.[startIntervalKey]);
+    const startDateValue = obj?.[startIntervalKey];
+    const endDateValue = obj?.[endIntervalKey];
+
+    if (!startDateValue || !endDateValue) continue;
+
+    const startDate: Date = new Date(startDateValue);
     // Item can have an end interval, if it doesn't then it is the same as the start interval
-    const endDate: Date = new Date(obj?.[endIntervalKey]);
+    const endDate: Date = new Date(endDateValue);
     const startDateModified = startOfDay(new Date(startDate));
     const endDateModified = startOfDay(new Date(endDate));
 
@@ -183,8 +195,13 @@ export const prepareCalendarDataWithTime = (
   );
 
   sortedCalendarValue.forEach((obj) => {
-    const startDate = new Date(obj?.[startIntervalKey]);
-    const endDate = new Date(obj?.[endIntervalKey]);
+    const startDateValue = obj?.[startIntervalKey];
+    const endDateValue = obj?.[endIntervalKey];
+
+    if (!startDateValue || !endDateValue) return;
+
+    const startDate = new Date(startDateValue);
+    const endDate = new Date(endDateValue);
 
     const numberOfMinutes = differenceInMinutes(endDate, startDate);
 
@@ -194,8 +211,6 @@ export const prepareCalendarDataWithTime = (
       ...obj,
       startMinute: 0,
       endMinute: 0,
-      startIntervalKey,
-      endIntervalKey,
     };
 
     if (numberOfMinutes > 24 * 60) {
@@ -204,18 +219,26 @@ export const prepareCalendarDataWithTime = (
       const firstDayEnd = endOfDay(startDate);
       const secondDayStart = startOfDay(endDate);
 
+      const { startMinute, endMinute } = calculateStartAndEndMinute(
+        startDate,
+        firstDayEnd,
+      );
       const firstDayRes = {
         ...res,
-        startMinute: getHours(startDate) * 60 + getMinutes(startDate),
-        endMinute: getHours(firstDayEnd) * 60 + getMinutes(firstDayEnd),
+        startMinute,
+        endMinute,
       };
+
+      const startAndEndMinutSecondItem = calculateStartAndEndMinute(
+        secondDayStart,
+        endDate,
+      );
       const secondDayKey: string = formatFullDate(secondDayStart);
       const secondDayRes = {
         ...res,
         fromPreviousDay: true,
-        startMinute:
-          getHours(secondDayStart) * 60 + getMinutes(secondDayStart) + 1,
-        endMinute: getHours(endDate) * 60 + getMinutes(endDate),
+        startMinute: startAndEndMinutSecondItem.startMinute,
+        endMinute: startAndEndMinutSecondItem.endMinute,
       };
       result.day[key] = [...(result.day[key] || []), firstDayRes];
       result.day[secondDayKey] = [
@@ -225,10 +248,14 @@ export const prepareCalendarDataWithTime = (
       processMatchingItems(result, secondDayKey, secondDayRes);
       processMatchingItems(result, key, firstDayRes);
     } else {
+      const { startMinute, endMinute } = calculateStartAndEndMinute(
+        startDate,
+        endDate,
+      );
       const expendedRes = {
         ...res,
-        startMinute: getHours(startDate) * 60 + getMinutes(startDate),
-        endMinute: getHours(endDate) * 60 + getMinutes(endDate),
+        startMinute,
+        endMinute: endMinute == startMinute ? endMinute + 30 : endMinute,
       };
       result.day[key] = [...(result.day[key] || []), expendedRes];
       processMatchingItems(result, key, expendedRes);
@@ -245,7 +272,7 @@ export const prepareCalendarDataInPlace = (
   const result = {};
   const [startIntervalKey] = (activeTimeDateField ?? '')
     .split('-')
-    .map((str) => str.replace(/\s/g, ''));
+    .map((str) => str.replace(/\s/g, '')) as [string, string];
 
   // A sorted array based on the date and time that was selected within configurations
   const sortedCalendarValue = calendarData.sort(
@@ -255,7 +282,10 @@ export const prepareCalendarDataInPlace = (
   );
 
   for (const obj of sortedCalendarValue) {
-    const startDate = new Date(obj?.[startIntervalKey]);
+    const startDateValue = obj?.[startIntervalKey];
+    if (!startDateValue) continue;
+
+    const startDate = new Date(startDateValue);
     const roundedStartTime = startOfHour(startDate);
 
     const key: string = formatFullDateTime(roundedStartTime);

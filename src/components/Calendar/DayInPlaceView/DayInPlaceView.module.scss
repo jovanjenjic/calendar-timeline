@@ -29,9 +29,8 @@
   }
 
   &__hour-cell {
-    height: 100%;
-    width: 100%;
-    position: relative;
+    min-width: 0px;
+
   
     &:not(:last-of-type) {
       border-bottom: 1px solid var(--gs-200);
@@ -44,6 +43,7 @@
     }
 
     &-hour-number {
+      height: 1px;
       position: relative;
       left: -35px;
       top: -13px;
