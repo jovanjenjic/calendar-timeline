@@ -1,10 +1,10 @@
 import React from 'react';
 import { add, sub, format } from 'date-fns';
-import GoUrbanStyleguide from '../../StyleGuide/StyleGuide';
 import { CurrentView } from '../Calendar.types';
 import CalendarView from '../CalendarView';
 import dataViewConfig from '../../../dataView';
 import { TimeDateFormat } from '../Calendar.constants';
+import Styleguide from '../../StyleGuide/StyleGuide';
 
 const stringDaysComponent = "*[data-cy='StringDays']";
 const calendarInside = "*[data-cy='WeekTimeInPlaceViewInside']";
@@ -56,7 +56,7 @@ const CalendarComponent = (params) => {
 
   return (
     <>
-      <GoUrbanStyleguide />
+      <Styleguide />
       <CalendarView {...dataView} {...params} colorDots={colorDots} />
     </>
   );

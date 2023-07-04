@@ -1,7 +1,13 @@
+@import '../../assets/scss/_mixins';
+
 .calendar {
   margin-top: var(--spacing);
   display: block;
   position: relative;
+
+  &--left-margin {
+    margin-left: 38px;
+  }
 
   &__navigation {
     display: flex;
@@ -32,17 +38,22 @@
     display: flex;
     flex-wrap: wrap;
     gap: calc(var(--spacing) * 2.5);
-    margin: calc(var(--spacing) * 2.5) 0;
+    margin: calc(var(--spacing) * 2.5) 0 0 0;
 
     &__flex {
       display: flex;
       align-items: center;
   
       &__color-dot {
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
         margin: auto var(--spacing) auto auto;
+
+        @include breakpoint('md') {
+          width: 10px;
+          height: 10px;
+      }
       }
   
       &__text {
@@ -89,6 +100,7 @@
   }
   
   &--right-arrow {
+    border-radius: 0;
     border-left: none;
     border-right: none;
     &::after {
@@ -111,6 +123,7 @@
   }
 
   &--left-arrow {   
+    border-radius: 0;
     border-left: none;
     border-right: none;
 

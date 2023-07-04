@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import CalendarView from './components/Calendar/CalendarView';
 import dataViewConfig from '../src/dataView';
-import GoUrbanStyleguide from './components/StyleGuide/StyleGuide';
+import Styleguide from './components/StyleGuide/StyleGuide';
 import {
   CellData,
   CellDisplayMode,
@@ -78,8 +78,8 @@ const Playground = () => {
     setCellDisplayMode,
   );
   return (
-    <div style={{ padding: '80px' }}>
-      <GoUrbanStyleguide />
+    <div style={{ padding: '30px' }}>
+      <Styleguide />
       <CalendarView
         {...dataView}
         onDayNumberClick={onDayNumberClick}

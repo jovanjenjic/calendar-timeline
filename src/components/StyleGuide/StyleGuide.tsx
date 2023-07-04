@@ -33,6 +33,8 @@ export const fonts = () => {
       --font-b-2: normal normal 400 12px/20px 'Inter', sans-serif;
 
       --font-c-1: normal normal 600 14px/20px 'Inter', sans-serif;
+      --font-c-2: normal normal 600 12px/18px 'Inter', sans-serif;
+      --font-c-3: normal normal 600 10px/16px 'Inter', sans-serif;
     `;
 };
 
@@ -40,7 +42,7 @@ export const fonts = () => {
  * New colors and styling
  * Refer to: https://www.figma.com/file/Ckxbd5Tdg2nda5yFp3TuZH/Dashboard?node-id=2850%3A6279
  */
-const GoUrbanStyleguide = () => {
+const Styleguide = () => {
   const minifyCssString = (css: string) => {
     return css.replace(/\n/g, '').replace(/\s\s+/g, ' ');
   };
@@ -60,4 +62,4 @@ const GoUrbanStyleguide = () => {
   );
 };
 
-export default GoUrbanStyleguide;
+export default Styleguide;

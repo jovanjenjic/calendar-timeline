@@ -1,6 +1,6 @@
 import React from 'react';
 import { add, sub, format } from 'date-fns';
-import GoUrbanStyleguide from '../../StyleGuide/StyleGuide';
+import Styleguide from '../../StyleGuide/StyleGuide';
 import { CurrentView } from '../Calendar.types';
 import CalendarView from '../CalendarView';
 import dataViewConfig from '../../../dataView';
@@ -55,7 +55,7 @@ const CalendarComponent = (params) => {
 
   return (
     <>
-      <GoUrbanStyleguide />
+      <Styleguide />
       <CalendarView {...dataView} {...params} colorDots={colorDots} />
     </>
   );
