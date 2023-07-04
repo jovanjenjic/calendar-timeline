@@ -1,5 +1,3 @@
-export type { IconName } from './manifest';
-
 export type TypographyAlignments = 'left' | 'center' | 'right';
 export type IconColoringMode = 'fill' | 'stroke' | 'both';
 
