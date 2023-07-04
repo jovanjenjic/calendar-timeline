@@ -2,8 +2,8 @@ import React from 'react';
 import { add, sub, format } from 'date-fns';
 import Styleguide from '../../StyleGuide/StyleGuide';
 import { CurrentView } from '../Calendar.types';
-import CalendarView from '../CalendarView';
-import dataViewConfig from '../../../dataView';
+import CalendarView from '../CalendarWrapper';
+import dataViewConfig from '../../../dataProps';
 import { TimeDateFormat } from '../Calendar.constants';
 
 const stringDayComponent = "*[data-cy='StringDay']";

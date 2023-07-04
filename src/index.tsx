@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import CalendarView from './components/Calendar/CalendarView';
-import dataViewConfig from '../src/dataView';
+import CalendarView from './components/Calendar/CalendarWrapper';
+import dataViewConfig from './dataProps';
 import Styleguide from './components/StyleGuide/StyleGuide';
 import {
   CellData,

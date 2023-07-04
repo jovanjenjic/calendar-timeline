@@ -7,7 +7,7 @@ import {
   PreparedDataWithTimeFull,
   PreparedDataWithTimeInPlace,
   PreparedDataWithoutTime,
-} from '../Calendar/Calendar.types';
+} from './Calendar.types';
 import calendarStyles from '../Calendar/Calendar.module.scss';
 import {
   formatFullDate,
