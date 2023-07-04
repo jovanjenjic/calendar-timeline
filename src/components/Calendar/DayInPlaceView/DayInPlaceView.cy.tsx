@@ -1,6 +1,6 @@
 import React from 'react';
 import { add, sub, format } from 'date-fns';
-import GoUrbanStyleguide from '../../style-guide/GoUrbanStyleguide';
+import GoUrbanStyleguide from '../../StyleGuide/StyleGuide';
 import { CurrentView } from '../Calendar.types';
 import CalendarView from '../CalendarView';
 import dataViewConfig from '../../../dataView';

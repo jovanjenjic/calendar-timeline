@@ -9,7 +9,6 @@ import {
   startOfWeek,
   format,
 } from 'date-fns';
-import { omit } from 'lodash-es';
 import weekViewStyles from './WeekVIew.module.scss';
 import { DateInfo } from '../Calendar.types';
 import { formatFullDate } from '../../../utils/index';
@@ -117,13 +116,13 @@ const WeekView: FC<WeekViewProps> = ({
                 style={{
                   gridColumn: `${idx + 1} / ${idx + 2}`,
                 }}
-                onClick={() =>
-                  onCellClick({
-                    ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
-                    hour: 0,
-                    cellKey: formatFullDate(new Date(dateInfo.date)),
-                  })
-                }
+                // onClick={() =>
+                //   onCellClick({
+                //     ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
+                //     hour: 0,
+                //     cellKey: formatFullDate(new Date(dateInfo.date)),
+                //   })
+                // }
               />
               <div className={weekViewStyles['cell-header']}>
                 <p

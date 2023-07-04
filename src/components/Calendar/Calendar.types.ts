@@ -117,7 +117,7 @@ export interface CalendarProps {
   onDayStringClick: (day: Date) => void;
   onHourClick: (value: CellData) => void;
   onColorDotClick: (value: ColorDot) => void;
-  onCellClick: (value: CellData) => void;
+  onCellClick: (value: any) => void;
   timeDateFormat: TimeFormat;
 }
 
@@ -134,7 +134,7 @@ export interface CalendarViewProps {
   onHourClick: (value: CellData) => void;
   onColorDotClick: (value: ColorDot) => void;
   onItemClick: (item: Record<string, any>) => void;
-  onCellClick: (value: CellData) => void;
+  onCellClick: (value: any) => void;
   timeDateFormat: TimeFormat;
 }
 

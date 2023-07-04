@@ -14,12 +14,8 @@ import {
   format,
   startOfDay,
   differenceInMinutes,
-  getHours,
-  getMinutes,
   endOfDay,
-  isAfter,
   isEqual,
-  isBefore,
   eachDayOfInterval,
   startOfMonth,
   endOfMonth,
@@ -43,19 +39,6 @@ export const dayInWeekBasedOnWeekStarts = (
   weekStartsOn = 1,
 ): number => {
   return (getDay(new Date(timeDate)) - (weekStartsOn || 0) + 7) % 7;
-};
-
-export const isInInterval = (
-  date: string,
-  startInterval: string,
-  endInterval: string,
-): boolean => {
-  return (
-    (isAfter(new Date(date), new Date(startInterval)) &&
-      isBefore(new Date(date), new Date(endInterval))) ||
-    isEqual(new Date(date), new Date(startInterval)) ||
-    isEqual(new Date(date), new Date(endInterval))
-  );
 };
 
 export const getAllDaysInMonth = (month) => {
@@ -291,6 +274,70 @@ export const prepareCalendarDataInPlace = (
     const key: string = formatFullDateTime(roundedStartTime);
 
     result[key] = [...(result[key] || []), obj];
+  }
+
+  return result;
+};
+
+export const isEqualValues = (value, other) => {
+  // Provera jednakosti za primitivne vrednosti
+  if (value === other) {
+    return true;
+  }
+
+  // Provera tipova
+  const typeValue = typeof value;
+  const typeOther = typeof other;
+  if (typeValue !== typeOther) {
+    return false;
+  }
+
+  // Provera specifičnih slučajeva
+  if (value === null || other === null || typeValue !== 'object') {
+    return false;
+  }
+
+  // Provera jednakosti za objekte i nizove
+  const valueKeys = Object.keys(value);
+  const otherKeys = Object.keys(other);
+
+  if (valueKeys.length !== otherKeys.length) {
+    return false;
+  }
+
+  for (const key of valueKeys) {
+    if (!isEqual(value[key], other[key])) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+export const isEmptyObject = (value) => {
+  if (value == null) {
+    return true;
+  }
+
+  if (typeof value === 'object') {
+    return Object.keys(value).length === 0;
+  }
+
+  if (typeof value === 'string' || Array.isArray(value)) {
+    return value.length === 0;
+  }
+
+  return false;
+};
+
+export const omit = (object, paths) => {
+  const result = {};
+  const omitPaths = Array.isArray(paths) ? paths : [paths];
+
+  for (const key in object) {
+    if (!omitPaths.includes(key)) {
+      result[key] = object[key];
+    }
   }
 
   return result;

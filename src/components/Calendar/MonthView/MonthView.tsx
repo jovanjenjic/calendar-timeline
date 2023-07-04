@@ -10,10 +10,9 @@ import {
   format,
   startOfMonth,
 } from 'date-fns';
-import { isEqual, omit } from 'lodash-es';
 import monthViewStyles from './MonthView.module.scss';
 import { DateInfo } from '../Calendar.types';
-import { formatFullDate } from '../../../utils/index';
+import { formatFullDate, isEqualValues, omit } from '../../../utils/index';
 import { MonthViewProps } from './MonthVIew.types';
 
 const getDateInfo = (date: Date, currentMonth: number): DateInfo => {
@@ -62,7 +61,7 @@ const MonthView: FC<MonthViewProps> = ({
             !newArray.includes(weekIndex)
           ) {
             newArray.push(weekIndex);
-            if (!isEqual(newArray, visibleWeeks)) {
+            if (!isEqualValues(newArray, visibleWeeks)) {
               setVisibleWeeks(newArray);
             }
             isStateUpdated = true;
