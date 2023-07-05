@@ -1,7 +1,7 @@
 @import '../../../styles/_mixins';
 @import '../../../styles/_components';
 
-.week-time-in-place-view-inside {
+.week-view-inside {
   background-color: var(--gs-50);
   border: 1px solid var(--gs-200);
   border-radius: 4px;
@@ -10,23 +10,30 @@
 
 @include days-component;
 @include vertical-borders-container;
-  
-.week-row {
+
+.week-view-row {
   z-index: 10;
   position: relative;
   width: 100%;
+  min-height: 160px;
   display: grid;
   grid-auto-flow: dense;
   grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(24, minmax(40px, auto));
+
+  @include breakpoint('xl') {
+    min-height: 220px;
+  }
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--gs-200);
   }
 
-  &__hour-cell {
-    &--border-bottom {
-      min-width: 0px;
+  &-day-cell {
+    height: 100%;
+    width: 100%;
+    position: relative;
+  
+    &:not(:last-of-type) {
       border-bottom: 1px solid var(--gs-200);
     }
 
@@ -35,26 +42,15 @@
       width: 100%;
       height: 100%;
     }
-
-    &-hour-number {
-      position: relative;
-      left: -35px;
-      top: -13px;
-      color: var(--gs-600);
-      font-size: 10px;
-    }
   }
 }
 
-.header {
-  display: flex;
-  border-bottom: 1px solid var(--gs-200);
-  align-items: center;}
-
-.cell-header {
+.week-view-cell-header {
   position: relative;
   z-index: 10;
+  height: max-content;
   width: 100%;
+  margin: 0 auto 0 auto;
   
   @include number;
 

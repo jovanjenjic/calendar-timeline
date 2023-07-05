@@ -11,7 +11,7 @@
 @include days-component;
 @include vertical-borders-container;
   
-.week-row {
+.month-week-row {
   z-index: 10;
   position: relative;
   width: 100%;
@@ -45,7 +45,7 @@
   }
 }
 
-.cell-header {
+.month-cell-header {
   position: relative;
   z-index: 10;
   height: max-content;

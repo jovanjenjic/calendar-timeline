@@ -1,3 +1,5 @@
+import './MonthView.scss';
+import cn from 'classnames';
 import React, { useMemo, FC, useState, useLayoutEffect, useRef } from 'react';
 import {
   add,
@@ -9,7 +11,6 @@ import {
   format,
   startOfMonth,
 } from 'date-fns';
-import monthViewStyles from './MonthView.module.scss';
 import { DateInfo } from '../Calendar.types';
 import { formatFullDate, isEqualValues, omit } from '../../../utils/index';
 import { MonthViewProps } from './MonthVIew.types';
@@ -114,11 +115,11 @@ const MonthView: FC<MonthViewProps> = ({
 
   return (
     <>
-      <div data-cy="StringDays" className={monthViewStyles['days-component']}>
+      <div data-cy="StringDays" className="days-component">
         {Array.from(Array(7)).map((_, i) => (
           <div
             key={i}
-            className={monthViewStyles['days-component__day']}
+            className="days-component__day"
             onClick={() =>
               onDayStringClick(
                 add(startOfWeek(new Date(currentDate), { weekStartsOn }), {
@@ -136,21 +137,15 @@ const MonthView: FC<MonthViewProps> = ({
           </div>
         ))}
       </div>
-      <div
-        data-cy="MonthViewInside"
-        className={monthViewStyles['month-view-inside']}
-      >
-        <div
-          data-cy="VerticalBorders"
-          className={monthViewStyles['vertical-borders-container']}
-        >
+      <div data-cy="MonthViewInside" className="month-view-inside">
+        <div data-cy="VerticalBorders" className="vertical-borders-container">
           {Array.from(Array(7)).map((_, key) => (
             <div
               key={key}
-              className={`
-                ${monthViewStyles['vertical-borders-container']}
-                ${monthViewStyles['vertical-borders-container__border']}
-              `}
+              className={cn(
+                'vertical-borders-container',
+                'vertical-borders-container__border',
+              )}
             />
           ))}
         </div>
@@ -159,7 +154,7 @@ const MonthView: FC<MonthViewProps> = ({
           return (
             <div
               key={`${week[0].date}/${index}`}
-              className={monthViewStyles['week-row']}
+              className="month-week-row"
               ref={(el) => (weekRefs.current[index] = el!)}
               data-week-index={index}
               data-cy="WeekRow"
@@ -167,7 +162,7 @@ const MonthView: FC<MonthViewProps> = ({
               {week.map((dateInfo, idx) => (
                 <React.Fragment key={dateInfo.date}>
                   <div
-                    className={monthViewStyles['week-row__day-cell--cover']}
+                    className="month-week-row__day-cell--cover"
                     style={{
                       gridColumn: `${idx + 1} / ${idx + 2}`,
                     }}
@@ -179,7 +174,7 @@ const MonthView: FC<MonthViewProps> = ({
                       })
                     }
                   />
-                  <div className={monthViewStyles['cell-header']}>
+                  <div className="month-cell-header">
                     <p
                       data-cy="DayNumber"
                       data-day-type={
@@ -187,17 +182,13 @@ const MonthView: FC<MonthViewProps> = ({
                           ? 'current'
                           : !dateInfo.isCurrentMonth && 'disabled'
                       }
-                      className={`
-                        ${monthViewStyles['cell-header__number']}
-                        ${
-                          !dateInfo.isCurrentMonth &&
-                          monthViewStyles['cell-header__number--disabled']
-                        }
-                        ${
-                          dateInfo.isCurrentDay &&
-                          monthViewStyles['cell-header__number--current-day']
-                        }
-                      `}
+                      className={cn(
+                        'month-cell-header__number',
+                        !dateInfo.isCurrentMonth &&
+                          'month-cell-header__number--disabled',
+                        dateInfo.isCurrentDay &&
+                          'month-cell-header__number--current-day',
+                      )}
                       onClick={() => onDayNumberClick(new Date(dateInfo.date))}
                     >
                       {dateInfo.day}
@@ -210,7 +201,7 @@ const MonthView: FC<MonthViewProps> = ({
                           backgroundColor:
                             preparedColorDots.dateKeys[dateInfo.date]?.color,
                         }}
-                        className={monthViewStyles['cell-header__color-dot']}
+                        className="month-cell-header__color-dot"
                         onClick={() =>
                           onColorDotClick(
                             preparedColorDots.dateKeys[dateInfo.date],

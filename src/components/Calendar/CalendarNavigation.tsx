@@ -1,7 +1,7 @@
+import './Calendar.scss';
 import React from 'react';
 import { formatFullDate } from '../../utils/index';
 import { add, sub, format } from 'date-fns';
-import calendarStyles from './Calendar.module.scss';
 import Button from '../Button/Button';
 import { CalendarHeaderProps, CurrentView } from './Calendar.types';
 import { TimeDateFormat } from './Calendar.constants';
@@ -39,17 +39,14 @@ const CalendarNavigation: React.FC<CalendarHeaderProps> = ({
   };
 
   return (
-    <div
-      data-cy="CalendarNavigation"
-      className={calendarStyles['calendar__navigation']}
-    >
+    <div data-cy="CalendarNavigation" className="calendar__navigation">
       <Button
         dataCy="NavigationNowButton"
         label="Today"
         onClick={() => setCurrentDate(formatFullDate(new Date()))}
         withBorder
       />
-      <div className={calendarStyles['calendar__navigation-arrow-buttons']}>
+      <div className="calendar__navigation-arrow-buttons">
         <Button
           dataCy="NavigationLeftButton"
           arrowSide="left"
@@ -62,7 +59,7 @@ const CalendarNavigation: React.FC<CalendarHeaderProps> = ({
         />
       </div>
 
-      <div className={calendarStyles['calendar__navigation__month-text']}>
+      <div className="calendar__navigation__month-text">
         <span data-cy="NavigationTimeDateText">
           {format(
             new Date(currentDate),

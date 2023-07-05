@@ -1,9 +1,9 @@
+import './Calendar.scss';
 import React, { FC, useMemo } from 'react';
 import { CalendarProps, ColorDotFull, CurrentView } from './Calendar.types';
 import MonthView from './MonthView/MonthView';
 import WeekView from './WeekView/WeekView';
 import CalendarNavigation from './CalendarNavigation';
-import calendarStyles from './Calendar.module.scss';
 import WeekTimeView from './WeekTimeView/WeekTimeView';
 import DayView from './DayView/DayView';
 import DayInPlaceView from './DayInPlaceView/DayInPlaceView';
@@ -43,7 +43,7 @@ const CalendarComponent: FC<CalendarProps> = ({
   ].includes(currentView);
 
   return (
-    <div className={leftMargin && calendarStyles['calendar--left-margin']}>
+    <div className={leftMargin ? 'calendar--left-margin' : ''}>
       {!!setCurrentDate && (
         <CalendarNavigation
           currentDate={currentDate}
@@ -137,29 +137,20 @@ const CalendarComponent: FC<CalendarProps> = ({
         />
       )}
       {!isEmptyObject(preparedColorDots) && (
-        <div
-          data-cy="ColorDots"
-          className={calendarStyles['calendar-color-dots-legend']}
-        >
+        <div data-cy="ColorDots" className="calendar-color-dots-legend">
           {Object.keys(preparedColorDots.colorKeys).map((color) => (
             <div
               key={color}
-              className={calendarStyles['calendar-color-dots-legend__flex']}
+              className="calendar-color-dots-legend__flex"
               onClick={() =>
                 onColorDotClick(preparedColorDots?.colorKeys[color])
               }
             >
               <p
                 style={{ background: color }}
-                className={
-                  calendarStyles['calendar-color-dots-legend__flex__color-dot']
-                }
+                className="calendar-color-dots-legend__flex__color-dot"
               />
-              <p
-                className={
-                  calendarStyles['calendar-color-dots-legend__flex__text']
-                }
-              >
+              <p className="calendar-color-dots-legend__flex__text">
                 {preparedColorDots?.colorKeys[color]?.text}
               </p>
             </div>

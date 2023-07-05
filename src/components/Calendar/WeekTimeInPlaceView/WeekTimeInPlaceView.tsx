@@ -1,3 +1,5 @@
+import './WeekTimeInPlaceView.scss';
+import cn from 'classnames';
 import React, { useMemo, FC } from 'react';
 import {
   add,
@@ -8,7 +10,6 @@ import {
   startOfWeek,
   format,
 } from 'date-fns';
-import weekViewStyles from './WeekTimeInPlaceView.module.scss';
 import { DateInfo } from '../Calendar.types';
 import { formatFullDate } from '../../../utils/index';
 import { getKeyFromDateInfo, getTimeUnitString } from '../Calendar.helper';
@@ -67,12 +68,12 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
 
   return (
     <>
-      <div data-cy="StringDays" className={weekViewStyles['days-component']}>
+      <div data-cy="StringDays" className="days-component">
         {Array.from(Array(7)).map((_, i) => (
           <>
             <div
               key={i}
-              className={weekViewStyles['days-component__day']}
+              className="days-component__day"
               onClick={() =>
                 onDayStringClick(
                   add(startOfWeek(new Date(currentDate), { weekStartsOn }), {
@@ -93,24 +94,24 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
       </div>
       <div
         data-cy="WeekTimeInPlaceViewInside"
-        className={weekViewStyles['week-time-in-place-view-inside']}
+        className="week-time-in-place-view-inside"
       >
-        <div className={weekViewStyles['vertical-borders-container']}>
+        <div className="vertical-borders-container">
           {Array.from(Array(7)).map((_, key) => (
             <div
               data-cy="CellsBorder"
               key={key}
-              className={`
-                ${weekViewStyles['vertical-borders-container']}
-                ${weekViewStyles['vertical-borders-container__border']}
-              `}
+              className={cn(
+                'vertical-borders-container',
+                'vertical-borders-container__border',
+              )}
             />
           ))}
         </div>
-        <div className={weekViewStyles['header']}>
+        <div className="week-in-place-header">
           {Array.from(Array(7)).map((_, i) => (
             <>
-              <div className={weekViewStyles['cell-header']}>
+              <div className="week-in-place-cell-header">
                 <p
                   data-cy="DayNumber"
                   data-day-type={
@@ -118,17 +119,13 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
                       ? 'current'
                       : !getCurrentWeek[i].isCurrentMonth && 'disabled'
                   }
-                  className={`
-                    ${weekViewStyles['cell-header__number']}
-                    ${
-                      !getCurrentWeek[i].isCurrentMonth &&
-                      weekViewStyles['cell-header__number--disabled']
-                    }
-                    ${
-                      getCurrentWeek[i].isCurrentDay &&
-                      weekViewStyles['cell-header__number--current-day']
-                    }
-                  `}
+                  className={cn(
+                    'week-in-place-cell-header__number',
+                    !getCurrentWeek[i].isCurrentMonth &&
+                      'week-in-place-cell-header__number--disabled',
+                    getCurrentWeek[i].isCurrentDay &&
+                      'week-in-place-cell-header__number--current-day',
+                  )}
                   onClick={() =>
                     onDayNumberClick(new Date(getCurrentWeek[i].date))
                   }
@@ -144,7 +141,7 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
                         preparedColorDots.dateKeys[getCurrentWeek[i].date]
                           ?.color,
                     }}
-                    className={weekViewStyles['cell-header__color-dot']}
+                    className="week-in-place-cell-header__color-dot"
                     onClick={() =>
                       onColorDotClick(
                         preparedColorDots.dateKeys[getCurrentWeek[i].date],
@@ -156,22 +153,19 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
             </>
           ))}
         </div>
-        <div data-cy="Cells" className={weekViewStyles['week-row']}>
+        <div data-cy="Cells" className="week-in-place-row">
           {Array.from(Array(24)).map((_, hour) =>
             getCurrentWeek.map((dateInfo, idx) => (
               <div
-                className={`
-                  ${weekViewStyles['week-row__hour-cell']}
-                  ${
-                    hour !== 23 &&
-                    weekViewStyles['week-row__hour-cell--border-bottom']
-                  }
-                `}
+                className={cn(
+                  'week-in-place-row__hour-cell',
+                  hour !== 23 && 'week-in-place-row__hour-cell--border-bottom',
+                )}
                 key={dateInfo.date}
               >
                 <>
                   <div
-                    className={weekViewStyles['week-row__hour-cell--cover']}
+                    className="week-in-place-row__hour-cell--cover"
                     // onClick={() =>
                     //   onCellClick({
                     //     ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
@@ -183,9 +177,8 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
                   {idx === 0 && (
                     <div
                       data-cy="Hours"
-                      className={
-                        weekViewStyles['week-row__hour-cell-hour-number']
-                      }
+                      className="week-in-place-row__hour-cell-hour-number"
+
                       // onClick={() =>
                       //   onHourClick({
                       //     ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),

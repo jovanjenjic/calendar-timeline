@@ -1,4 +1,6 @@
+import './DayView.scss';
 import React, { useMemo, FC } from 'react';
+import cn from 'classnames';
 import {
   getDate,
   getMonth,
@@ -8,7 +10,6 @@ import {
   getMinutes,
   getHours,
 } from 'date-fns';
-import calendarStyles from './DayView.module.scss';
 import { getTimeUnitString } from '../Calendar.helper';
 import { TimeDateFormat } from '../Calendar.constants';
 import { DayTimeViewProps } from './DayView.types';
@@ -44,10 +45,10 @@ const DayView: FC<DayTimeViewProps> = ({
 
   return (
     <>
-      <div data-cy="StringDay" className={calendarStyles['days-component']}>
+      <div data-cy="StringDay" className="days-component">
         <div
           onClick={() => onDayStringClick(new Date(currentDate))}
-          className={calendarStyles['days-component__day']}
+          className="days-component__day"
         >
           {format(
             new Date(currentDate),
@@ -55,21 +56,16 @@ const DayView: FC<DayTimeViewProps> = ({
           )}
         </div>
       </div>
-      <div
-        data-cy="DayViewInside"
-        className={calendarStyles['day-view-inside']}
-      >
-        <div className={calendarStyles['header']}>
-          <div className={calendarStyles['header__number-color-dot']}>
+      <div data-cy="DayViewInside" className="day-view-inside">
+        <div className="day-header">
+          <div className="day-header__number-color-dot">
             <p
               data-cy="DayNumber"
-              className={`
-                ${calendarStyles['header__number']}
-                ${
-                  parsedCurrentDay.isCurrentDay &&
-                  calendarStyles['header__number--current-day']
-                }
-              `}
+              className={cn(
+                'day-header__number',
+                parsedCurrentDay.isCurrentDay &&
+                  'day-header__number--current-day',
+              )}
               onClick={() => onDayNumberClick(new Date(parsedCurrentDay.date))}
             >
               {parsedCurrentDay.day}
@@ -82,7 +78,7 @@ const DayView: FC<DayTimeViewProps> = ({
                   backgroundColor:
                     preparedColorDots.dateKeys[parsedCurrentDay.date]?.color,
                 }}
-                className={calendarStyles['header__color-dot']}
+                className="day-header__color-dot"
                 onClick={() =>
                   onColorDotClick(
                     preparedColorDots.dateKeys[parsedCurrentDay.date],
@@ -93,33 +89,26 @@ const DayView: FC<DayTimeViewProps> = ({
           </div>
           {renderHeaderItems(parsedCurrentDay?.date)}
         </div>
-        <div className={calendarStyles['hour-rows']}>
+        <div className="day-hour-rows">
           <>
-            <div
-              data-cy="HourRows"
-              className={calendarStyles['hour-rows__border-bottom']}
-            >
+            <div data-cy="HourRows" className="day-hour-rows__border-bottom">
               {Array.from(Array(24)).map((_, hour) => (
                 <div
                   data-cy="Hours"
-                  className={calendarStyles['hour-rows__border-bottom-line']}
+                  className="day-hour-rows__border-bottom-line"
                 >
-                  <p
-                    className={
-                      calendarStyles['hour-rows__border-bottom-hour-unit']
-                    }
-                  >
+                  <p className="day-hour-rows__border-bottom-hour-unit">
                     {getTimeUnitString(hour - 1, timeDateFormat)}
                   </p>
                 </div>
               ))}
             </div>
-            <div className={calendarStyles['hour-rows__items']}>
+            <div className="day-hour-rows__items">
               {renderItems({ dateInfo: parsedCurrentDay, idx: 0 })}
               {parsedCurrentDay.isCurrentDay && (
                 <div
                   data-cy="CurrentMinutLine"
-                  className={calendarStyles['current-minute-line']}
+                  className="current-minute-line"
                   style={{
                     gridColumn: '1/3',
                     gridRow: getHours(new Date()) * 60 + getMinutes(new Date()),
