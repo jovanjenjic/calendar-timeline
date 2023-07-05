@@ -1,4 +1,5 @@
 import React, { useMemo, FC } from 'react';
+import cn from 'classnames';
 import {
   add,
   getDate,
@@ -96,10 +97,10 @@ const WeekView: FC<WeekViewProps> = ({
           {Array.from(Array(7)).map((_, key) => (
             <div
               key={key}
-              className={`
-                ${weekViewStyles['vertical-borders-container']}
-                ${weekViewStyles['vertical-borders-container__border']}
-              `}
+              className={cn(
+                weekViewStyles['vertical-borders-container'],
+                weekViewStyles['vertical-borders-container__border'],
+              )}
             />
           ))}
         </div>
@@ -127,17 +128,13 @@ const WeekView: FC<WeekViewProps> = ({
                       ? 'current'
                       : !dateInfo.isCurrentMonth && 'disabled'
                   }
-                  className={`
-                    ${weekViewStyles['cell-header__number']}
-                    ${
-                      !dateInfo.isCurrentMonth &&
-                      weekViewStyles['cell-header__number--disabled']
-                    }
-                    ${
-                      dateInfo.isCurrentDay &&
-                      weekViewStyles['cell-header__number--current-day']
-                    }
-                  `}
+                  className={cn(
+                    weekViewStyles['cell-header__number'],
+                    !dateInfo.isCurrentMonth &&
+                      weekViewStyles['cell-header__number--disabled'],
+                    dateInfo.isCurrentDay &&
+                      weekViewStyles['cell-header__number--current-day'],
+                  )}
                   onClick={() => onDayNumberClick(new Date(dateInfo.date))}
                 >
                   {dateInfo.day}

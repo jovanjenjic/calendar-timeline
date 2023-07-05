@@ -1,4 +1,5 @@
 import React, { useMemo, FC, useState, useLayoutEffect, useRef } from 'react';
+import cn from 'classnames';
 import {
   add,
   getDate,
@@ -147,10 +148,10 @@ const MonthView: FC<MonthViewProps> = ({
           {Array.from(Array(7)).map((_, key) => (
             <div
               key={key}
-              className={`
-                ${monthViewStyles['vertical-borders-container']}
-                ${monthViewStyles['vertical-borders-container__border']}
-              `}
+              className={cn(
+                monthViewStyles['vertical-borders-container'],
+                monthViewStyles['vertical-borders-container__border'],
+              )}
             />
           ))}
         </div>
@@ -187,17 +188,13 @@ const MonthView: FC<MonthViewProps> = ({
                           ? 'current'
                           : !dateInfo.isCurrentMonth && 'disabled'
                       }
-                      className={`
-                        ${monthViewStyles['cell-header__number']}
-                        ${
-                          !dateInfo.isCurrentMonth &&
-                          monthViewStyles['cell-header__number--disabled']
-                        }
-                        ${
-                          dateInfo.isCurrentDay &&
-                          monthViewStyles['cell-header__number--current-day']
-                        }
-                      `}
+                      className={cn(
+                        monthViewStyles['cell-header__number'],
+                        !dateInfo.isCurrentMonth &&
+                          monthViewStyles['cell-header__number--disabled'],
+                        dateInfo.isCurrentDay &&
+                          monthViewStyles['cell-header__number--current-day'],
+                      )}
                       onClick={() => onDayNumberClick(new Date(dateInfo.date))}
                     >
                       {dateInfo.day}

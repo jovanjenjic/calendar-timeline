@@ -1,5 +1,6 @@
 import React, { useMemo, FC } from 'react';
 import { getDate, getMonth, getYear, isToday, format } from 'date-fns';
+import cn from 'classnames';
 import calendarStyles from './DayInPlaceView.module.scss';
 import { getKeyFromDateInfo, getTimeUnitString } from '../Calendar.helper';
 import { TimeDateFormat } from '../Calendar.constants';
@@ -55,17 +56,13 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
         <div className={calendarStyles['cell-header']}>
           <p
             data-cy="DayNumber"
-            className={`
-              ${calendarStyles['cell-header__number']}
-              ${
-                !parsedCurrentDay.isCurrentMonth &&
-                calendarStyles['cell-header__number--disabled']
-              }
-              ${
-                parsedCurrentDay.isCurrentDay &&
-                calendarStyles['cell-header__number--current-day']
-              }
-            `}
+            className={cn(
+              calendarStyles['cell-header__number'],
+              !parsedCurrentDay.isCurrentMonth &&
+                calendarStyles['cell-header__number--disabled'],
+              parsedCurrentDay.isCurrentDay &&
+                calendarStyles['cell-header__number--current-day'],
+            )}
             onClick={() => onDayNumberClick(new Date(parsedCurrentDay.date))}
           >
             {parsedCurrentDay.day}

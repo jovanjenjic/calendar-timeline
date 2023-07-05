@@ -1,4 +1,5 @@
 import React, { useMemo, FC } from 'react';
+import cn from 'classnames';
 import {
   add,
   getDate,
@@ -100,10 +101,10 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
             <div
               data-cy="CellsBorder"
               key={key}
-              className={`
-                ${weekViewStyles['vertical-borders-container']}
-                ${weekViewStyles['vertical-borders-container__border']}
-              `}
+              className={cn(
+                weekViewStyles['vertical-borders-container'],
+                weekViewStyles['vertical-borders-container__border'],
+              )}
             />
           ))}
         </div>
@@ -118,17 +119,13 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
                       ? 'current'
                       : !getCurrentWeek[i].isCurrentMonth && 'disabled'
                   }
-                  className={`
-                    ${weekViewStyles['cell-header__number']}
-                    ${
-                      !getCurrentWeek[i].isCurrentMonth &&
-                      weekViewStyles['cell-header__number--disabled']
-                    }
-                    ${
-                      getCurrentWeek[i].isCurrentDay &&
-                      weekViewStyles['cell-header__number--current-day']
-                    }
-                  `}
+                  className={cn(
+                    weekViewStyles['cell-header__number'],
+                    !getCurrentWeek[i].isCurrentMonth &&
+                      weekViewStyles['cell-header__number--disabled'],
+                    getCurrentWeek[i].isCurrentDay &&
+                      weekViewStyles['cell-header__number--current-day'],
+                  )}
                   onClick={() =>
                     onDayNumberClick(new Date(getCurrentWeek[i].date))
                   }
@@ -160,13 +157,11 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
           {Array.from(Array(24)).map((_, hour) =>
             getCurrentWeek.map((dateInfo, idx) => (
               <div
-                className={`
-                  ${weekViewStyles['week-row__hour-cell']}
-                  ${
-                    hour !== 23 &&
-                    weekViewStyles['week-row__hour-cell--border-bottom']
-                  }
-                `}
+                className={cn(
+                  weekViewStyles['week-row__hour-cell'],
+                  hour !== 23 &&
+                    weekViewStyles['week-row__hour-cell--border-bottom'],
+                )}
                 key={dateInfo.date}
               >
                 <>
