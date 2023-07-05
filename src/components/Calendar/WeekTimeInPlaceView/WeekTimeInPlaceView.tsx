@@ -1,5 +1,4 @@
 import React, { useMemo, FC } from 'react';
-import cn from 'classnames';
 import {
   add,
   getDate,
@@ -98,17 +97,17 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
       </div>
       <div
         data-cy="WeekTimeInPlaceViewInside"
-        className={weekViewStyles['week-time-view-inside']}
+        className={weekViewStyles['week-time-in-place-view-inside']}
       >
         <div className={weekViewStyles['vertical-borders-container']}>
           {Array.from(Array(7)).map((_, key) => (
             <div
               data-cy="CellsBorder"
               key={key}
-              className={cn(
-                weekViewStyles['vertical-borders-container'],
-                weekViewStyles['vertical-borders-container__border'],
-              )}
+              className={`
+                ${weekViewStyles['vertical-borders-container']}
+                ${weekViewStyles['vertical-borders-container__border']}
+              `}
             />
           ))}
         </div>
@@ -123,13 +122,17 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
                       ? 'current'
                       : !getCurrentWeek[i].isCurrentMonth && 'disabled'
                   }
-                  className={cn(
-                    weekViewStyles['cell-header__number'],
-                    !getCurrentWeek[i].isCurrentMonth &&
-                      weekViewStyles['cell-header__number--disabled'],
-                    getCurrentWeek[i].isCurrentDay &&
-                      weekViewStyles['cell-header__number--current-day'],
-                  )}
+                  className={`
+                    ${weekViewStyles['cell-header__number']}
+                    ${
+                      !getCurrentWeek[i].isCurrentMonth &&
+                      weekViewStyles['cell-header__number--disabled']
+                    }
+                    ${
+                      getCurrentWeek[i].isCurrentDay &&
+                      weekViewStyles['cell-header__number--current-day']
+                    }
+                  `}
                   onClick={() =>
                     onDayNumberClick(new Date(getCurrentWeek[i].date))
                   }
@@ -157,15 +160,17 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
             </>
           ))}
         </div>
-        <div data-cy="Cells" className={cn(weekViewStyles['week-row'])}>
+        <div data-cy="Cells" className={weekViewStyles['week-row']}>
           {Array.from(Array(24)).map((_, hour) =>
             getCurrentWeek.map((dateInfo, idx) => (
               <div
-                className={cn(
-                  weekViewStyles['week-row__hour-cell'],
-                  hour !== 23 &&
-                    weekViewStyles['week-row__hour-cell--border-bottom'],
-                )}
+                className={`
+                  ${weekViewStyles['week-row__hour-cell']}
+                  ${
+                    hour !== 23 &&
+                    weekViewStyles['week-row__hour-cell--border-bottom']
+                  }
+                `}
                 key={dateInfo.date}
               >
                 <>

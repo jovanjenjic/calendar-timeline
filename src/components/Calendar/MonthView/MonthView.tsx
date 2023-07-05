@@ -1,5 +1,4 @@
 import React, { useMemo, FC, useState, useLayoutEffect, useRef } from 'react';
-import cn from 'classnames';
 import {
   add,
   getDate,
@@ -150,10 +149,10 @@ const MonthView: FC<MonthViewProps> = ({
           {Array.from(Array(7)).map((_, key) => (
             <div
               key={key}
-              className={cn(
-                monthViewStyles['vertical-borders-container'],
-                monthViewStyles['vertical-borders-container__border'],
-              )}
+              className={`
+                ${monthViewStyles['vertical-borders-container']}
+                ${monthViewStyles['vertical-borders-container__border']}
+              `}
             />
           ))}
         </div>
@@ -162,7 +161,7 @@ const MonthView: FC<MonthViewProps> = ({
           return (
             <div
               key={`${week[0].date}/${index}`}
-              className={cn(monthViewStyles['week-row'])}
+              className={monthViewStyles['week-row']}
               ref={(el) => (weekRefs.current[index] = el!)}
               data-week-index={index}
               data-cy="WeekRow"
@@ -190,13 +189,17 @@ const MonthView: FC<MonthViewProps> = ({
                           ? 'current'
                           : !dateInfo.isCurrentMonth && 'disabled'
                       }
-                      className={cn(
-                        monthViewStyles['cell-header__number'],
-                        !dateInfo.isCurrentMonth &&
-                          monthViewStyles['cell-header__number--disabled'],
-                        dateInfo.isCurrentDay &&
-                          monthViewStyles['cell-header__number--current-day'],
-                      )}
+                      className={`
+                        ${monthViewStyles['cell-header__number']}
+                        ${
+                          !dateInfo.isCurrentMonth &&
+                          monthViewStyles['cell-header__number--disabled']
+                        }
+                        ${
+                          dateInfo.isCurrentDay &&
+                          monthViewStyles['cell-header__number--current-day']
+                        }
+                      `}
                       onClick={() => onDayNumberClick(new Date(dateInfo.date))}
                     >
                       {dateInfo.day}

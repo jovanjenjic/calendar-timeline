@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react';
-import cn from 'classnames';
 import {
   CalendarViewProps,
   CurrentView,
@@ -102,20 +101,26 @@ const CalendarView: React.FC<CalendarViewProps> = ({
           }}
           onMouseEnter={() => setHoveredElement(preparedDataItem?.id)}
           onMouseLeave={() => setHoveredElement(0)}
-          className={cn(
-            calendarStyles['item'],
-            hoveredElement === preparedDataItem.id &&
-              calendarStyles['item--hovered'],
-          )}
+          className={`
+            ${calendarStyles['item']}
+            ${
+              hoveredElement === preparedDataItem.id &&
+              calendarStyles['item--hovered']
+            }
+          `}
         >
           <div
-            className={cn(
-              calendarStyles['sub-item'],
-              hoveredElement === preparedDataItem.id &&
-                calendarStyles['sub-item--hovered'],
-              preparedDataItem?.isStart &&
-                calendarStyles['sub-item--left-border'],
-            )}
+            className={`
+              ${calendarStyles['sub-item']}
+              ${
+                hoveredElement === preparedDataItem.id &&
+                calendarStyles['sub-item--hovered']
+              }
+              ${
+                preparedDataItem?.isStart &&
+                calendarStyles['sub-item--left-border']
+              }
+            `}
           >
             <p onClick={() => onItemClick(preparedDataItem)}>
               <div>{preparedDataItem?.title}</div>
@@ -158,18 +163,22 @@ const CalendarView: React.FC<CalendarViewProps> = ({
             }}
             onMouseEnter={() => setHoveredElement(preparedDataItem?.id)}
             onMouseLeave={() => setHoveredElement(0)}
-            className={cn(
-              calendarStyles['item'],
-              hoveredElement === preparedDataItem.id &&
-                calendarStyles['item--hovered'],
-            )}
+            className={`
+              ${calendarStyles['item']}
+              ${
+                hoveredElement === preparedDataItem.id &&
+                calendarStyles['item--hovered']
+              }
+            `}
           >
             <p
-              className={cn(
-                calendarStyles['sub-item'],
-                hoveredElement === preparedDataItem.id &&
-                  calendarStyles['sub-item--hovered'],
-              )}
+              className={`
+                ${calendarStyles['sub-item']}
+                ${
+                  hoveredElement === preparedDataItem.id &&
+                  calendarStyles['sub-item--hovered']
+                }
+              `}
               style={{
                 backgroundColor: preparedDataItem?.bgColor,
                 color: preparedDataItem?.textColor,
@@ -226,15 +235,20 @@ const CalendarView: React.FC<CalendarViewProps> = ({
           style={{
             gridColumn,
           }}
-          className={cn(calendarStyles['item'])}
+          className={calendarStyles['item']}
         >
           <p
-            className={cn(
-              calendarStyles['sub-item'],
-              isFromPreviousOrNext[0] && calendarStyles['sub-item--left-arrow'],
-              isFromPreviousOrNext[1] &&
-                calendarStyles['sub-item--right-arrow'],
-            )}
+            className={`
+              ${calendarStyles['sub-item']}
+              ${
+                isFromPreviousOrNext[0] &&
+                calendarStyles['sub-item--left-arrow']
+              }
+              ${
+                isFromPreviousOrNext[1] &&
+                calendarStyles['sub-item--right-arrow']
+              }
+            `}
             onClick={() => onItemClick(preparedDataItem)}
             style={{
               backgroundColor: preparedDataItem?.bgColor,
