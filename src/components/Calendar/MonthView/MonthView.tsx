@@ -80,10 +80,8 @@ const MonthView: FC<MonthViewProps> = ({
     return () => observer.disconnect();
   }, [visibleWeeks]);
 
-  /**
-   * It will contain all the days of the month structured by weeks.
-   * The first array is an array of weeks, and each week is an array of days in that week.
-   */
+  // It will contain all the days of the month structured by weeks.
+  // The first array is an array of weeks, and each week is an array of days in that week.
   const getAllWeeksInMonth = useMemo(() => {
     const startDate = startOfWeek(startOfMonth(new Date(currentDate)), {
       weekStartsOn,

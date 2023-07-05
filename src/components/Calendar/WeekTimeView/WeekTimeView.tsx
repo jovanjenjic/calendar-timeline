@@ -41,11 +41,7 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
   preparedColorDots,
 }) => {
   const weekStartsOn = timeDateFormat.weekStartsOn ?? 1;
-
-  /**
-   * It will contain all the days of the month structured by weeks.
-   * The first array is an array of weeks, and each week is an array of days in that week.
-   */
+  // Returns every day of the week
   const getCurrentWeek = useMemo(() => {
     const startDate = startOfWeek(new Date(currentDate), { weekStartsOn });
     const nextTimeUnit = getDate(add(startDate, { weeks: 1 }));
@@ -183,7 +179,7 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
                       weekTimeViewStyles['week__border-bottom-hour-unit']
                     }
                   >
-                    {getTimeUnitString(hour, timeDateFormat)}
+                    {getTimeUnitString(hour - 1, timeDateFormat)}
                   </p>
                 </div>
               ))}

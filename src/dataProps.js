@@ -72,7 +72,7 @@ const colorDots = [
   },
 ];
 
-const dataViewConfig = (
+const dataProp = (
   currentDate = '2022-06-03',
   setCurrentDate,
   cellDisplayMode = {},
@@ -81,7 +81,7 @@ const dataViewConfig = (
   data: data,
   currentDate,
   setCurrentDate,
-  currentView: CurrentView.WEEK_TIME,
+  currentView: CurrentView.MONTH,
   cellDisplayMode,
   setCellDisplayMode,
   timeDateFormat: {
@@ -95,4 +95,4 @@ const dataViewConfig = (
   colorDots,
 });
 
-export default dataViewConfig;
+export default dataProp;

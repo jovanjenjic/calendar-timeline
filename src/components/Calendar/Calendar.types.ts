@@ -26,7 +26,6 @@ export interface PreparedDataWithoutTime {
 export interface PreparedDataWithTime {
   startMinute: number;
   endMinute: number;
-  fromPreviousDay?: boolean;
   numberInRow?: number;
   margin?: string;
   width?: string;
@@ -148,4 +147,10 @@ export interface CalendarHeaderProps {
 export interface CalculateStartAndEndMinuteFunc {
   startMinute: number;
   endMinute: number;
+}
+
+export interface GetHeaderItemInfoFunc {
+  gridColumn: string;
+  isFromPrevious?: boolean;
+  isFromNext?: boolean;
 }
