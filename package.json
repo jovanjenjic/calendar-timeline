@@ -1,10 +1,9 @@
 {
-  "name": "neotech-app",
+  "name": "react-calendar-timeline",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@cypress/react18": "^2.0.0",
-    "classnames": "^2.3.2",
     "date-fns": "^2.30.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

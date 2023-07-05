@@ -1,5 +1,4 @@
 import React, { useMemo, FC } from 'react';
-import cn from 'classnames';
 import { getDate, getMonth, getYear, isToday, format } from 'date-fns';
 import calendarStyles from './DayInPlaceView.module.scss';
 import { getKeyFromDateInfo, getTimeUnitString } from '../Calendar.helper';
@@ -59,13 +58,17 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
         <div className={calendarStyles['cell-header']}>
           <p
             data-cy="DayNumber"
-            className={cn(
-              calendarStyles['cell-header__number'],
-              !parsedCurrentDay.isCurrentMonth &&
-                calendarStyles['cell-header__number--disabled'],
-              parsedCurrentDay.isCurrentDay &&
-                calendarStyles['cell-header__number--current-day'],
-            )}
+            className={`
+              ${calendarStyles['cell-header__number']}
+              ${
+                !parsedCurrentDay.isCurrentMonth &&
+                calendarStyles['cell-header__number--disabled']
+              }
+              ${
+                parsedCurrentDay.isCurrentDay &&
+                calendarStyles['cell-header__number--current-day']
+              }
+            `}
             onClick={() => onDayNumberClick(new Date(parsedCurrentDay.date))}
           >
             {parsedCurrentDay.day}
@@ -90,7 +93,7 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
         <div
           data-cy="Cells"
           key={parsedCurrentDay.date}
-          className={cn(calendarStyles['hour-row'])}
+          className={calendarStyles['hour-row']}
         >
           {Array.from(Array(24)).map((_, hour) => (
             <div
