@@ -1,4 +1,5 @@
 import React, { useMemo, FC } from 'react';
+import cn from 'classnames';
 import {
   getDate,
   getMonth,
@@ -63,13 +64,11 @@ const DayView: FC<DayTimeViewProps> = ({
           <div className={calendarStyles['header__number-color-dot']}>
             <p
               data-cy="DayNumber"
-              className={`
-                ${calendarStyles['header__number']}
-                ${
-                  parsedCurrentDay.isCurrentDay &&
-                  calendarStyles['header__number--current-day']
-                }
-              `}
+              className={cn(
+                calendarStyles['header__number'],
+                parsedCurrentDay.isCurrentDay &&
+                  calendarStyles['header__number--current-day'],
+              )}
               onClick={() => onDayNumberClick(new Date(parsedCurrentDay.date))}
             >
               {parsedCurrentDay.day}
