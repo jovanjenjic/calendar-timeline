@@ -1,18 +1,11 @@
-import {
-  add,
-  addHours,
-  endOfWeek,
-  format,
-  getHours,
-  getMinutes,
-  startOfWeek,
-} from 'date-fns';
+import { add, addHours, format, getHours, getMinutes } from 'date-fns';
 import {
   CalculateStartAndEndMinuteFunc,
   CellDisplayMode,
   CellDisplayModeState,
   CurrentView,
   DateInfo,
+  GetHeaderItemInfoFunc,
   PreparedDataWithoutTime,
   TimeFormat,
 } from './Calendar.types';
@@ -24,15 +17,15 @@ import {
 } from '../../utils/index';
 import { TimeDateFormat } from './Calendar.constants';
 
+// Designed to prepare and display the hours on the left side of the calendar
 export const getTimeUnitString = (
-  num: number,
+  hour: number,
   timeDateFormat: TimeFormat,
 ): string => {
-  const date = addHours(0, num - 1);
-  const label = format(date, timeDateFormat.hour || TimeDateFormat.HOUR);
-  return label;
+  return format(addHours(0, hour), timeDateFormat.hour || TimeDateFormat.HOUR);
 };
 
+// Makes the necessary keys by adding hours to each day
 export const getKeyFromDateInfo = (
   dateInfo: DateInfo,
   hour: number,
@@ -44,6 +37,8 @@ export const getKeyFromDateInfo = (
   return formatFullDateTime(currentHour);
 };
 
+// In case a cell is collapsed, it decides whether any next item should be
+// displayed that originates from that collapsed cell
 export const shouldShowItem = (
   preparedDataItem: PreparedDataWithoutTime,
   dateKey: string,
@@ -81,6 +76,7 @@ export const shouldShowItem = (
   return retValue;
 };
 
+// A simple method that decides whether a cell should be collapsed
 export const shouldCollapse = (
   cellDisplayMode: CellDisplayMode,
   currentView: CurrentView,
@@ -90,65 +86,54 @@ export const shouldCollapse = (
   (cellDisplayMode[currentView]?.state === CellDisplayModeState.CUSTOM &&
     cellDisplayMode[currentView].inactiveCells.includes(dateKey));
 
-export const calculatePosition = (
+// It creates the necessary information for the elements in the header - position
+// and whether the element is from the previous week or day or from the next
+export const getHeaderItemInfo = (
   startWeekDate: string,
   endWeekDate: string,
   startIntervalDate: string,
   endIntervalDate: string,
   weekStartsOn: number,
-): string => {
+): GetHeaderItemInfoFunc => {
   if (
     formatFullDate(new Date(startWeekDate)) >
       formatFullDate(new Date(endIntervalDate)) ||
     formatFullDate(new Date(endWeekDate)) <
       formatFullDate(new Date(startIntervalDate))
   ) {
-    return '';
+    return { gridColumn: '' };
   }
 
+  const isFromPrevious =
+    formatFullDate(new Date(startWeekDate)) >
+    formatFullDate(new Date(startIntervalDate));
+  const isFromNext =
+    formatFullDate(new Date(endWeekDate)) <
+    formatFullDate(new Date(endIntervalDate));
+
   const startPosition = dayInWeekBasedOnWeekStarts(
-    startWeekDate > startIntervalDate ? startWeekDate : startIntervalDate,
+    isFromPrevious ? startWeekDate : startIntervalDate,
     weekStartsOn,
   );
   const endPosition = dayInWeekBasedOnWeekStarts(
-    endWeekDate < endIntervalDate ? endWeekDate : endIntervalDate,
+    isFromNext ? endWeekDate : endIntervalDate,
     weekStartsOn,
   );
 
-  return startWeekDate === endWeekDate
-    ? '1'
-    : `${startPosition + 1} / ${endPosition + 2}`;
+  const gridColumn =
+    startWeekDate === endWeekDate
+      ? '1'
+      : `${startPosition + 1} / ${endPosition + 2}`;
+
+  return {
+    gridColumn,
+    isFromPrevious,
+    isFromNext,
+  };
 };
 
-export const isFromPreviousOrNextDateUnit = (
-  startDate: string,
-  endDate: string,
-  startIntervalDate: string,
-  endIntervalDate: string,
-  currentView: CurrentView,
-  weekStartsOn,
-): boolean[] => {
-  const response = [false, false];
-  if (currentView === CurrentView.DAY) {
-    response[0] =
-      formatFullDate(new Date(startIntervalDate)) <
-      formatFullDate(new Date(startDate));
-
-    response[1] =
-      formatFullDate(new Date(endIntervalDate)) >
-      formatFullDate(new Date(endDate));
-  } else {
-    response[0] =
-      formatFullDate(new Date(startIntervalDate)) <
-      formatFullDate(startOfWeek(new Date(startDate), { weekStartsOn }));
-
-    response[1] =
-      formatFullDate(new Date(endIntervalDate)) >
-      formatFullDate(endOfWeek(new Date(startDate), { weekStartsOn }));
-  }
-  return response;
-};
-
+// Calculates the height of the interval for two views (DAY and WEEK_TIME).
+// If second interval unit is not set, the height will be 30 minutes or pixels
 export const calculateStartAndEndMinute = (
   startDate: Date,
   endDate: Date,

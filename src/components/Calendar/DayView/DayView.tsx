@@ -37,10 +37,7 @@ const DayView: FC<DayTimeViewProps> = ({
   timeDateFormat,
   preparedColorDots,
 }) => {
-  /**
-   * It will contain all the days of the month structured by weeks.
-   * The first array is an array of weeks, and each week is an array of days in that week.
-   */
+  // Current day info
   const parsedCurrentDay = useMemo(() => {
     return getDateInfo(new Date(currentDate));
   }, [currentDate]);
@@ -112,7 +109,7 @@ const DayView: FC<DayTimeViewProps> = ({
                       calendarStyles['hour-rows__border-bottom-hour-unit']
                     }
                   >
-                    {getTimeUnitString(hour, timeDateFormat)}
+                    {getTimeUnitString(hour - 1, timeDateFormat)}
                   </p>
                 </div>
               ))}

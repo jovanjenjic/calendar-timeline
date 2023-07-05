@@ -52,9 +52,11 @@ export const getAllDaysInMonth = (month) => {
 
 /**
  * Based on the currently selected field in the configuration (eg `startTime` or `startTime-endTime`),
- * a corresponding array is formed that will be displayed on the calendar
+ * a corresponding array is formed that will be displayed on the calendar.
+ * Used for MONTH and WEEK view
  * @param calendarData - Array of data for calendar view
- * @param activeViewConfiguration - Configuration for calendar view
+ * @param activeTimeDateField - Current active field (startTime, endTime, startTime-endTIme, etc...)
+ * @param weekStartsOn - By default week starts on Monday
  * @returns - Prepared array of data for calendar view
  */
 export const prepareCalendarData = (
@@ -69,7 +71,7 @@ export const prepareCalendarData = (
     .split('-')
     .map((str) => str.replace(/\s/g, ''));
 
-  // A sorted array based on the date and time that was selected within configurations
+  // A sorted array based on the date and time that is active
   const sortedCalendarValue = calendarData.sort(
     (a, b) =>
       new Date(a?.[startIntervalKey]).valueOf() -
@@ -83,7 +85,7 @@ export const prepareCalendarData = (
     if (!startDateValue || !endDateValue) continue;
 
     const startDate: Date = new Date(startDateValue);
-    // Item can have an end interval, if it doesn't then it is the same as the start interval
+    // Item can has an end interval, if it doesn't then it is the same as the start interval
     const endDate: Date = new Date(endDateValue);
     const startDateModified = startOfDay(new Date(startDate));
     const endDateModified = startOfDay(new Date(endDate));
@@ -123,11 +125,14 @@ export const prepareCalendarData = (
   return result;
 };
 
+// This is a helper method that, based on the number of
+// elements and their position, will determine the width, position and margin for better visibility
 const processMatchingItems = (
   result: PreparedDataWithTimeFull,
   secondDayKey: string,
   secondDayRes: PreparedDataWithTime,
 ): void => {
+  // If there is any item that is 30 pixels above or below
   const matchingItems = result.day[secondDayKey]?.filter((item) => {
     return (
       +item.startMinute >= +secondDayRes.startMinute - 30 &&
@@ -157,6 +162,14 @@ const processMatchingItems = (
   }
 };
 
+/**
+ * Based on the currently selected field in the configuration (eg `startTime` or `startTime-endTime`),
+ * a corresponding array is formed that will be displayed on the calendar.
+ * Used for DAY and WEEK_TIME
+ * @param calendarData - Array of data for calendar view
+ * @param activeTimeDateField - Current active field (startTime, endTime, startTime-endTIme, etc...)
+ * @returns - Prepared array of data for calendar view
+ */
 export const prepareCalendarDataWithTime = (
   calendarData: Record<string, any>[],
   activeTimeDateField: string,
@@ -165,12 +178,14 @@ export const prepareCalendarDataWithTime = (
     week: [] as PreparedDataWithTime[],
     day: {} as Record<string, PreparedDataWithTime>[],
   };
+  // If there is an end interval, it is separated by '-' (createdAt - updatedAt)
   const [startIntervalKey, endIntervalKey = startIntervalKey] = (
     activeTimeDateField ?? ''
   )
     .split('-')
     .map((str) => str.replace(/\s/g, '')) as [string, string];
 
+  // Sorted by active field
   const sortedCalendarValue = calendarData.sort(
     (a, b) =>
       new Date(a?.[startIntervalKey]).valueOf() -
@@ -179,8 +194,11 @@ export const prepareCalendarDataWithTime = (
 
   sortedCalendarValue.forEach((obj) => {
     const startDateValue = obj?.[startIntervalKey];
+    // If there is no end interval key, it will be the same as start
     const endDateValue = obj?.[endIntervalKey];
 
+    // If by chance one of the values is missing, it means that the item is invalid and we will not
+    // insert it into the resulting array
     if (!startDateValue || !endDateValue) return;
 
     const startDate = new Date(startDateValue);
@@ -196,8 +214,10 @@ export const prepareCalendarDataWithTime = (
       endMinute: 0,
     };
 
+    // In case it is longer than 24 hours, we will place it in the header
     if (numberOfMinutes > 24 * 60) {
       result.week = [...(result.week || []), res];
+      // In case it is not longer than 24 hours but is on 2 different days
     } else if (differenceInMinutes(endDate, startOfDay(startDate)) > 24 * 60) {
       const firstDayEnd = endOfDay(startDate);
       const secondDayStart = startOfDay(endDate);
@@ -219,7 +239,6 @@ export const prepareCalendarDataWithTime = (
       const secondDayKey: string = formatFullDate(secondDayStart);
       const secondDayRes = {
         ...res,
-        fromPreviousDay: true,
         startMinute: startAndEndMinutSecondItem.startMinute,
         endMinute: startAndEndMinutSecondItem.endMinute,
       };
@@ -230,6 +249,7 @@ export const prepareCalendarDataWithTime = (
       ];
       processMatchingItems(result, secondDayKey, secondDayRes);
       processMatchingItems(result, key, firstDayRes);
+      // In case if it is in one day
     } else {
       const { startMinute, endMinute } = calculateStartAndEndMinute(
         startDate,
@@ -248,11 +268,22 @@ export const prepareCalendarDataWithTime = (
   return result;
 };
 
+/**
+ * Based on the currently selected field in the configuration (eg `startTime` or `startTime-endTime`),
+ * a corresponding array is formed that will be displayed on the calendar.
+ * Used for DAY_IN_PLACE and WEEK_IN_PLACE views
+ * @param calendarData - Array of data for calendar view
+ * @param activeTimeDateField - Current active field (startTime, endTime, startTime-endTIme, etc...)
+ * @returns - Prepared array of data for calendar view
+ */
 export const prepareCalendarDataInPlace = (
   calendarData: Record<string, any>[],
   activeTimeDateField: string,
 ): PreparedDataWithTimeInPlace => {
   const result = {};
+
+  // Regardless of the existence of the second interval, we only consider the first interval.
+  // This method will position the elements always in one cell, sorted
   const [startIntervalKey] = (activeTimeDateField ?? '')
     .split('-')
     .map((str) => str.replace(/\s/g, '')) as [string, string];
@@ -279,25 +310,22 @@ export const prepareCalendarDataInPlace = (
   return result;
 };
 
+// It simulates the lodash method
 export const isEqualValues = (value, other) => {
-  // Provera jednakosti za primitivne vrednosti
   if (value === other) {
     return true;
   }
 
-  // Provera tipova
   const typeValue = typeof value;
   const typeOther = typeof other;
   if (typeValue !== typeOther) {
     return false;
   }
 
-  // Provera specifičnih slučajeva
   if (value === null || other === null || typeValue !== 'object') {
     return false;
   }
 
-  // Provera jednakosti za objekte i nizove
   const valueKeys = Object.keys(value);
   const otherKeys = Object.keys(other);
 
@@ -314,6 +342,7 @@ export const isEqualValues = (value, other) => {
   return true;
 };
 
+// It simulates the lodash method
 export const isEmptyObject = (value) => {
   if (value == null) {
     return true;
@@ -330,6 +359,7 @@ export const isEmptyObject = (value) => {
   return false;
 };
 
+// It simulates the lodash method
 export const omit = (object, paths) => {
   const result = {};
   const omitPaths = Array.isArray(paths) ? paths : [paths];

@@ -30,10 +30,7 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
   timeDateFormat,
   preparedColorDots,
 }) => {
-  /**
-   * It will contain all the days of the month structured by weeks.
-   * The first array is an array of weeks, and each week is an array of days in that week.
-   */
+  // Current day info
   const parsedCurrentDay = useMemo(() => {
     return getDateInfo(new Date(currentDate), getMonth(new Date(currentDate)));
   }, [currentDate]);
@@ -127,7 +124,7 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
                   //   })
                   // }
                 >
-                  {getTimeUnitString(hour, timeDateFormat)}
+                  {getTimeUnitString(hour - 1, timeDateFormat)}
                 </div>
                 {renderItems({ dateInfo: parsedCurrentDay, hour, idx: 0 })}
               </>

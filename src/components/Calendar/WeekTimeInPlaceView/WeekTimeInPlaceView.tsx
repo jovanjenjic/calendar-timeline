@@ -38,11 +38,7 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
   preparedColorDots,
 }) => {
   const weekStartsOn = timeDateFormat.weekStartsOn ?? 1;
-
-  /**
-   * It will contain all the days of the month structured by weeks.
-   * The first array is an array of weeks, and each week is an array of days in that week.
-   */
+  // Returns every day of the week
   const getCurrentWeek = useMemo(() => {
     const startOfWeekOptions = { weekStartsOn } as const;
     const startDate = startOfWeek(new Date(currentDate), startOfWeekOptions);
@@ -197,7 +193,7 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
                       //   })
                       // }
                     >
-                      {getTimeUnitString(hour, timeDateFormat)}
+                      {getTimeUnitString(hour - 1, timeDateFormat)}
                     </div>
                   )}
                   {renderItems({ dateInfo, hour, idx })}

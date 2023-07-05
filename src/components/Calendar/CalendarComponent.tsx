@@ -34,6 +34,7 @@ const CalendarComponent: FC<CalendarProps> = ({
     return newValue;
   }, [colorDots]);
 
+  // In case there are hours on the left side of the calendar, it is necessary to move the calendar on the left side
   const leftMargin = [
     CurrentView.DAY,
     CurrentView.DAY_IN_PLACE,

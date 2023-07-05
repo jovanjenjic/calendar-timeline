@@ -19,9 +19,8 @@ import {
 import {
   shouldCollapse,
   shouldShowItem,
-  calculatePosition,
+  getHeaderItemInfo,
   getKeyFromDateInfo,
-  isFromPreviousOrNextDateUnit,
 } from './Calendar.helper';
 import CalendarComponent from './CalendarComponent';
 
@@ -46,7 +45,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     .split('-')
     .map((str) => str.replace(/\s/g, '')) as [string, string];
 
-  // Prepared data so that for each item in the array there is all the data as well as the length of the interval
+  // Prepared data based on curentView so that for each item in the array there is all needed data
   const preparedData:
     | PreparedDataWithTimeFull
     | Record<string, PreparedDataWithoutTime[]>[]
@@ -68,6 +67,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     }
   }, [data, activeTimeDateField, currentView]);
 
+  // A method that will render elements for four views
+  // MONTH, WEEK, WEEK_IN_PLACE, DAY_IN_PLACE
   const renderItemsWithoutTimeOrInPlace = ({
     dateInfo,
     idx,
@@ -79,19 +80,21 @@ const CalendarView: React.FC<CalendarViewProps> = ({
 
     const isCollapsed = shouldCollapse(cellDisplayMode, currentView, key);
 
+    // If a cell is collapsed, only the last item will be displayed
     const arrayData: PreparedDataWithoutTime[] =
       (isCollapsed ? preparedData?.[key]?.slice(-1) : preparedData?.[key]) ||
       [];
 
     return arrayData.map((preparedDataItem, index) => {
-      return shouldShowItem(
+      const shoudShow = shouldShowItem(
         preparedDataItem,
         key,
         cellDisplayMode,
         currentView,
         preparedData,
         currentDate,
-      ) ? (
+      );
+      return shoudShow ? (
         <div
           key={`${index}-${dateInfo.date}`}
           style={{
@@ -145,6 +148,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     });
   };
 
+  // A method that will render elements for two views
+  // DAY, WEEK_TIME
   const renderItemsWithTime = ({
     dateInfo,
   }: DateInfoFunction): ReactElement[] => {
@@ -201,6 +206,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     );
   };
 
+  // The method renders the elements in the header on two views (DAY and WEEK_TIME)
   const renderHeaderItems = (
     startDate: string,
     endDate?: string,
@@ -208,7 +214,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     const weekItems = preparedData as PreparedDataWithTimeFull;
 
     return weekItems.week.map((preparedDataItem, index) => {
-      const gridColumn = calculatePosition(
+      // Based on the intersection of the intervals, it is decided where the element should be positioned
+      const { gridColumn, isFromPrevious, isFromNext } = getHeaderItemInfo(
         startDate,
         endDate || startDate,
         preparedDataItem[startIntervalKey],
@@ -219,15 +226,6 @@ const CalendarView: React.FC<CalendarViewProps> = ({
       if (!gridColumn) {
         return null;
       }
-
-      const isFromPreviousOrNext = isFromPreviousOrNextDateUnit(
-        startDate,
-        endDate || startDate,
-        preparedDataItem[startIntervalKey],
-        preparedDataItem[endIntervalKey],
-        currentView,
-        timeDateFormat.weekStartsOn ?? 1,
-      );
 
       return (
         <div
@@ -240,14 +238,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({
           <p
             className={`
               ${calendarStyles['sub-item']}
-              ${
-                isFromPreviousOrNext[0] &&
-                calendarStyles['sub-item--left-arrow']
-              }
-              ${
-                isFromPreviousOrNext[1] &&
-                calendarStyles['sub-item--right-arrow']
-              }
+              ${isFromPrevious && calendarStyles['sub-item--left-arrow']}
+              ${isFromNext && calendarStyles['sub-item--right-arrow']}
             `}
             onClick={() => onItemClick(preparedDataItem)}
             style={{
