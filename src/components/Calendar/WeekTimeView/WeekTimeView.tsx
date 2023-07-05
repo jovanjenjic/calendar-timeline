@@ -1,6 +1,6 @@
 import './WeekTimeView.scss';
-import cn from 'classnames';
 import React, { useMemo, FC } from 'react';
+import cn from 'classnames';
 import {
   add,
   getDate,
