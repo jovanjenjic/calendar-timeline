@@ -1,3 +1,4 @@
+import './WeekTimeView.scss';
 import React, { useMemo, FC } from 'react';
 import cn from 'classnames';
 import {
@@ -11,7 +12,6 @@ import {
   getHours,
   getMinutes,
 } from 'date-fns';
-import weekTimeViewStyles from './WeekTimeView.module.scss';
 import { DateInfo } from '../Calendar.types';
 import { formatFullDate } from '../../../utils/index';
 import { getTimeUnitString } from '../Calendar.helper';
@@ -68,15 +68,12 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
 
   return (
     <>
-      <div
-        data-cy="StringDays"
-        className={weekTimeViewStyles['days-component']}
-      >
+      <div data-cy="StringDays" className="days-component">
         {Array.from(Array(7)).map((_, i) => (
           <>
             <div
               key={i}
-              className={weekTimeViewStyles['days-component__day']}
+              className="days-component__day"
               onClick={() =>
                 onDayStringClick(
                   add(startOfWeek(new Date(currentDate), { weekStartsOn }), {
@@ -95,26 +92,23 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
           </>
         ))}
       </div>
-      <div
-        data-cy="WeekTimeViewInside"
-        className={weekTimeViewStyles['week-time-view-inside']}
-      >
-        <div className={weekTimeViewStyles['vertical-borders-container']}>
+      <div data-cy="WeekTimeViewInside" className="week-time-view-inside">
+        <div className="vertical-borders-container">
           {Array.from(Array(7)).map((_, key) => (
             <div
               data-cy="CellsBorder"
               key={key}
               className={cn(
-                weekTimeViewStyles['vertical-borders-container'],
-                weekTimeViewStyles['vertical-borders-container__border'],
+                'vertical-borders-container',
+                'vertical-borders-container__border',
               )}
             />
           ))}
         </div>
-        <div className={weekTimeViewStyles['header']}>
+        <div className="week-time-header">
           <>
             {Array.from(Array(7)).map((_, i) => (
-              <div className={weekTimeViewStyles['header--item']}>
+              <div className="week-time-header--item">
                 <p
                   data-cy="DayNumber"
                   data-day-type={
@@ -123,11 +117,11 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
                       : !getCurrentWeek[i].isCurrentMonth && 'disabled'
                   }
                   className={cn(
-                    weekTimeViewStyles['header__number'],
+                    'week-time-header__number',
                     !getCurrentWeek[i].isCurrentMonth &&
-                      weekTimeViewStyles['header__number--disabled'],
+                      'week-time-header__number--disabled',
                     getCurrentWeek[i].isCurrentDay &&
-                      weekTimeViewStyles['header__number--current-day'],
+                      'week-time-header__number--current-day',
                   )}
                   onClick={() =>
                     onDayNumberClick(new Date(getCurrentWeek[i].date))
@@ -144,7 +138,7 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
                         preparedColorDots.dateKeys[getCurrentWeek[i].date]
                           ?.color,
                     }}
-                    className={weekTimeViewStyles['header__color-dot']}
+                    className="week-time-header__color-dot"
                     onClick={() =>
                       onColorDotClick(
                         preparedColorDots.dateKeys[getCurrentWeek[i].date],
@@ -160,34 +154,27 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
             )}
           </>
         </div>
-        <div className={weekTimeViewStyles['week']}>
+        <div className="week-time-week">
           <>
-            <div
-              data-cy="HourRows"
-              className={weekTimeViewStyles['week__border-bottom']}
-            >
+            <div data-cy="HourRows" className="week-time-week__border-bottom">
               {Array.from(Array(24)).map((_, hour) => (
                 <div
                   data-cy="Hours"
-                  className={weekTimeViewStyles['week__border-bottom-row']}
+                  className="week-time-week__border-bottom-row"
                 >
-                  <p
-                    className={
-                      weekTimeViewStyles['week__border-bottom-hour-unit']
-                    }
-                  >
+                  <p className="week-time-week__border-bottom-hour-unit">
                     {getTimeUnitString(hour - 1, timeDateFormat)}
                   </p>
                 </div>
               ))}
             </div>
             {getCurrentWeek.map((dateInfo, idx) => (
-              <div className={weekTimeViewStyles['week__column']}>
+              <div className="week-time-week__column">
                 {renderItems({ dateInfo, idx })}
                 {dateInfo.isCurrentDay && (
                   <div
                     data-cy="CurrentMinutLine"
-                    className={weekTimeViewStyles['current-minute-line']}
+                    className="current-minute-line"
                     style={{
                       gridColumn: '1/3',
                       gridRow:

@@ -10,7 +10,7 @@
 
 @include days-component;
 
-.hour-row {
+.day-in-place-hour-row {
   z-index: 10;
   position: relative;
   width: 100%;
@@ -48,7 +48,7 @@
   }
 }
 
-.cell-header {
+.day-in-place-cell-header {
   z-index: 10;
   height: max-content;
   border-bottom: 1px solid var(--gs-200);

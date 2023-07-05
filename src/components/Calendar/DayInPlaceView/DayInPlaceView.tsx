@@ -1,7 +1,7 @@
+import './DayInPlaceView.scss';
 import React, { useMemo, FC } from 'react';
 import { getDate, getMonth, getYear, isToday, format } from 'date-fns';
 import cn from 'classnames';
-import calendarStyles from './DayInPlaceView.module.scss';
 import { getKeyFromDateInfo, getTimeUnitString } from '../Calendar.helper';
 import { TimeDateFormat } from '../Calendar.constants';
 import { DateInfo } from '../Calendar.types';
@@ -38,10 +38,10 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
 
   return (
     <>
-      <div data-cy="StringDay" className={calendarStyles['days-component']}>
+      <div data-cy="StringDay" className="days-component">
         <div
           onClick={() => onDayStringClick(new Date(currentDate))}
-          className={calendarStyles['days-component__day']}
+          className="days-component__day"
         >
           {format(
             new Date(currentDate),
@@ -49,19 +49,16 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
           )}
         </div>
       </div>
-      <div
-        data-cy="DayInPlaceViewInside"
-        className={calendarStyles['day-view-inside']}
-      >
-        <div className={calendarStyles['cell-header']}>
+      <div data-cy="DayInPlaceViewInside" className="day-view-inside">
+        <div className="day-in-place-cell-header">
           <p
             data-cy="DayNumber"
             className={cn(
-              calendarStyles['cell-header__number'],
+              'day-in-place-cell-header__number',
               !parsedCurrentDay.isCurrentMonth &&
-                calendarStyles['cell-header__number--disabled'],
+                'day-in-place-cell-header__number--disabled',
               parsedCurrentDay.isCurrentDay &&
-                calendarStyles['cell-header__number--current-day'],
+                'day-in-place-cell-header__number--current-day',
             )}
             onClick={() => onDayNumberClick(new Date(parsedCurrentDay.date))}
           >
@@ -75,7 +72,7 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
                 backgroundColor:
                   preparedColorDots.dateKeys[parsedCurrentDay.date]?.color,
               }}
-              className={calendarStyles['cell-header__color-dot']}
+              className="day-in-place-cell-header__color-dot"
               onClick={() =>
                 onColorDotClick(
                   preparedColorDots.dateKeys[parsedCurrentDay.date],
@@ -87,16 +84,16 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
         <div
           data-cy="Cells"
           key={parsedCurrentDay.date}
-          className={calendarStyles['hour-row']}
+          className="day-in-place-hour-row"
         >
           {Array.from(Array(24)).map((_, hour) => (
             <div
-              className={calendarStyles['hour-row__hour-cell']}
+              className="day-in-place-hour-row__hour-cell"
               key={parsedCurrentDay.date}
             >
               <>
                 <div
-                  className={calendarStyles['hour-row__hour-cell--cover']}
+                  className="day-in-place-hour-row__hour-cell--cover"
                   // onClick={() =>
                   //   onCellClick({
                   //     ...omit(parsedCurrentDay, [
@@ -110,7 +107,7 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
                 />
                 <div
                   data-cy="Hours"
-                  className={calendarStyles['hour-row__hour-cell-hour-number']}
+                  className="day-in-place-hour-row__hour-cell-hour-number"
                   // onClick={() =>
                   //   onHourClick({
                   //     ...omit(parsedCurrentDay, [

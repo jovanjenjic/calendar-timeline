@@ -1,5 +1,6 @@
-import React, { useMemo, FC } from 'react';
+import './WeekVIew.scss';
 import cn from 'classnames';
+import React, { useMemo, FC } from 'react';
 import {
   add,
   getDate,
@@ -9,7 +10,6 @@ import {
   startOfWeek,
   format,
 } from 'date-fns';
-import weekViewStyles from './WeekVIew.module.scss';
 import { DateInfo } from '../Calendar.types';
 import { formatFullDate } from '../../../utils/index';
 import { WeekViewProps } from './WeekView.types';
@@ -64,11 +64,11 @@ const WeekView: FC<WeekViewProps> = ({
 
   return (
     <>
-      <div data-cy="StringDays" className={weekViewStyles['days-component']}>
+      <div data-cy="StringDays" className="days-component">
         {Array.from(Array(7)).map((_, i) => (
           <div
             key={i}
-            className={weekViewStyles['days-component__day']}
+            className="days-component__day"
             onClick={() =>
               onDayStringClick(
                 add(startOfWeek(new Date(currentDate), { weekStartsOn }), {
@@ -86,29 +86,23 @@ const WeekView: FC<WeekViewProps> = ({
           </div>
         ))}
       </div>
-      <div
-        data-cy="WeekViewInside"
-        className={weekViewStyles['week-view-inside']}
-      >
-        <div
-          data-cy="VerticalBorders"
-          className={weekViewStyles['vertical-borders-container']}
-        >
+      <div data-cy="WeekViewInside" className="week-view-inside">
+        <div data-cy="VerticalBorders" className="vertical-borders-container">
           {Array.from(Array(7)).map((_, key) => (
             <div
               key={key}
               className={cn(
-                weekViewStyles['vertical-borders-container'],
-                weekViewStyles['vertical-borders-container__border'],
+                'vertical-borders-container',
+                'vertical-borders-container__border',
               )}
             />
           ))}
         </div>
-        <div data-cy="WeekRow" className={weekViewStyles['week-row']}>
+        <div data-cy="WeekRow" className="week-view-row">
           {getCurrentWeek.map((dateInfo, idx) => (
             <React.Fragment key={dateInfo.date}>
               <div
-                className={weekViewStyles['week-row-day-cell--cover']}
+                className="week-view-row-day-cell--cover"
                 style={{
                   gridColumn: `${idx + 1} / ${idx + 2}`,
                 }}
@@ -120,7 +114,7 @@ const WeekView: FC<WeekViewProps> = ({
                 //   })
                 // }
               />
-              <div className={weekViewStyles['cell-header']}>
+              <div className="week-view-cell-header">
                 <p
                   data-cy="DayNumber"
                   data-day-type={
@@ -129,11 +123,11 @@ const WeekView: FC<WeekViewProps> = ({
                       : !dateInfo.isCurrentMonth && 'disabled'
                   }
                   className={cn(
-                    weekViewStyles['cell-header__number'],
+                    'week-view-cell-header__number',
                     !dateInfo.isCurrentMonth &&
-                      weekViewStyles['cell-header__number--disabled'],
+                      'week-view-cell-header__number--disabled',
                     dateInfo.isCurrentDay &&
-                      weekViewStyles['cell-header__number--current-day'],
+                      'week-view-cell-header__number--current-day',
                   )}
                   onClick={() => onDayNumberClick(new Date(dateInfo.date))}
                 >
@@ -147,7 +141,7 @@ const WeekView: FC<WeekViewProps> = ({
                       backgroundColor:
                         preparedColorDots.dateKeys[dateInfo.date]?.color,
                     }}
-                    className={weekViewStyles['cell-header__color-dot']}
+                    className="week-view-cell-header__color-dot"
                     onClick={() =>
                       onColorDotClick(preparedColorDots.dateKeys[dateInfo.date])
                     }

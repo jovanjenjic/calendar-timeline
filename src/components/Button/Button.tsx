@@ -1,7 +1,7 @@
+import './Button.scss';
 import React from 'react';
 import cn from 'classnames';
 import { ButtonProps } from './Button.types';
-import buttonStyles from './Button.module.scss';
 
 const Button: React.FC<ButtonProps> = ({
   onClick,
@@ -15,9 +15,9 @@ const Button: React.FC<ButtonProps> = ({
       data-cy={dataCy}
       onClick={onClick}
       className={cn(
-        buttonStyles['arrow-button'],
-        buttonStyles[`arrow-button__${arrowSide}`],
-        withBorder && buttonStyles['arrow-button--border'],
+        'arrow-button',
+        `arrow-button__${arrowSide}`,
+        withBorder && 'arrow-button--border',
       )}
     >
       {label}
