@@ -119,6 +119,22 @@ export interface CalendarProps {
 export interface CalendarWrapperProps {
   // eslint-disable-next-line
   data: Record<string, any>[];
+  // eslint-disable-next-line
+  renderItem?: (data: Record<string, any>, isHovered: boolean) => JSX.Element;
+  // eslint-disable-next-line
+  renderItemText?: (data: Record<string, any>) => JSX.Element;
+  renderHeaderItem?: (
+    // eslint-disable-next-line
+    data: Record<string, any>,
+    extras: {
+      gridColumn: string;
+      isFromPrevious?: boolean;
+      isFromNext?: boolean;
+    },
+  ) => JSX.Element;
+  // eslint-disable-next-line
+  renderHeaderItemText?: (data: Record<string, any>) => JSX.Element;
+  enableHoverEffect?: boolean;
   currentDate: string | Date;
   setCurrentDate?: (date: string | Date) => void;
   activeTimeDateField: string;

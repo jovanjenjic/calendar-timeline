@@ -74,6 +74,7 @@ const Playground = () => {
       <Styleguide />
       <CalendarView
         {...dataView}
+        enableHoverEffect={true}
         onDayNumberClick={onDayNumberClick}
         onDayStringClick={onDayStringClick}
         onHourClick={onHourClick}
