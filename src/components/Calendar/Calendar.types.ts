@@ -22,6 +22,7 @@ export interface DateInfoExtendedFunction {
 export interface PreparedDataWithoutTime {
   isStart: boolean;
   length: number;
+  // eslint-disable-next-line
   [key: string]: any;
 }
 
@@ -32,6 +33,7 @@ export interface PreparedDataWithTime {
   margin?: string;
   width?: string;
   left?: string;
+  // eslint-disable-next-line
   [key: string]: any;
 }
 export interface PreparedDataWithTimeFull {
@@ -40,6 +42,7 @@ export interface PreparedDataWithTimeFull {
 }
 
 export interface PreparedDataWithTimeInPlace {
+  // eslint-disable-next-line
   [key: string]: any;
 }
 
@@ -72,6 +75,7 @@ export interface ColorDot {
   color: string;
   text: string;
   date: string;
+  // eslint-disable-next-line
   [key: string]: any;
 }
 
@@ -108,11 +112,12 @@ export interface CalendarProps {
   onDayStringClick: (day: string | Date) => void;
   onHourClick: (value: DateInfo | number) => void;
   onColorDotClick: (value: ColorDot) => void;
-  onCellClick: (value: any) => void;
+  onCellClick: (value: DateInfo) => void;
   timeDateFormat: TimeFormat;
 }
 
 export interface CalendarWrapperProps {
+  // eslint-disable-next-line
   data: Record<string, any>[];
   currentDate: string | Date;
   setCurrentDate?: (date: string | Date) => void;
@@ -124,8 +129,9 @@ export interface CalendarWrapperProps {
   onDayStringClick?: (day: string | Date) => void;
   onHourClick?: (value: DateInfo | number) => void;
   onColorDotClick?: (value: ColorDot) => void;
+  // eslint-disable-next-line
   onItemClick?: (item: Record<string, any>) => void;
-  onCellClick?: (value: any) => void;
+  onCellClick?: (value: DateInfo) => void;
   timeDateFormat?: TimeFormat;
 }
 
@@ -155,8 +161,9 @@ export interface InitializePropsFunc {
   onDayStringClick: ((day: string | Date) => void) | undefined;
   onHourClick: ((value: DateInfo | number) => void) | undefined;
   onColorDotClick: ((value: ColorDot) => void) | undefined;
+  // eslint-disable-next-line
   onItemClick: ((item: Record<string, any>) => void) | undefined;
-  onCellClick: ((value: any) => void) | undefined;
+  onCellClick: ((value: DateInfo) => void) | undefined;
 }
 export interface InitializePropsRetFunc {
   setCurrentDateModified: (date: string | Date) => void;
@@ -165,7 +172,8 @@ export interface InitializePropsRetFunc {
   onDayStringClickModified: (day: string | Date) => void;
   onHourClickModified: (value: DateInfo | number) => void;
   onColorDotClickModified: (value: ColorDot) => void;
+  // eslint-disable-next-line
   onItemClickModified: (item: Record<string, any>) => void;
-  onCellClickModified: (value: any) => void;
+  onCellClickModified: (value: DateInfo) => void;
   timeDateFormatModified: TimeFormat;
 }

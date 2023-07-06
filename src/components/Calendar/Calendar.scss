@@ -36,6 +36,7 @@
 
   &-color-dots-legend {
     display: flex;
+    cursor: default;
     flex-wrap: wrap;
     gap: calc(var(--spacing) * 2.5);
     margin: calc(var(--spacing) * 2.5) 0 0 0;

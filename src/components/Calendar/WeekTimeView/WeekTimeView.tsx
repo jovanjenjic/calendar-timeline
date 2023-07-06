@@ -69,24 +69,22 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
     <>
       <div data-cy="StringDays" className="days-component">
         {Array.from(Array(7)).map((_, i) => (
-          <>
-            <div
-              key={i}
-              className="days-component__day"
-              onClick={() =>
-                onDayStringClick(
-                  onDayStringClickHandler(currentDate, i, weekStartsOn),
-                )
-              }
-            >
-              {format(
-                add(startOfWeek(new Date(currentDate), { weekStartsOn }), {
-                  days: i,
-                }),
-                timeDateFormat.day,
-              )}
-            </div>
-          </>
+          <div
+            key={i}
+            className="days-component__day"
+            onClick={() =>
+              onDayStringClick(
+                onDayStringClickHandler(currentDate, i, weekStartsOn),
+              )
+            }
+          >
+            {format(
+              add(startOfWeek(new Date(currentDate), { weekStartsOn }), {
+                days: i,
+              }),
+              timeDateFormat.day,
+            )}
+          </div>
         ))}
       </div>
       <div data-cy="WeekTimeViewInside" className="week-time-view-inside">
@@ -105,7 +103,7 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
         <div className="week-time-header">
           <>
             {Array.from(Array(7)).map((_, i) => (
-              <div className="week-time-header--item">
+              <div key={i} className="week-time-header--item">
                 <p
                   data-cy="DayNumber"
                   data-day-type={
@@ -155,6 +153,7 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
               {Array.from(Array(24)).map((_, hour) =>
                 Array.from(Array(7)).map((_, day) => (
                   <div
+                    key={`${day}-${hour}`}
                     onClick={() =>
                       onCellClick({ ...getCurrentWeek[day], hour })
                     }
@@ -165,6 +164,7 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
             <div data-cy="HourRows" className="week-time-week__border-bottom">
               {Array.from(Array(24)).map((_, hour) => (
                 <div
+                  key={hour}
                   data-cy="Hours"
                   className="week-time-week__border-bottom-row"
                 >
@@ -181,10 +181,11 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
               ))}
             </div>
             {getCurrentWeek.map((dateInfo, idx) => (
-              <div className="week-time-week__column">
+              <div key={dateInfo.date} className="week-time-week__column">
                 {renderItems({ dateInfo, idx })}
                 {dateInfo.isCurrentDay && (
                   <div
+                    key={dateInfo.date}
                     data-cy="CurrentMinutLine"
                     className="current-minute-line"
                     style={{

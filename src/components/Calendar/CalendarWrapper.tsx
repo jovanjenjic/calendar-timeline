@@ -26,7 +26,7 @@ import {
 } from './Calendar.helper';
 import CalendarComponent from './CalendarComponent';
 
-const CalendarView: React.FC<CalendarWrapperProps> = ({
+const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
   data,
   currentDate,
   setCurrentDate,
@@ -144,7 +144,7 @@ const CalendarView: React.FC<CalendarWrapperProps> = ({
               preparedDataItem?.isStart && 'sub-item--left-border',
             )}
           >
-            <p
+            <div
               onClick={(e) => {
                 e.stopPropagation();
                 onItemClickModified(preparedDataItem);
@@ -163,7 +163,7 @@ const CalendarView: React.FC<CalendarWrapperProps> = ({
                     )
                   }`}
               </div>
-            </p>
+            </div>
           </div>
         </div>
       ) : (
@@ -198,7 +198,7 @@ const CalendarView: React.FC<CalendarWrapperProps> = ({
               hoveredElement === preparedDataItem.id && 'item--hovered',
             )}
           >
-            <p
+            <div
               className={cn(
                 'sub-item',
                 hoveredElement === preparedDataItem.id && 'sub-item--hovered',
@@ -218,7 +218,7 @@ const CalendarView: React.FC<CalendarWrapperProps> = ({
                     formatHour(new Date(preparedDataItem[endIntervalKey]))
                   }`}
               </div>
-            </p>
+            </div>
           </div>
         );
       },
@@ -254,7 +254,7 @@ const CalendarView: React.FC<CalendarWrapperProps> = ({
           }}
           className="item"
         >
-          <p
+          <div
             className={cn(
               'sub-item',
               isFromPrevious && 'sub-item--left-arrow',
@@ -267,7 +267,7 @@ const CalendarView: React.FC<CalendarWrapperProps> = ({
             }}
           >
             <div>{preparedDataItem?.title}</div>
-          </p>
+          </div>
         </div>
       );
     });
@@ -306,4 +306,4 @@ const CalendarView: React.FC<CalendarWrapperProps> = ({
   );
 };
 
-export default CalendarView;
+export default CalendarWrapper;
