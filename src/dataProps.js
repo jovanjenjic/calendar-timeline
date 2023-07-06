@@ -37,7 +37,7 @@ const data = [
   {
     id: 6666,
     updatedAt: '2023-06-02T06:00:00Z',
-    createdAt: '2023-06-02T02:35:00Z',
+    createdAt: '2023-06-02T03:00:00Z',
     title: 'Dejli',
   },
   {
@@ -81,7 +81,7 @@ const dataProp = (
   data: data,
   currentDate,
   setCurrentDate,
-  currentView: CurrentView.WEEK_TIME,
+  currentView: CurrentView.DAY,
   cellDisplayMode,
   setCellDisplayMode,
   timeDateFormat: {

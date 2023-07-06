@@ -28,6 +28,11 @@ import CalendarComponent from './CalendarComponent';
 
 const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
   data,
+  renderItem,
+  renderItemText,
+  renderHeaderItem,
+  renderHeaderItemText,
+  enableHoverEffect,
   currentDate,
   setCurrentDate,
   activeTimeDateField,
@@ -130,41 +135,53 @@ const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
               idx + (isCollapsed ? 1 : preparedDataItem?.length || 1) + 1
             }`,
           }}
-          onMouseEnter={() => setHoveredElement(preparedDataItem?.id)}
-          onMouseLeave={() => setHoveredElement(0)}
+          onMouseEnter={() =>
+            enableHoverEffect && setHoveredElement(preparedDataItem?.id)
+          }
+          onMouseLeave={() => enableHoverEffect && setHoveredElement(0)}
           className={cn(
             'item',
             hoveredElement === preparedDataItem.id && 'item--hovered',
           )}
         >
-          <div
-            className={cn(
-              'sub-item',
-              hoveredElement === preparedDataItem.id && 'sub-item--hovered',
-              preparedDataItem?.isStart && 'sub-item--left-border',
-            )}
-          >
+          {renderItem ? (
+            renderItem(preparedDataItem, hoveredElement === preparedDataItem.id)
+          ) : (
             <div
-              onClick={(e) => {
-                e.stopPropagation();
-                onItemClickModified(preparedDataItem);
-              }}
+              className={cn(
+                'sub-item',
+                hoveredElement === preparedDataItem.id && 'sub-item--hovered',
+                preparedDataItem?.isStart && 'sub-item--left-border',
+              )}
             >
-              <div>{preparedDataItem?.title}</div>
-              <div>
-                {formatMonthDayHour(
-                  new Date(preparedDataItem[startIntervalKey]),
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onItemClickModified(preparedDataItem);
+                }}
+              >
+                {renderItemText ? (
+                  renderItemText(preparedDataItem)
+                ) : (
+                  <>
+                    <div>{preparedDataItem?.title}</div>
+                    <div>
+                      {formatMonthDayHour(
+                        new Date(preparedDataItem[startIntervalKey]),
+                      )}
+                      {endIntervalKey &&
+                        `${
+                          ' - ' +
+                          formatMonthDayHour(
+                            new Date(preparedDataItem[endIntervalKey]),
+                          )
+                        }`}
+                    </div>
+                  </>
                 )}
-                {endIntervalKey &&
-                  `${
-                    ' - ' +
-                    formatMonthDayHour(
-                      new Date(preparedDataItem[endIntervalKey]),
-                    )
-                  }`}
               </div>
             </div>
-          </div>
+          )}
         </div>
       ) : (
         <></>
@@ -191,34 +208,49 @@ const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
               margin: preparedDataItem.margin,
               marginRight: '4%',
             }}
-            onMouseEnter={() => setHoveredElement(preparedDataItem?.id)}
-            onMouseLeave={() => setHoveredElement(0)}
+            onMouseEnter={() =>
+              enableHoverEffect && setHoveredElement(preparedDataItem?.id)
+            }
+            onMouseLeave={() => enableHoverEffect && setHoveredElement(0)}
             className={cn(
               'item',
               hoveredElement === preparedDataItem.id && 'item--hovered',
             )}
           >
-            <div
-              className={cn(
-                'sub-item',
-                hoveredElement === preparedDataItem.id && 'sub-item--hovered',
-              )}
-              style={{
-                backgroundColor: preparedDataItem?.bgColor,
-                color: preparedDataItem?.textColor,
-              }}
-              onClick={() => onItemClickModified(preparedDataItem)}
-            >
-              <div>{preparedDataItem?.title}</div>
-              <div>
-                {formatHour(new Date(preparedDataItem[startIntervalKey]))}
-                {endIntervalKey &&
-                  `${
-                    ' - ' +
-                    formatHour(new Date(preparedDataItem[endIntervalKey]))
-                  }`}
+            {renderItem ? (
+              renderItem(
+                preparedDataItem,
+                hoveredElement === preparedDataItem.id,
+              )
+            ) : (
+              <div
+                className={cn(
+                  'sub-item',
+                  hoveredElement === preparedDataItem.id && 'sub-item--hovered',
+                )}
+                style={{
+                  backgroundColor: preparedDataItem?.bgColor,
+                  color: preparedDataItem?.textColor,
+                }}
+                onClick={() => onItemClickModified(preparedDataItem)}
+              >
+                {renderItemText ? (
+                  renderItemText(preparedDataItem)
+                ) : (
+                  <>
+                    <div>{preparedDataItem?.title}</div>
+                    <div>
+                      {formatHour(new Date(preparedDataItem[startIntervalKey]))}
+                      {endIntervalKey &&
+                        `${
+                          ' - ' +
+                          formatHour(new Date(preparedDataItem[endIntervalKey]))
+                        }`}
+                    </div>
+                  </>
+                )}
               </div>
-            </div>
+            )}
           </div>
         );
       },
@@ -254,20 +286,32 @@ const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
           }}
           className="item"
         >
-          <div
-            className={cn(
-              'sub-item',
-              isFromPrevious && 'sub-item--left-arrow',
-              isFromNext && 'sub-item--right-arrow',
-            )}
-            onClick={() => onItemClickModified(preparedDataItem)}
-            style={{
-              backgroundColor: preparedDataItem?.bgColor,
-              color: preparedDataItem?.textColor,
-            }}
-          >
-            <div>{preparedDataItem?.title}</div>
-          </div>
+          {renderHeaderItem ? (
+            renderHeaderItem(preparedDataItem, {
+              gridColumn,
+              isFromPrevious,
+              isFromNext,
+            })
+          ) : (
+            <div
+              className={cn(
+                'sub-item',
+                isFromPrevious && 'sub-item--left-arrow',
+                isFromNext && 'sub-item--right-arrow',
+              )}
+              onClick={() => onItemClickModified(preparedDataItem)}
+              style={{
+                backgroundColor: preparedDataItem?.bgColor,
+                color: preparedDataItem?.textColor,
+              }}
+            >
+              {renderHeaderItemText ? (
+                renderHeaderItemText(preparedDataItem)
+              ) : (
+                <div>{preparedDataItem?.title}</div>
+              )}
+            </div>
+          )}
         </div>
       );
     });
