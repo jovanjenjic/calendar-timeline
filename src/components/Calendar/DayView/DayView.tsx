@@ -28,7 +28,6 @@ const getDateInfo = (date: Date): DateInfo => {
 const DayView: FC<DayTimeViewProps> = ({
   renderItems,
   renderHeaderItems,
-  currentView,
   currentDate,
   onDayNumberClick,
   onDayStringClick,
@@ -47,7 +46,7 @@ const DayView: FC<DayTimeViewProps> = ({
     <>
       <div data-cy="StringDay" className="days-component">
         <div
-          onClick={() => onDayStringClick(new Date(currentDate))}
+          onClick={() => onDayStringClick(currentDate)}
           className="days-component__day"
         >
           {format(
@@ -66,7 +65,7 @@ const DayView: FC<DayTimeViewProps> = ({
                 parsedCurrentDay.isCurrentDay &&
                   'day-header__number--current-day',
               )}
-              onClick={() => onDayNumberClick(new Date(parsedCurrentDay.date))}
+              onClick={() => onDayNumberClick(parsedCurrentDay.date)}
             >
               {parsedCurrentDay.day}
             </p>
@@ -96,8 +95,15 @@ const DayView: FC<DayTimeViewProps> = ({
                 <div
                   data-cy="Hours"
                   className="day-hour-rows__border-bottom-line"
+                  onClick={() => onCellClick({ ...parsedCurrentDay, hour })}
                 >
-                  <p className="day-hour-rows__border-bottom-hour-unit">
+                  <p
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onHourClick({ ...parsedCurrentDay, hour });
+                    }}
+                    className="day-hour-rows__border-bottom-hour-unit"
+                  >
                     {getTimeUnitString(hour - 1, timeDateFormat)}
                   </p>
                 </div>

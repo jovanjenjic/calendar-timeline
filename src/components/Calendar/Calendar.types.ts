@@ -5,6 +5,8 @@ export interface DateInfo {
   day: number;
   month: number;
   year: number;
+  hour?: number;
+  cellKey?: string;
 }
 export interface DateInfoFunction {
   dateInfo: DateInfo;
@@ -78,15 +80,6 @@ export interface ColorDotFull {
   colorKeys: Record<string, ColorDot>[] | object;
 }
 
-export interface CellData {
-  date: string;
-  day: number;
-  month: number;
-  year: number;
-  cellKey: string;
-  hour?: number;
-}
-
 export interface CellDisplayMode {
   [key: string]: {
     state: CellDisplayModeState;
@@ -97,7 +90,6 @@ export interface CellDisplayMode {
 export interface TimeFormat {
   day: string;
   hour: string;
-  hourTimeZone: string;
   monthYear: string;
   weekStartsOn?: WeekStartsOn;
 }
@@ -109,38 +101,38 @@ export interface CalendarProps {
     endDate?: string,
   ) => (JSX.Element | null)[];
   currentView: CurrentView;
-  currentDate: string;
-  setCurrentDate: (date: string) => void;
+  currentDate: string | Date;
+  setCurrentDate: (date: string | Date) => void;
   colorDots?: ColorDot[];
-  onDayNumberClick: (day: Date) => void;
-  onDayStringClick: (day: Date) => void;
-  onHourClick: (value: CellData) => void;
+  onDayNumberClick: (day: string) => void;
+  onDayStringClick: (day: string | Date) => void;
+  onHourClick: (value: DateInfo | number) => void;
   onColorDotClick: (value: ColorDot) => void;
   onCellClick: (value: any) => void;
   timeDateFormat: TimeFormat;
 }
 
-export interface CalendarViewProps {
+export interface CalendarWrapperProps {
   data: Record<string, any>[];
-  currentDate: string;
-  setCurrentDate: (date: string) => void;
+  currentDate: string | Date;
+  setCurrentDate?: (date: string | Date) => void;
   activeTimeDateField: string;
   currentView: CurrentView;
-  cellDisplayMode: CellDisplayMode;
-  colorDots: ColorDot[];
-  onDayNumberClick: (day: Date) => void;
-  onDayStringClick: (day: Date) => void;
-  onHourClick: (value: CellData) => void;
-  onColorDotClick: (value: ColorDot) => void;
-  onItemClick: (item: Record<string, any>) => void;
-  onCellClick: (value: any) => void;
-  timeDateFormat: TimeFormat;
+  cellDisplayMode?: CellDisplayMode;
+  colorDots?: ColorDot[];
+  onDayNumberClick?: (day: string) => void;
+  onDayStringClick?: (day: string | Date) => void;
+  onHourClick?: (value: DateInfo | number) => void;
+  onColorDotClick?: (value: ColorDot) => void;
+  onItemClick?: (item: Record<string, any>) => void;
+  onCellClick?: (value: any) => void;
+  timeDateFormat?: TimeFormat;
 }
 
 export interface CalendarHeaderProps {
-  setCurrentDate: (date: string) => void;
+  setCurrentDate: (date: string | Date) => void;
   currentView: CurrentView;
-  currentDate: string;
+  currentDate: string | Date;
   timeDateFormat: TimeFormat;
 }
 
@@ -153,4 +145,27 @@ export interface GetHeaderItemInfoFunc {
   gridColumn: string;
   isFromPrevious?: boolean;
   isFromNext?: boolean;
+}
+
+export interface InitializePropsFunc {
+  cellDisplayMode: CellDisplayMode | undefined;
+  timeDateFormat: TimeFormat | undefined;
+  setCurrentDate: ((date: string | Date) => void) | undefined;
+  onDayNumberClick: ((day: string) => void) | undefined;
+  onDayStringClick: ((day: string | Date) => void) | undefined;
+  onHourClick: ((value: DateInfo | number) => void) | undefined;
+  onColorDotClick: ((value: ColorDot) => void) | undefined;
+  onItemClick: ((item: Record<string, any>) => void) | undefined;
+  onCellClick: ((value: any) => void) | undefined;
+}
+export interface InitializePropsRetFunc {
+  setCurrentDateModified: (date: string | Date) => void;
+  cellDisplayModeModified: CellDisplayMode;
+  onDayNumberClickModified: (day: string) => void;
+  onDayStringClickModified: (day: string | Date) => void;
+  onHourClickModified: (value: DateInfo | number) => void;
+  onColorDotClickModified: (value: ColorDot) => void;
+  onItemClickModified: (item: Record<string, any>) => void;
+  onCellClickModified: (value: any) => void;
+  timeDateFormatModified: TimeFormat;
 }

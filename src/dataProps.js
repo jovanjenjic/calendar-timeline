@@ -19,13 +19,13 @@ const data = [
   {
     id: 3333,
     updatedAt: '2023-06-02T07:40:00Z',
-    createdAt: '2023-06-02T05:15:06.628591Z',
+    createdAt: '2023-06-02T02:45:06.628591Z',
     title: 'Codeday',
   },
   {
     id: 4444,
-    updatedAt: '2023-06-02T04:00:00Z',
-    createdAt: '2023-06-02T02:30:00Z',
+    updatedAt: '2023-06-02T05:00:00Z',
+    createdAt: '2023-06-02T04:00:00Z',
     title: 'Sastanak upoznavanja',
   },
   {
@@ -36,20 +36,20 @@ const data = [
   },
   {
     id: 6666,
-    updatedAt: '2023-06-02T03:00:00Z',
-    createdAt: '2023-06-02T02:10:00Z',
+    updatedAt: '2023-06-02T06:00:00Z',
+    createdAt: '2023-06-02T02:20:00Z',
     title: 'Dejli',
   },
   {
     id: 7777,
-    updatedAt: '2023-06-02T00:00:00Z',
-    createdAt: '2023-06-02T01:05:00Z',
+    updatedAt: '2023-06-02T05:00:00Z',
+    createdAt: '2023-06-02T02:50:00Z',
     title: 'Druzenje Unije',
   },
   {
     id: 8888,
-    updatedAt: '2023-06-03T02:12:00Z',
-    createdAt: '2023-06-02T02:11:00Z',
+    updatedAt: '2023-06-03T00:10:00Z',
+    createdAt: '2023-06-02T01:10:00Z',
     title: 'Dobar film',
   },
 ];
@@ -73,7 +73,7 @@ const colorDots = [
 ];
 
 const dataProp = (
-  currentDate = '2022-06-03',
+  currentDate,
   setCurrentDate,
   cellDisplayMode = {},
   setCellDisplayMode,
@@ -81,13 +81,12 @@ const dataProp = (
   data: data,
   currentDate,
   setCurrentDate,
-  currentView: CurrentView.MONTH,
+  currentView: CurrentView.WEEK_TIME,
   cellDisplayMode,
   setCellDisplayMode,
   timeDateFormat: {
     day: 'EEE',
     hour: 'hh a',
-    hourTimeZone: 'z',
     monthYear: 'LLLL yyyy',
     weekStartsOn: WeekStartsOn.MONDAY,
   },

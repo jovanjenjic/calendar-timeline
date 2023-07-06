@@ -12,8 +12,9 @@ import {
   startOfMonth,
 } from 'date-fns';
 import { DateInfo } from '../Calendar.types';
-import { formatFullDate, isEqualValues, omit } from '../../../utils/index';
+import { formatFullDate, isEqualValues } from '../../../utils/index';
 import { MonthViewProps } from './MonthVIew.types';
+import { onDayStringClickHandler } from '../Calendar.helper';
 
 const getDateInfo = (date: Date, currentMonth: number): DateInfo => {
   return {
@@ -122,9 +123,7 @@ const MonthView: FC<MonthViewProps> = ({
             className="days-component__day"
             onClick={() =>
               onDayStringClick(
-                add(startOfWeek(new Date(currentDate), { weekStartsOn }), {
-                  days: i,
-                }),
+                onDayStringClickHandler(currentDate, i, weekStartsOn),
               )
             }
           >
@@ -168,8 +167,7 @@ const MonthView: FC<MonthViewProps> = ({
                     }}
                     onClick={() =>
                       onCellClick({
-                        ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
-                        hour: 0,
+                        ...dateInfo,
                         cellKey: formatFullDate(new Date(dateInfo.date)),
                       })
                     }
@@ -189,7 +187,7 @@ const MonthView: FC<MonthViewProps> = ({
                         dateInfo.isCurrentDay &&
                           'month-cell-header__number--current-day',
                       )}
-                      onClick={() => onDayNumberClick(new Date(dateInfo.date))}
+                      onClick={() => onDayNumberClick(dateInfo.date)}
                     >
                       {dateInfo.day}
                     </p>

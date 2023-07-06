@@ -6,7 +6,6 @@ import { getKeyFromDateInfo, getTimeUnitString } from '../Calendar.helper';
 import { TimeDateFormat } from '../Calendar.constants';
 import { DateInfo } from '../Calendar.types';
 import { DayInPlaceViewProps } from './DayInPlaceView.types';
-import { omit } from '../../../utils';
 
 const getDateInfo = (date: Date, currentMonth: number): DateInfo => {
   return {
@@ -21,7 +20,6 @@ const getDateInfo = (date: Date, currentMonth: number): DateInfo => {
 
 const DayInPlaceView: FC<DayInPlaceViewProps> = ({
   renderItems,
-  currentView,
   currentDate,
   onDayNumberClick,
   onDayStringClick,
@@ -40,7 +38,7 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
     <>
       <div data-cy="StringDay" className="days-component">
         <div
-          onClick={() => onDayStringClick(new Date(currentDate))}
+          onClick={() => onDayStringClick(currentDate)}
           className="days-component__day"
         >
           {format(
@@ -60,7 +58,7 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
               parsedCurrentDay.isCurrentDay &&
                 'day-in-place-cell-header__number--current-day',
             )}
-            onClick={() => onDayNumberClick(new Date(parsedCurrentDay.date))}
+            onClick={() => onDayNumberClick(parsedCurrentDay.date)}
           >
             {parsedCurrentDay.day}
           </p>
@@ -89,39 +87,29 @@ const DayInPlaceView: FC<DayInPlaceViewProps> = ({
           {Array.from(Array(24)).map((_, hour) => (
             <div
               className="day-in-place-hour-row__hour-cell"
-              key={parsedCurrentDay.date}
+              key={`${parsedCurrentDay.date}-${hour}`}
+              onClick={() =>
+                onCellClick({
+                  ...parsedCurrentDay,
+                  hour,
+                  cellKey: getKeyFromDateInfo(parsedCurrentDay, hour),
+                })
+              }
             >
-              <>
-                <div
-                  className="day-in-place-hour-row__hour-cell--cover"
-                  // onClick={() =>
-                  //   onCellClick({
-                  //     ...omit(parsedCurrentDay, [
-                  //       'isCurrentDay',
-                  //       'isCurrentMonth',
-                  //     ]),
-                  //     hour,
-                  //     cellKey: getKeyFromDateInfo(parsedCurrentDay, hour),
-                  //   })
-                  // }
-                />
-                <div
-                  data-cy="Hours"
-                  className="day-in-place-hour-row__hour-cell-hour-number"
-                  // onClick={() =>
-                  //   onHourClick({
-                  //     ...omit(parsedCurrentDay, [
-                  //       'isCurrentDay',
-                  //       'isCurrentMonth',
-                  //     ]),
-                  //     hour,
-                  //   })
-                  // }
-                >
-                  {getTimeUnitString(hour - 1, timeDateFormat)}
-                </div>
-                {renderItems({ dateInfo: parsedCurrentDay, hour, idx: 0 })}
-              </>
+              <div
+                data-cy="Hours"
+                className="day-in-place-hour-row__hour-cell-hour-number"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onHourClick({
+                    ...parsedCurrentDay,
+                    hour,
+                  });
+                }}
+              >
+                {getTimeUnitString(hour - 1, timeDateFormat)}
+              </div>
+              {renderItems({ dateInfo: parsedCurrentDay, hour, idx: 0 })}
             </div>
           ))}
         </div>

@@ -135,8 +135,8 @@ const processMatchingItems = (
   // If there is any item that is 30 pixels above or below
   const matchingItems = result.day[secondDayKey]?.filter((item) => {
     return (
-      +item.startMinute >= +secondDayRes.startMinute - 30 &&
-      +item.startMinute <= +secondDayRes.startMinute + 30
+      +item.startMinute >= +secondDayRes.startMinute - 50 &&
+      +item.startMinute <= +secondDayRes.startMinute + 50
     );
   });
 
@@ -153,11 +153,8 @@ const processMatchingItems = (
 
     matchingItems.forEach((item, index) => {
       item.numberInRow = numberInRow;
-      item.width = `calc(${calculateWidth()} - ${numberInRow * 2}%)`;
+      item.width = `calc(${calculateWidth()} - ${numberInRow * 3}%)`;
       item.left = calculateLeft(index);
-      item.margin =
-        (index === 0 && `0 0 0 ${numberInRow * 2}%`) ||
-        (index === numberInRow - 1 && `0 ${numberInRow * 2}% 0 0`);
     });
   }
 };
@@ -357,18 +354,4 @@ export const isEmptyObject = (value) => {
   }
 
   return false;
-};
-
-// It simulates the lodash method
-export const omit = (object, paths) => {
-  const result = {};
-  const omitPaths = Array.isArray(paths) ? paths : [paths];
-
-  for (const key in object) {
-    if (!omitPaths.includes(key)) {
-      result[key] = object[key];
-    }
-  }
-
-  return result;
 };

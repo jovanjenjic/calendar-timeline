@@ -12,7 +12,6 @@
 @include vertical-borders-container;
   
 .month-week-row {
-  z-index: 10;
   position: relative;
   width: 100%;
   min-height: 140px;
@@ -39,6 +38,7 @@
 
     &--cover {
       position: absolute;
+      z-index: 10;
       width: 100%;
       height: 100%;
     }
@@ -47,7 +47,6 @@
 
 .month-cell-header {
   position: relative;
-  z-index: 10;
   height: max-content;
   width: 100%;
   
