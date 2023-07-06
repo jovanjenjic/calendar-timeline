@@ -2,7 +2,7 @@ import '../Calendar/Calendar.scss';
 import React, { ReactElement } from 'react';
 import cn from 'classnames';
 import {
-  CalendarViewProps,
+  CalendarWrapperProps,
   CurrentView,
   DateInfoFunction,
   PreparedDataWithTimeFull,
@@ -22,10 +22,11 @@ import {
   shouldShowItem,
   getHeaderItemInfo,
   getKeyFromDateInfo,
+  initializeProps,
 } from './Calendar.helper';
 import CalendarComponent from './CalendarComponent';
 
-const CalendarView: React.FC<CalendarViewProps> = ({
+const CalendarView: React.FC<CalendarWrapperProps> = ({
   data,
   currentDate,
   setCurrentDate,
@@ -41,6 +42,28 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   onCellClick,
   timeDateFormat,
 }) => {
+  const {
+    cellDisplayModeModified,
+    timeDateFormatModified,
+    setCurrentDateModified,
+    onDayNumberClickModified,
+    onDayStringClickModified,
+    onHourClickModified,
+    onColorDotClickModified,
+    onItemClickModified,
+    onCellClickModified,
+  } = initializeProps({
+    cellDisplayMode,
+    timeDateFormat,
+    setCurrentDate,
+    onDayNumberClick,
+    onDayStringClick,
+    onHourClick,
+    onColorDotClick,
+    onItemClick,
+    onCellClick,
+  });
+
   const [hoveredElement, setHoveredElement] = React.useState(0);
   const [startIntervalKey, endIntervalKey] = (activeTimeDateField ?? '')
     .split('-')
@@ -60,7 +83,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
         return prepareCalendarData(
           data,
           activeTimeDateField,
-          timeDateFormat?.weekStartsOn ?? 1,
+          timeDateFormatModified?.weekStartsOn ?? 1,
         );
       case CurrentView.DAY_IN_PLACE:
       case CurrentView.WEEK_IN_PLACE:
@@ -79,7 +102,11 @@ const CalendarView: React.FC<CalendarViewProps> = ({
       ? getKeyFromDateInfo(dateInfo, hour)
       : formatFullDate(new Date(dateInfo.date));
 
-    const isCollapsed = shouldCollapse(cellDisplayMode, currentView, key);
+    const isCollapsed = shouldCollapse(
+      cellDisplayModeModified,
+      currentView,
+      key,
+    );
 
     // If a cell is collapsed, only the last item will be displayed
     const arrayData: PreparedDataWithoutTime[] =
@@ -90,7 +117,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
       const shoudShow = shouldShowItem(
         preparedDataItem,
         key,
-        cellDisplayMode,
+        cellDisplayModeModified,
         currentView,
         preparedData,
         currentDate,
@@ -117,7 +144,12 @@ const CalendarView: React.FC<CalendarViewProps> = ({
               preparedDataItem?.isStart && 'sub-item--left-border',
             )}
           >
-            <p onClick={() => onItemClick(preparedDataItem)}>
+            <p
+              onClick={(e) => {
+                e.stopPropagation();
+                onItemClickModified(preparedDataItem);
+              }}
+            >
               <div>{preparedDataItem?.title}</div>
               <div>
                 {formatMonthDayHour(
@@ -157,6 +189,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
               width: preparedDataItem.width,
               left: preparedDataItem.left,
               margin: preparedDataItem.margin,
+              marginRight: '4%',
             }}
             onMouseEnter={() => setHoveredElement(preparedDataItem?.id)}
             onMouseLeave={() => setHoveredElement(0)}
@@ -174,7 +207,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
                 backgroundColor: preparedDataItem?.bgColor,
                 color: preparedDataItem?.textColor,
               }}
-              onClick={() => onItemClick(preparedDataItem)}
+              onClick={() => onItemClickModified(preparedDataItem)}
             >
               <div>{preparedDataItem?.title}</div>
               <div>
@@ -206,7 +239,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
         endDate || startDate,
         preparedDataItem[startIntervalKey],
         preparedDataItem[endIntervalKey],
-        timeDateFormat.weekStartsOn ?? 1,
+        timeDateFormatModified.weekStartsOn ?? 1,
       );
 
       if (!gridColumn) {
@@ -227,7 +260,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
               isFromPrevious && 'sub-item--left-arrow',
               isFromNext && 'sub-item--right-arrow',
             )}
-            onClick={() => onItemClick(preparedDataItem)}
+            onClick={() => onItemClickModified(preparedDataItem)}
             style={{
               backgroundColor: preparedDataItem?.bgColor,
               color: preparedDataItem?.textColor,
@@ -259,16 +292,16 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     <CalendarComponent
       renderItems={renderItems}
       renderHeaderItems={renderHeaderItems}
-      setCurrentDate={setCurrentDate}
+      setCurrentDate={setCurrentDateModified}
       currentView={currentView}
       colorDots={colorDots}
       currentDate={currentDate}
-      onDayNumberClick={onDayNumberClick}
-      onDayStringClick={onDayStringClick}
-      onHourClick={onHourClick}
-      onColorDotClick={onColorDotClick}
-      onCellClick={onCellClick}
-      timeDateFormat={timeDateFormat}
+      onDayNumberClick={onDayNumberClickModified}
+      onDayStringClick={onDayStringClickModified}
+      onHourClick={onHourClickModified}
+      onColorDotClick={onColorDotClickModified}
+      onCellClick={onCellClickModified}
+      timeDateFormat={timeDateFormatModified}
     />
   );
 };

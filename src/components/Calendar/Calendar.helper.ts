@@ -1,4 +1,11 @@
-import { add, addHours, format, getHours, getMinutes } from 'date-fns';
+import {
+  add,
+  addHours,
+  format,
+  getHours,
+  getMinutes,
+  startOfWeek,
+} from 'date-fns';
 import {
   CalculateStartAndEndMinuteFunc,
   CellDisplayMode,
@@ -6,14 +13,18 @@ import {
   CurrentView,
   DateInfo,
   GetHeaderItemInfoFunc,
+  InitializePropsFunc,
+  InitializePropsRetFunc,
   PreparedDataWithoutTime,
   TimeFormat,
+  WeekStartsOn,
 } from './Calendar.types';
 import {
   dayInWeekBasedOnWeekStarts,
   formatFullDate,
   formatFullDateTime,
   getAllDaysInMonth,
+  isEmptyObject,
 } from '../../utils/index';
 import { TimeDateFormat } from './Calendar.constants';
 
@@ -45,7 +56,7 @@ export const shouldShowItem = (
   cellDisplayMode: CellDisplayMode,
   currentView: CurrentView,
   preparedData,
-  currentDate: string,
+  currentDate: string | Date,
 ): boolean => {
   let retValue = true;
   if (
@@ -138,11 +149,79 @@ export const calculateStartAndEndMinute = (
   startDate: Date,
   endDate: Date,
 ): CalculateStartAndEndMinuteFunc => {
-  const startMinute = getHours(startDate) * 60 + getMinutes(startDate) || 1;
-  const endMinute = getHours(endDate) * 60 + getMinutes(endDate) || 1;
+  const startMinute = getHours(startDate) * 60 + getMinutes(startDate) + 1 || 1;
+  const endMinute = getHours(endDate) * 60 + getMinutes(endDate) + 1 || 1;
 
   return {
     startMinute,
     endMinute: startMinute === endMinute ? endMinute + 30 : endMinute,
   };
+};
+
+export const initializeProps = ({
+  cellDisplayMode,
+  timeDateFormat,
+  setCurrentDate,
+  onDayNumberClick,
+  onDayStringClick,
+  onHourClick,
+  onColorDotClick,
+  onItemClick,
+  onCellClick,
+}: InitializePropsFunc): InitializePropsRetFunc => {
+  const setCurrentDateModified = setCurrentDate || (() => null);
+  const onDayNumberClickModified = onDayNumberClick || (() => null);
+  const onDayStringClickModified = onDayStringClick || (() => null);
+  const onHourClickModified = onHourClick || (() => null);
+  const onColorDotClickModified = onColorDotClick || (() => null);
+  const onItemClickModified = onItemClick || (() => null);
+  const onCellClickModified = onCellClick || (() => null);
+
+  const timeDateFormatModified = {
+    day: timeDateFormat?.day || TimeDateFormat.SHORT_WEEKDAY,
+    hour: timeDateFormat?.hour || TimeDateFormat.HOUR,
+    monthYear: timeDateFormat?.monthYear || TimeDateFormat.MONTH_YEAR,
+    weekStartsOn: timeDateFormat?.weekStartsOn ?? WeekStartsOn.MONDAY,
+  };
+
+  const cellDisplayModeConst = {
+    MONTH: {
+      inactiveCells: [],
+      state: CellDisplayModeState.ALL_EXPANDED,
+    },
+    WEEK_TIME: {
+      inactiveCells: [],
+      state: CellDisplayModeState.ALL_EXPANDED,
+    },
+    DAY_IN_PLACE: {
+      inactiveCells: [],
+      state: CellDisplayModeState.ALL_EXPANDED,
+    },
+    WEEK_IN_PLACE: {
+      inactiveCells: [],
+      state: CellDisplayModeState.ALL_EXPANDED,
+    },
+  } as CellDisplayMode;
+
+  return {
+    cellDisplayModeModified: isEmptyObject(cellDisplayMode)
+      ? cellDisplayModeConst
+      : (cellDisplayMode as CellDisplayMode),
+    timeDateFormatModified,
+    setCurrentDateModified,
+    onDayNumberClickModified,
+    onDayStringClickModified,
+    onHourClickModified,
+    onColorDotClickModified,
+    onItemClickModified,
+    onCellClickModified,
+  };
+};
+
+export const onDayStringClickHandler = (currentDate, days, weekStartsOn) => {
+  return formatFullDate(
+    add(startOfWeek(new Date(currentDate), { weekStartsOn }), {
+      days,
+    }),
+  );
 };

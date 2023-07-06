@@ -13,6 +13,7 @@ import {
 import { DateInfo } from '../Calendar.types';
 import { formatFullDate } from '../../../utils/index';
 import { WeekViewProps } from './WeekView.types';
+import { onDayStringClickHandler } from '../Calendar.helper';
 
 const getDateInfo = (date: Date, currentMonth: number): DateInfo => {
   return {
@@ -27,7 +28,6 @@ const getDateInfo = (date: Date, currentMonth: number): DateInfo => {
 
 const WeekView: FC<WeekViewProps> = ({
   renderItems,
-  currentView,
   currentDate,
   onDayNumberClick,
   onDayStringClick,
@@ -71,9 +71,7 @@ const WeekView: FC<WeekViewProps> = ({
             className="days-component__day"
             onClick={() =>
               onDayStringClick(
-                add(startOfWeek(new Date(currentDate), { weekStartsOn }), {
-                  days: i,
-                }),
+                onDayStringClickHandler(currentDate, i, weekStartsOn),
               )
             }
           >
@@ -106,13 +104,12 @@ const WeekView: FC<WeekViewProps> = ({
                 style={{
                   gridColumn: `${idx + 1} / ${idx + 2}`,
                 }}
-                // onClick={() =>
-                //   onCellClick({
-                //     ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
-                //     hour: 0,
-                //     cellKey: formatFullDate(new Date(dateInfo.date)),
-                //   })
-                // }
+                onClick={() =>
+                  onCellClick({
+                    ...dateInfo,
+                    cellKey: formatFullDate(new Date(dateInfo.date)),
+                  })
+                }
               />
               <div className="week-view-cell-header">
                 <p
@@ -129,7 +126,7 @@ const WeekView: FC<WeekViewProps> = ({
                     dateInfo.isCurrentDay &&
                       'week-view-cell-header__number--current-day',
                   )}
-                  onClick={() => onDayNumberClick(new Date(dateInfo.date))}
+                  onClick={() => onDayNumberClick(dateInfo.date)}
                 >
                   {dateInfo.day}
                 </p>

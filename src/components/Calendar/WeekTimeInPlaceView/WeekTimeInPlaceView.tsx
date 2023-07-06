@@ -12,7 +12,11 @@ import {
 } from 'date-fns';
 import { DateInfo } from '../Calendar.types';
 import { formatFullDate } from '../../../utils/index';
-import { getKeyFromDateInfo, getTimeUnitString } from '../Calendar.helper';
+import {
+  getKeyFromDateInfo,
+  getTimeUnitString,
+  onDayStringClickHandler,
+} from '../Calendar.helper';
 import { WeekInPlaceViewProps } from './WeekTimeInPlaceView.types';
 
 const getDateInfo = (date: Date, currentMonth: number): DateInfo => {
@@ -28,7 +32,6 @@ const getDateInfo = (date: Date, currentMonth: number): DateInfo => {
 
 const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
   renderItems,
-  currentView,
   currentDate,
   onDayNumberClick,
   onDayStringClick,
@@ -76,9 +79,7 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
               className="days-component__day"
               onClick={() =>
                 onDayStringClick(
-                  add(startOfWeek(new Date(currentDate), { weekStartsOn }), {
-                    days: i,
-                  }),
+                  onDayStringClickHandler(currentDate, i, weekStartsOn),
                 )
               }
             >
@@ -126,9 +127,7 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
                     getCurrentWeek[i].isCurrentDay &&
                       'week-in-place-cell-header__number--current-day',
                   )}
-                  onClick={() =>
-                    onDayNumberClick(new Date(getCurrentWeek[i].date))
-                  }
+                  onClick={() => onDayNumberClick(getCurrentWeek[i].date)}
                 >
                   {getCurrentWeek[i].day}
                 </p>
@@ -162,35 +161,30 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
                   hour !== 23 && 'week-in-place-row__hour-cell--border-bottom',
                 )}
                 key={dateInfo.date}
+                onClick={() =>
+                  onCellClick({
+                    ...dateInfo,
+                    hour,
+                    cellKey: getKeyFromDateInfo(dateInfo, hour),
+                  })
+                }
               >
-                <>
+                {idx === 0 && (
                   <div
-                    className="week-in-place-row__hour-cell--cover"
-                    // onClick={() =>
-                    //   onCellClick({
-                    //     ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
-                    //     hour,
-                    //     cellKey: getKeyFromDateInfo(dateInfo, hour),
-                    //   })
-                    // }
-                  />
-                  {idx === 0 && (
-                    <div
-                      data-cy="Hours"
-                      className="week-in-place-row__hour-cell-hour-number"
-
-                      // onClick={() =>
-                      //   onHourClick({
-                      //     ...omit(dateInfo, ['isCurrentDay', 'isCurrentMonth']),
-                      //     hour,
-                      //   })
-                      // }
-                    >
-                      {getTimeUnitString(hour - 1, timeDateFormat)}
-                    </div>
-                  )}
-                  {renderItems({ dateInfo, hour, idx })}
-                </>
+                    data-cy="Hours"
+                    className="week-in-place-row__hour-cell-hour-number"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onHourClick({
+                        ...dateInfo,
+                        hour,
+                      });
+                    }}
+                  >
+                    {getTimeUnitString(hour - 1, timeDateFormat)}
+                  </div>
+                )}
+                {renderItems({ dateInfo, hour, idx })}
               </div>
             )),
           )}

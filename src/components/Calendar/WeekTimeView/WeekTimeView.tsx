@@ -14,7 +14,7 @@ import {
 } from 'date-fns';
 import { DateInfo } from '../Calendar.types';
 import { formatFullDate } from '../../../utils/index';
-import { getTimeUnitString } from '../Calendar.helper';
+import { getTimeUnitString, onDayStringClickHandler } from '../Calendar.helper';
 import { WeekTimeViewProps } from './WeekTimeView.types';
 
 const getDateInfo = (date: Date, currentMonth: number): DateInfo => {
@@ -31,10 +31,9 @@ const getDateInfo = (date: Date, currentMonth: number): DateInfo => {
 const WeekTimeView: FC<WeekTimeViewProps> = ({
   renderItems,
   renderHeaderItems,
-  currentView,
   currentDate,
-  onDayNumberClick,
   onDayStringClick,
+  onDayNumberClick,
   onHourClick,
   onColorDotClick,
   onCellClick,
@@ -76,9 +75,7 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
               className="days-component__day"
               onClick={() =>
                 onDayStringClick(
-                  add(startOfWeek(new Date(currentDate), { weekStartsOn }), {
-                    days: i,
-                  }),
+                  onDayStringClickHandler(currentDate, i, weekStartsOn),
                 )
               }
             >
@@ -123,9 +120,7 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
                     getCurrentWeek[i].isCurrentDay &&
                       'week-time-header__number--current-day',
                   )}
-                  onClick={() =>
-                    onDayNumberClick(new Date(getCurrentWeek[i].date))
-                  }
+                  onClick={() => onDayNumberClick(getCurrentWeek[i].date)}
                 >
                   {getCurrentWeek[i].day}
                 </p>
@@ -156,13 +151,30 @@ const WeekTimeView: FC<WeekTimeViewProps> = ({
         </div>
         <div className="week-time-week">
           <>
+            <div className="week-time-week__cover">
+              {Array.from(Array(24)).map((_, hour) =>
+                Array.from(Array(7)).map((_, day) => (
+                  <div
+                    onClick={() =>
+                      onCellClick({ ...getCurrentWeek[day], hour })
+                    }
+                  />
+                )),
+              )}
+            </div>
             <div data-cy="HourRows" className="week-time-week__border-bottom">
               {Array.from(Array(24)).map((_, hour) => (
                 <div
                   data-cy="Hours"
                   className="week-time-week__border-bottom-row"
                 >
-                  <p className="week-time-week__border-bottom-hour-unit">
+                  <p
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onHourClick(hour);
+                    }}
+                    className="week-time-week__border-bottom-hour-unit"
+                  >
                     {getTimeUnitString(hour - 1, timeDateFormat)}
                   </p>
                 </div>
