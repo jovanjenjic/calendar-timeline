@@ -93,6 +93,7 @@ const DayView: FC<DayTimeViewProps> = ({
             <div data-cy="HourRows" className="day-hour-rows__border-bottom">
               {Array.from(Array(24)).map((_, hour) => (
                 <div
+                  key={hour}
                   data-cy="Hours"
                   className="day-hour-rows__border-bottom-line"
                   onClick={() => onCellClick({ ...parsedCurrentDay, hour })}

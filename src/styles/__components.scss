@@ -2,6 +2,7 @@
 
 @mixin days-component {
     .days-component {
+        cursor: default;
         display: flex;
         justify-content: space-around;
         align-items: center;
@@ -44,6 +45,7 @@
 @mixin number {
     &__number {
         position: relative;
+        cursor: default;
         z-index: 20;
         font: var(--font-a-3);
         display: flex;

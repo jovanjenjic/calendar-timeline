@@ -60,6 +60,7 @@ export const getAllDaysInMonth = (month) => {
  * @returns - Prepared array of data for calendar view
  */
 export const prepareCalendarData = (
+  // eslint-disable-next-line
   calendarData: Record<string, any>[],
   activeTimeDateField: string,
   weekStartsOn: WeekStartsOn,
@@ -168,6 +169,7 @@ const processMatchingItems = (
  * @returns - Prepared array of data for calendar view
  */
 export const prepareCalendarDataWithTime = (
+  // eslint-disable-next-line
   calendarData: Record<string, any>[],
   activeTimeDateField: string,
 ): PreparedDataWithTimeFull => {
@@ -274,6 +276,7 @@ export const prepareCalendarDataWithTime = (
  * @returns - Prepared array of data for calendar view
  */
 export const prepareCalendarDataInPlace = (
+  // eslint-disable-next-line
   calendarData: Record<string, any>[],
   activeTimeDateField: string,
 ): PreparedDataWithTimeInPlace => {

@@ -25,7 +25,7 @@ const data = [
   {
     id: 4444,
     updatedAt: '2023-06-02T05:00:00Z',
-    createdAt: '2023-06-02T04:00:00Z',
+    createdAt: '2023-06-02T03:30:00Z',
     title: 'Sastanak upoznavanja',
   },
   {
@@ -37,7 +37,7 @@ const data = [
   {
     id: 6666,
     updatedAt: '2023-06-02T06:00:00Z',
-    createdAt: '2023-06-02T02:20:00Z',
+    createdAt: '2023-06-02T02:35:00Z',
     title: 'Dejli',
   },
   {

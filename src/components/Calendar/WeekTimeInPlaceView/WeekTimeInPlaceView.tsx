@@ -73,24 +73,22 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
     <>
       <div data-cy="StringDays" className="days-component">
         {Array.from(Array(7)).map((_, i) => (
-          <>
-            <div
-              key={i}
-              className="days-component__day"
-              onClick={() =>
-                onDayStringClick(
-                  onDayStringClickHandler(currentDate, i, weekStartsOn),
-                )
-              }
-            >
-              {format(
-                add(startOfWeek(new Date(currentDate), { weekStartsOn }), {
-                  days: i,
-                }),
-                timeDateFormat.day,
-              )}
-            </div>
-          </>
+          <div
+            key={i}
+            className="days-component__day"
+            onClick={() =>
+              onDayStringClick(
+                onDayStringClickHandler(currentDate, i, weekStartsOn),
+              )
+            }
+          >
+            {format(
+              add(startOfWeek(new Date(currentDate), { weekStartsOn }), {
+                days: i,
+              }),
+              timeDateFormat.day,
+            )}
+          </div>
         ))}
       </div>
       <div
@@ -100,8 +98,8 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
         <div className="vertical-borders-container">
           {Array.from(Array(7)).map((_, key) => (
             <div
-              data-cy="CellsBorder"
               key={key}
+              data-cy="CellsBorder"
               className={cn(
                 'vertical-borders-container',
                 'vertical-borders-container__border',
@@ -111,7 +109,7 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
         </div>
         <div className="week-in-place-header">
           {Array.from(Array(7)).map((_, i) => (
-            <>
+            <React.Fragment key={i}>
               <div className="week-in-place-cell-header">
                 <p
                   data-cy="DayNumber"
@@ -149,7 +147,7 @@ const WeekTimeInPlaceView: FC<WeekInPlaceViewProps> = ({
                   />
                 )}
               </div>
-            </>
+            </React.Fragment>
           ))}
         </div>
         <div data-cy="Cells" className="week-in-place-row">
