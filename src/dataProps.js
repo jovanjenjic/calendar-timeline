@@ -3,54 +3,56 @@ import {
   WeekStartsOn,
 } from './components/Calendar/Calendar.types';
 
-const data = [
+export const testData = [
   {
     id: 1111,
-    updatedAt: '2023-06-06T20:54:22.620702Z',
-    createdAt: '2023-05-10T03:05:06.628591Z',
+    startTime: '2023-05-10T03:05:06.628591Z',
+    endTime: '2023-06-06T20:54:22.620702Z',
     title: 'Codeference',
   },
   {
     id: 2222,
-    updatedAt: '2023-06-01T06:03:00Z',
-    createdAt: '2023-06-01T05:05:06.628591Z',
+    startTime: '2023-06-01T05:05:06.628591Z',
+    endTime: '2023-06-01T06:03:00Z',
     title: 'Intervju call',
   },
   {
     id: 3333,
-    updatedAt: '2023-06-02T07:40:00Z',
-    createdAt: '2023-06-02T02:45:06.628591Z',
+    startTime: '2023-06-02T06:45:06.628591Z',
+    endTime: '2023-06-02T07:15:00Z',
     title: 'Codeday',
   },
   {
     id: 4444,
-    updatedAt: '2023-06-02T05:00:00Z',
-    createdAt: '2023-06-02T03:30:00Z',
+    startTime: '2023-06-02T03:30:00Z',
+    endTime: '2023-06-02T05:00:00Z',
     title: 'Sastanak upoznavanja',
   },
   {
     id: 5555,
-    updatedAt: '2023-06-05T07:00:00Z',
-    createdAt: '2023-05-02T06:05:06.628591Z',
+    startTime: '2023-05-02T06:35:06.628591Z',
+    endTime: '2023-06-05T07:00:00Z',
     title: 'Codefair',
   },
   {
     id: 6666,
-    updatedAt: '2023-06-02T06:00:00Z',
-    createdAt: '2023-06-02T03:00:00Z',
+    startTime: '2023-06-02T05:00:00Z',
+    endTime: '2023-06-02T06:00:00Z',
     title: 'Dejli',
   },
   {
     id: 7777,
-    updatedAt: '2023-06-02T05:00:00Z',
-    createdAt: '2023-06-02T02:50:00Z',
+    startTime: '2023-06-02T02:00:00Z',
+    endTime: '2023-06-02T02:30:00Z',
     title: 'Druzenje Unije',
   },
   {
     id: 8888,
-    updatedAt: '2023-06-03T00:10:00Z',
-    createdAt: '2023-06-02T01:10:00Z',
+    startTime: '2023-06-02T01:10:00Z',
+    endTime: '2023-06-02T02:10:00Z',
     title: 'Dobar film',
+    bgColor: 'rgb(97, 189, 255)',
+    textColor: 'white',
   },
 ];
 
@@ -78,10 +80,10 @@ const dataProp = (
   cellDisplayMode = {},
   setCellDisplayMode,
 ) => ({
-  data: data,
+  data: testData,
   currentDate,
   setCurrentDate,
-  currentView: CurrentView.DAY,
+  currentView: CurrentView.MONTH,
   cellDisplayMode,
   setCellDisplayMode,
   timeDateFormat: {
@@ -90,7 +92,7 @@ const dataProp = (
     monthYear: 'LLLL yyyy',
     weekStartsOn: WeekStartsOn.MONDAY,
   },
-  activeTimeDateField: 'createdAt-updatedAt',
+  activeTimeDateField: 'startTime-endTime',
   colorDots,
 });
 

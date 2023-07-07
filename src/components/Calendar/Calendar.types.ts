@@ -106,7 +106,7 @@ export interface CalendarProps {
   ) => (JSX.Element | null)[];
   currentView: CurrentView;
   currentDate: string | Date;
-  setCurrentDate: (date: string | Date) => void;
+  setCurrentDate?: (date: string | Date) => void;
   colorDots?: ColorDot[];
   onDayNumberClick: (day: string) => void;
   onDayStringClick: (day: string | Date) => void;
@@ -172,7 +172,6 @@ export interface GetHeaderItemInfoFunc {
 export interface InitializePropsFunc {
   cellDisplayMode: CellDisplayMode | undefined;
   timeDateFormat: TimeFormat | undefined;
-  setCurrentDate: ((date: string | Date) => void) | undefined;
   onDayNumberClick: ((day: string) => void) | undefined;
   onDayStringClick: ((day: string | Date) => void) | undefined;
   onHourClick: ((value: DateInfo | number) => void) | undefined;
@@ -182,7 +181,6 @@ export interface InitializePropsFunc {
   onCellClick: ((value: DateInfo) => void) | undefined;
 }
 export interface InitializePropsRetFunc {
-  setCurrentDateModified: (date: string | Date) => void;
   cellDisplayModeModified: CellDisplayMode;
   onDayNumberClickModified: (day: string) => void;
   onDayStringClickModified: (day: string | Date) => void;
