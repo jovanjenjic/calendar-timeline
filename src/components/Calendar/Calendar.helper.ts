@@ -161,7 +161,6 @@ export const calculateStartAndEndMinute = (
 export const initializeProps = ({
   cellDisplayMode,
   timeDateFormat,
-  setCurrentDate,
   onDayNumberClick,
   onDayStringClick,
   onHourClick,
@@ -169,7 +168,6 @@ export const initializeProps = ({
   onItemClick,
   onCellClick,
 }: InitializePropsFunc): InitializePropsRetFunc => {
-  const setCurrentDateModified = setCurrentDate || (() => null);
   const onDayNumberClickModified = onDayNumberClick || (() => null);
   const onDayStringClickModified = onDayStringClick || (() => null);
   const onHourClickModified = onHourClick || (() => null);
@@ -208,7 +206,6 @@ export const initializeProps = ({
       ? cellDisplayModeConst
       : (cellDisplayMode as CellDisplayMode),
     timeDateFormatModified,
-    setCurrentDateModified,
     onDayNumberClickModified,
     onDayStringClickModified,
     onHourClickModified,

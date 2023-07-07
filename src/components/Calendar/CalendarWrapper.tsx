@@ -50,7 +50,6 @@ const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
   const {
     cellDisplayModeModified,
     timeDateFormatModified,
-    setCurrentDateModified,
     onDayNumberClickModified,
     onDayStringClickModified,
     onHourClickModified,
@@ -60,7 +59,6 @@ const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
   } = initializeProps({
     cellDisplayMode,
     timeDateFormat,
-    setCurrentDate,
     onDayNumberClick,
     onDayStringClick,
     onHourClick,
@@ -153,6 +151,10 @@ const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
                 hoveredElement === preparedDataItem.id && 'sub-item--hovered',
                 preparedDataItem?.isStart && 'sub-item--left-border',
               )}
+              style={{
+                backgroundColor: preparedDataItem?.bgColor,
+                color: preparedDataItem?.textColor,
+              }}
             >
               <div
                 onClick={(e) => {
@@ -330,13 +332,19 @@ const CalendarWrapper: React.FC<CalendarWrapperProps> = ({
       default:
         return renderItemsWithoutTimeOrInPlace;
     }
-  }, [currentView, cellDisplayMode, hoveredElement]);
+  }, [
+    currentView,
+    cellDisplayMode,
+    hoveredElement,
+    activeTimeDateField,
+    enableHoverEffect,
+  ]);
 
   return (
     <CalendarComponent
       renderItems={renderItems}
       renderHeaderItems={renderHeaderItems}
-      setCurrentDate={setCurrentDateModified}
+      setCurrentDate={setCurrentDate}
       currentView={currentView}
       colorDots={colorDots}
       currentDate={currentDate}
